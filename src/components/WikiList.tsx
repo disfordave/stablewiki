@@ -13,7 +13,7 @@ export default async function WikiList() {
     <>
       <ul className="flex flex-col gap-4 mt-4">
         {pages.map((page) => (
-          <li key={page.id} className="shadow-sm p-4 rounded-2xl">
+          <li key={page.id} className="shadow-sm p-4 rounded-2xl bg-white dark:bg-gray-800">
             <h2 className="text-2xl font-bold">{page.title}</h2>
             <p className="text-sm text-gray-500">
               By {page.author.name} on{" "}
