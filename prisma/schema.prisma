@@ -1,0 +1,90 @@
+// Prisma schema for a Wiki Engine
+// Database: PostgreSQL (recommended for JSON fields and full-text search)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  avatarUrl   String?
+  role        Role     @default(USER)
+  pages       Page[]   @relation("PageAuthors")
+  revisions   Revision[]
+  comments    Comment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Page {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String       @unique
+  content     String
+  authorId    String
+  author      User         @relation("PageAuthors", fields: [authorId], references: [id])
+  revisions   Revision[]
+  tags        PageTag[]
+  comments    Comment[]
+  parentId    String?      
+  parent      Page?        @relation("SubPages", fields: [parentId], references: [id])
+  children    Page[]       @relation("SubPages")
+  isPublished Boolean      @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Revision {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        Page     @relation(fields: [pageId], references: [id])
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  content     String   
+  summary     String?
+  createdAt   DateTime @default(now())
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        Page     @relation(fields: [pageId], references: [id])
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  content     String
+  parentId    String?
+  parent      Comment? @relation("ThreadedComments", fields: [parentId], references: [id])
+  replies     Comment[] @relation("ThreadedComments")
+  createdAt   DateTime @default(now())
+}
+
+model Tag {
+  id          String     @id @default(cuid())
+  name        String      @unique
+  description String?
+  pages       PageTag[]
+  createdAt   DateTime    @default(now())
+}
+
+model PageTag {
+  pageId String
+  tagId  String
+  page   Page @relation(fields: [pageId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([pageId, tagId])
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
