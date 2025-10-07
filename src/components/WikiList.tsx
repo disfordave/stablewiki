@@ -1,19 +1,26 @@
-import { prisma } from "@/lib/prisma";
+import { PageWithRelations } from "@/lib/types";
 
 export default async function WikiList() {
-  const pages = await prisma.page.findMany({
-    include: {
-      author: true,
-      tags: { include: { tag: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  let pagesList: PageWithRelations[] = [];
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pages`);
+    if (!res.ok) throw new Error("Failed to fetch pages");
+    const { pages }: { pages: PageWithRelations[] } = await res.json();
+    pagesList = pages;
+  } catch (err) {
+    console.error(err);
+    return <p className="text-red-500">Failed to load pages 😢</p>;
+  }
 
   return (
     <>
       <ul className="flex flex-col gap-4 mt-4">
-        {pages.map((page) => (
-          <li key={page.id} className="shadow-sm p-4 rounded-2xl bg-white dark:bg-gray-800">
+        {pagesList.map((page) => (
+          <li
+            key={page.id}
+            className="shadow-sm p-4 rounded-2xl bg-white dark:bg-gray-800"
+          >
             <h2 className="text-2xl font-bold">{page.title}</h2>
             <p className="text-sm text-gray-500">
               By {page.author.name} on{" "}
