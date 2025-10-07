@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.className} ${geistMono.variable} antialiased bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
+        className={`${geistSans.className} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen p-4 mx-auto max-w-2xl">
           <h1 className="text-3xl font-bold"><Link href={'/'}>{WIKI_NAME}</Link></h1>
