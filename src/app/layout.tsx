@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { WIKI_NAME } from "@/lib/config";
+import {
+  WIKI_COPYRIGHT_HOLDER,
+  WIKI_COPYRIGHT_HOLDER_URL,
+  WIKI_NAME,
+} from "@/lib/config";
 import Link from "next/link";
 
 const geistSans = Geist({
@@ -30,8 +34,23 @@ export default function RootLayout({
         className={`${geistSans.className} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen p-4 mx-auto max-w-2xl">
-          <h1 className="text-3xl font-bold"><Link href={'/'}>{WIKI_NAME}</Link></h1>
+          <p className="text-xl font-bold">
+            <Link href={"/"}>{WIKI_NAME}</Link>
+          </p>
           {children}
+          <footer className="mt-4">
+            <p className="text-sm text-gray-500">
+              &copy; {new Date().getFullYear()}{" "}
+              <a
+                href={WIKI_COPYRIGHT_HOLDER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {WIKI_COPYRIGHT_HOLDER}
+              </a>
+            </p>
+          </footer>
         </div>
       </body>
     </html>
