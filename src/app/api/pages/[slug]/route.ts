@@ -37,28 +37,28 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  const { slug } = await params;
-  const body = await request.json();
-  const { title, content, authorId, tags } = body;
-}
+// export async function POST(
+//   request: Request,
+//   { params }: { params: Promise<{ slug: string }> }
+// ) {
+//   const { slug } = await params;
+//   const body = await request.json();
+//   const { title, content, authorId, tags } = body;
+// }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  const { slug } = await params;
+// export async function DELETE(
+//   request: Request,
+//   { params }: { params: Promise<{ slug: string }> }
+// ) {
+//   const { slug } = await params;
 
-  try {
-    await prisma.page.delete({
-      where: { slug: slug },
-    });
-    return new Response(null, { status: 204 });
-  } catch (error) {
-    console.error(error);
-    return Response.json({ error: "Failed to delete page" }, { status: 500 });
-  }
-}
+//   try {
+//     await prisma.page.delete({
+//       where: { slug: slug },
+//     });
+//     return new Response(null, { status: 204 });
+//   } catch (error) {
+//     console.error(error);
+//     return Response.json({ error: "Failed to delete page" }, { status: 500 });
+//   }
+// }

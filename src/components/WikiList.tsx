@@ -1,4 +1,4 @@
-import { Page, PageWithRelations } from "@/lib/types";
+import { Page } from "@/lib/types";
 
 export default async function WikiList() {
   let pagesList: Page[] = [];
