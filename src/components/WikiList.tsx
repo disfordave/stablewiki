@@ -1,12 +1,12 @@
-import { PageWithRelations } from "@/lib/types";
+import { Page, PageWithRelations } from "@/lib/types";
 
 export default async function WikiList() {
-  let pagesList: PageWithRelations[] = [];
+  let pagesList: Page[] = [];
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pages`);
     if (!res.ok) throw new Error("Failed to fetch pages");
-    const { pages }: { pages: PageWithRelations[] } = await res.json();
+    const pages = await res.json();
     pagesList = pages;
   } catch (err) {
     console.error(err);
@@ -32,10 +32,10 @@ export default async function WikiList() {
                 <div className="mt-2">
                   {page.tags.map((pt) => (
                     <span
-                      key={pt.tag.id}
+                      key={pt.id}
                       className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded mr-1"
                     >
-                      {pt.tag.name}
+                      {pt.name}
                     </span>
                   ))}
                 </div>

@@ -1,13 +1,42 @@
 import { prisma } from "@/lib/prisma";
+import { Page } from "@/lib/types";
 
 export async function GET() {
   try {
     const pages = await prisma.page.findMany({
-      include: { author: true, tags: { include: { tag: true } } },
+      include: {
+        author: true,
+        tags: { include: { tag: true } },
+        revisions: {
+          orderBy: { createdAt: "desc" },
+          take: 1, 
+          include: { author: true },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
 
-    return Response.json({ pages });
+    return Response.json(
+      pages.map((page) => ({
+        id: page.id,
+        title: page.title,
+        content:
+          page.revisions.length > 0 ? page.revisions[0].content : page.content,
+        slug: page.slug,
+        author:
+          page.revisions.length > 0
+            ? {
+                id: page.revisions[0].author.id,
+                name: page.revisions[0].author.name,
+              }
+            : { id: page.author.id, name: page.author.name },
+        createdAt: page.createdAt,
+        updatedAt: page.updatedAt,
+        tags: page.tags.map((t) => {
+          return { id: t.tag.id, name: t.tag.name };
+        }),
+      })) as Page[]
+    );
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to fetch pages" }, { status: 500 });

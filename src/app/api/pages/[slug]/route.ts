@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { slug } = await params;
   try {
-    const pages = await prisma.page.findUnique({
+    const page = await prisma.page.findUnique({
       where: { slug: slug },
       include: { author: true, tags: { include: { tag: true } }, revisions: {
           orderBy: { createdAt: "desc" },
@@ -16,24 +16,24 @@ export async function GET(
         }, },
     });
 
-    if (!pages) {
+    if (!page) {
       return Response.json({ error: "Page not found" }, { status: 404 });
     }
     return Response.json({ 
-      id: pages.id,
-      title: pages.title,
-      content: pages.revisions.length > 0 ? pages.revisions[0].content : pages.content,
-      slug: pages.slug,
-      author: pages.revisions.length > 0 ? { id: pages.revisions[0].author.id, name: pages.revisions[0].author.name } : { id: pages.author.id, name: pages.author.name },
-      createdAt: pages.createdAt,
-      updatedAt: pages.updatedAt,
-      tags: pages.tags.map(t => {
+      id: page.id,
+      title: page.title,
+      content: page.revisions.length > 0 ? page.revisions[0].content : page.content,
+      slug: page.slug,
+      author: page.revisions.length > 0 ? { id: page.revisions[0].author.id, name: page.revisions[0].author.name } : { id: page.author.id, name: page.author.name },
+      createdAt: page.createdAt,
+      updatedAt: page.updatedAt,
+      tags: page.tags.map(t => {
         return { id: t.tag.id, name: t.tag.name };
       })
      } as Page);
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Failed to fetch pages" }, { status: 500 });
+    return Response.json({ error: "Failed to fetch page" }, { status: 500 });
   }
 }
 
