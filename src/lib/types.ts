@@ -12,7 +12,10 @@ export interface Page {
   title: string;
   content: string;
   slug: string;
-  authorId: string;
+  author: {
+    id: string;
+    name: string;
+  }
   createdAt: Date;
   updatedAt: Date;
   tags: {

@@ -10,8 +10,10 @@ export async function GET(
     const pages = await prisma.page.findUnique({
       where: { slug: slug },
       include: { author: true, tags: { include: { tag: true } }, revisions: {
-        orderBy: { createdAt: "desc" }
-      } },
+          orderBy: { createdAt: "desc" },
+          take: 1, 
+          include: { author: true },
+        }, },
     });
 
     if (!pages) {
@@ -22,7 +24,7 @@ export async function GET(
       title: pages.title,
       content: pages.revisions.length > 0 ? pages.revisions[0].content : pages.content,
       slug: pages.slug,
-      authorId: pages.revisions.length > 0 ? pages.revisions[0].authorId : pages.authorId,
+      author: pages.revisions.length > 0 ? { id: pages.revisions[0].author.id, name: pages.revisions[0].author.name } : { id: pages.author.id, name: pages.author.name },
       createdAt: pages.createdAt,
       updatedAt: pages.updatedAt,
       tags: pages.tags.map(t => {

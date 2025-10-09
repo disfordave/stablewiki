@@ -28,9 +28,9 @@ export default async function WikiPage({
   return (
     <div>
       <h1 className="text-3xl font-bold">{page.title}</h1>
-      {/* <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500">
         By {page.author.name} on {new Date(page.createdAt).toLocaleDateString()}
-      </p> */}
+      </p>
       <div className="mt-2">
         {page.tags.map((pt) => (
           <span
