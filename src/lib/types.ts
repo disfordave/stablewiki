@@ -6,3 +6,17 @@ export type PageWithRelations = Prisma.PageGetPayload<{
     tags: { include: { tag: true } };
   };
 }>;
+
+export interface Page {
+  id: string;
+  title: string;
+  content: string;
+  slug: string;
+  authorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: {
+    id: string;
+    name: string;
+  }[];
+}
