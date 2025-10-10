@@ -1,4 +1,5 @@
 import { Page } from "@/lib/types";
+import Markdown from "react-markdown"
 
 export default async function WikiPage({
   params,
@@ -42,7 +43,7 @@ export default async function WikiPage({
         ))}
       </div>
       <div className="mt-4">
-        <p>{page.content}</p>
+        <Markdown>{page.content}</Markdown>
       </div>
     </div>
   );
