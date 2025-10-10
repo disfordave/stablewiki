@@ -25,7 +25,7 @@ export default async function WikiList() {
               <div className="shadow-sm p-4 rounded-2xl bg-white dark:bg-gray-800">
                 <h2 className="text-2xl font-bold">{page.title}</h2>
                 <p className="text-sm text-gray-500">
-                  By {page.author.name} on{" "}
+                  By {page.author.username} on{" "}
                   {new Date(page.createdAt).toLocaleDateString()}
                 </p>
                 <p>{page.content}</p>

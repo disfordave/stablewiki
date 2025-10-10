@@ -27,9 +27,9 @@ export async function GET() {
           page.revisions.length > 0
             ? {
                 id: page.revisions[0].author.id,
-                name: page.revisions[0].author.name,
+                username: page.revisions[0].author.username,
               }
-            : { id: page.author.id, name: page.author.name },
+            : { id: page.author.id, username: page.author.username },
         createdAt: page.createdAt,
         updatedAt: page.updatedAt,
         tags: page.tags.map((t) => {

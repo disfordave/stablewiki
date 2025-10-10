@@ -5,7 +5,7 @@ export interface Page {
   slug: string;
   author: {
     id: string;
-    name: string;
+    username: string;
   }
   createdAt: Date;
   updatedAt: Date;
