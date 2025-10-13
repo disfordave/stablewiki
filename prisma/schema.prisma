@@ -12,8 +12,16 @@ datasource db {
 
 model User {
   id          String   @id @default(cuid())
-  email       String   @unique
+  email       String?   @unique
   username    String   @unique
+  password    String
+  recoverKey  String?  @unique
+  recoveryQuestionFirst String?
+  recoveryQuestionSecond String?
+  recoveryQuestionThird String?
+  recoveryAnswerFirst   String?
+  recoveryAnswerSecond  String?
+  recoveryAnswerThird   String?
   name        String?
   avatarUrl   String?
   role        Role     @default(USER)

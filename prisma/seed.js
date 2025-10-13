@@ -5,10 +5,10 @@ async function main() {
   // --- Users ---
   const alice = await prisma.user.create({
     data: {
-      email: "alice@example.com",
-      username: "alice",
+      username: "aliceadmin001",
+      password: "password123",
       name: "Alice Johnson",
-      avatarUrl: "https://i.pravatar.cc/150?img=1",
+      avatarUrl: "https://i.pravatar.cc/150?img=2",
       role: "ADMIN",
     },
   });
@@ -16,9 +16,10 @@ async function main() {
   const bob = await prisma.user.create({
     data: {
       email: "bob@example.com",
-      username: "bob",
+      username: "bobeditor001",
+      password: "password123",
       name: "Bob Lee",
-      avatarUrl: "https://i.pravatar.cc/150?img=2",
+      avatarUrl: "https://i.pravatar.cc/150?img=1",
       role: "EDITOR",
     },
   });
@@ -26,7 +27,8 @@ async function main() {
   const charlie = await prisma.user.create({
     data: {
       email: "charlie@example.com",
-      username: "charlie",
+      username: "charlieuser001",
+      password: "password123",
       name: "Charlie Kim",
       avatarUrl: "https://i.pravatar.cc/150?img=3",
       role: "USER",
