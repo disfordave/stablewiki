@@ -38,12 +38,7 @@ export default function RootLayout({
             <p className="text-xl font-bold">
               <Link href={"/"}>{WIKI_NAME}</Link>
             </p>
-            <form action={
-              'use server'
-              
-            }>
-              <button type="submit">Login</button>
-            </form>
+            <Link href={"/signin"}>Sign In</Link>
           </header>
           {children}
           <footer className="mt-4">
