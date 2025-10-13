@@ -17,9 +17,12 @@ export async function GET(
     });
 
     if (!page) {
-      return Response.json({ error: "Page not found" }, { status: 404 });
+      return Response.json({
+        page: null,
+      });
     }
-    return Response.json({ 
+    return Response.json({
+      page: { 
       id: page.id,
       title: page.title,
       content: page.revisions.length > 0 ? page.revisions[0].content : page.content,
@@ -30,9 +33,33 @@ export async function GET(
       tags: page.tags.map(t => {
         return { id: t.tag.id, name: t.tag.name };
       })
-     } as Page);
+     } as Page
+    });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to fetch page" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const { title, content, slug, author } = await request.json();
+
+  if (!title || !content || !slug || !author) {
+    return Response.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  try {
+    const page = await prisma.revision.create({
+      data: {
+        content,
+        page: { connect: { slug } },
+        author: { connect: { id: author.id } },
+      }
+    });
+
+    return Response.json(page, { status: 201 });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to create page" }, { status: 500 });
   }
 }

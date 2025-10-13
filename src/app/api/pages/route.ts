@@ -42,3 +42,30 @@ export async function GET() {
     return Response.json({ error: "Failed to fetch pages" }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  const { title, content, slug, author } = await request.json();
+
+  if (!title || !content || !slug || !author) {
+    return Response.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  try {
+    const page = await prisma.page.create({
+      data: {
+        title,
+        content,
+        slug,
+        author: { connect: { id: author.id } },
+        revisions: {
+          create: { content, author: { connect: { id: author.id } } },
+        },
+      },
+    });
+
+    return Response.json(page, { status: 201 });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to create page" }, { status: 500 });
+  }
+}
