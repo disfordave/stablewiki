@@ -1,6 +1,5 @@
 import { getUser } from "@/lib/auth/functions";
 import Link from "next/link";
-import Image from "next/image";
 
 export default async function DashboardPage() {
   const user = await getUser();
