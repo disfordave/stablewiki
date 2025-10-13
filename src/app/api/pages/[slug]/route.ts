@@ -10,7 +10,7 @@ export async function GET(
     const page = await prisma.page.findUnique({
       where: { slug: slug },
       include: { author: true, tags: { include: { tag: true } }, revisions: {
-          orderBy: { createdAt: "desc" },
+          orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
           take: 1, 
           include: { author: true },
         }, },
