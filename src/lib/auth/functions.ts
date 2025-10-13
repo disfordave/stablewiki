@@ -28,6 +28,6 @@ export async function signOutUser() {
   const cookieStore = await cookies();
   cookieStore.delete("jwt");
   redirect(
-    `/?success=${encodeURIComponent("Successfully signed out, see you soon!")}`
+    `/signin?success=${encodeURIComponent("Successfully signed out!")}`
   );
 }

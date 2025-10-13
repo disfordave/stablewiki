@@ -1,3 +1,4 @@
+import { getUser } from "@/lib/auth/functions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -6,6 +7,13 @@ export default async function SignIn({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+
+  const user = await getUser();
+  if (user.username) {
+    redirect(`/dashboard`);
+  }
+
+
   async function signIn(formData: FormData) {
     "use server";
 
@@ -30,23 +38,20 @@ export default async function SignIn({
 
     const data = await res.json();
 
-            const cookieStore = await cookies()
-        cookieStore.set({
-          name: 'jwt',
-          value: data.user.token,
-          httpOnly: true,
-          sameSite: 'lax'
-        })
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: "jwt",
+      value: data.user.token,
+      httpOnly: true,
+      sameSite: "lax",
+    });
 
-    redirect(
-      `/?success=${encodeURIComponent(
-        "Successfully signed in, Hello " + data.user.username + "!"
-      )}`
-    );
+    redirect(`/dashboard`);
   }
 
   const params = await searchParams;
   const error = params.error as string | undefined;
+  const success = params.success as string | undefined;
   return (
     <>
       <form action={signIn}>
@@ -58,7 +63,8 @@ export default async function SignIn({
           required
         />
         <button type="submit">Login</button>
-        <p>{error && <span>{error}</span>}</p>
+        <p className="text-green-500">{success && <span>{success}</span>}</p>
+        <p className="text-red-500">{error && <span>{error}</span>}</p>
       </form>
     </>
   );
