@@ -11,10 +11,9 @@ export default async function Header() {
         <p className="text-xl font-bold">
           <Link href={"/"}>{WIKI_NAME}</Link>
         </p>
-        <pre>{JSON.stringify(user, null, 2)}</pre>
         {user.username ? (
           <>
-            <p>{user.username}</p>
+            <p><Link href={`/dashboard`}>{user.username}</Link></p>
             <form action={signOutUser}>
               <button type="submit">Sign Out</button>
             </form>

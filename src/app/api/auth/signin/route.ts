@@ -44,10 +44,22 @@ export async function POST(request: Request) {
       );
     }
 
-    return Response.json({
+    const response = Response.json({
       message: "Login successful! Happy reading!",
       user: { id: user.id, username: user.username, token },
     });
+
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: "jwt",
+      value: token,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 3600,
+    });
+
+    return response;
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to sign in user" }, { status: 500 });
