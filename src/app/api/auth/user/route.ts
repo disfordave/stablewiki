@@ -19,14 +19,21 @@ export async function GET(request: NextRequest): Promise<Response> {
     );
   }
 
+  if (!process.env.JWT_SECRET) {
+    console.error("JWT_SECRET is not defined in the environment variables.");
+    return Response.json({ error: "Internal server error" }, { status: 500 });
+  }
+
   try {
-    const decodedToken = jwt.verify(token, "secretkeyappearshere") as {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as {
       id: string;
       username: string;
+      avatarUrl?: string;
+      role: string;
     };
 
     return Response.json(
-      { id: decodedToken.id, username: decodedToken.username },
+      { id: decodedToken.id, username: decodedToken.username, avatarUrl: decodedToken.avatarUrl, role: decodedToken.role },
       { status: 200 }
     );
   } catch (error) {

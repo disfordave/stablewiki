@@ -28,16 +28,6 @@ export default async function WikiList() {
                   By {page.author.username} on{" "}
                   {new Date(page.createdAt).toLocaleDateString()}
                 </p>
-                <div className="mt-2">
-                  {page.tags.map((pt) => (
-                    <span
-                      key={pt.id}
-                      className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded mr-1"
-                    >
-                      {pt.name}
-                    </span>
-                  ))}
-                </div>
               </div>
             </a>
           </li>

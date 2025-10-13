@@ -12,14 +12,14 @@ export default async function Header() {
           <Link href={"/"}>{WIKI_NAME}</Link>
         </p>
         {user.username ? (
-          <>
-            <p><Link href={`/dashboard`}>{user.username}</Link></p>
+          <div className="flex gap-2 items-center">
+            <p className="font-bold hover:underline"><Link href={`/dashboard`}>{user.username}</Link></p>
             <form action={signOutUser}>
-              <button type="submit">Sign Out</button>
+              <button type="submit" className="cursor-pointer hover:underline">Sign Out</button>
             </form>
-          </>
+          </div>
         ) : (
-          <Link href={"/signin"}>Sign In</Link>
+          <Link className="hover:underline" href={"/signin"}>Sign In</Link>
         )}
       </header>
     </>

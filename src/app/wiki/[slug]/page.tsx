@@ -1,5 +1,5 @@
 import { Page } from "@/lib/types";
-import Markdown from "react-markdown"
+import Markdown from "react-markdown";
 
 export default async function WikiPage({
   params,
@@ -30,18 +30,9 @@ export default async function WikiPage({
     <div>
       <h1 className="text-3xl font-bold">{page.title}</h1>
       <p className="text-sm text-gray-500">
-        By {page.author.username} on {new Date(page.createdAt).toLocaleDateString()}
+        By {page.author.username} on{" "}
+        {new Date(page.createdAt).toLocaleDateString()}
       </p>
-      <div className="mt-2">
-        {page.tags.map((pt) => (
-          <span
-            key={pt.id}
-            className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded mr-1"
-          >
-            {pt.name}
-          </span>
-        ))}
-      </div>
       <div className="mt-4">
         <Markdown>{page.content}</Markdown>
       </div>

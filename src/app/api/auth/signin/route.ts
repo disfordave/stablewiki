@@ -25,6 +25,11 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not defined in the environment variables.");
+      return Response.json({ error: "Internal server error" }, { status: 500 });
+    }
+
     let token;
     try {
       //Creating jwt token
@@ -32,8 +37,10 @@ export async function POST(request: Request) {
         {
           id: user.id,
           username: user.username,
+          avatarUrl: user.avatarUrl,
+          role: user.role,
         },
-        "secretkeyappearshere",
+        process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
     } catch (err) {
@@ -46,7 +53,7 @@ export async function POST(request: Request) {
 
     const response = Response.json({
       message: "Login successful! Happy reading!",
-      user: { id: user.id, username: user.username, token },
+      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role, token },
     });
 
     const cookieStore = await cookies();

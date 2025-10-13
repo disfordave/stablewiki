@@ -7,28 +7,35 @@ export default async function SignIn({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-
   const user = await getUser();
   if (user.username) {
     redirect(`/dashboard`);
   }
 
-
   async function signIn(formData: FormData) {
     "use server";
+
+    if (user.username) {
+      redirect(`/dashboard`);
+    }
+
+    //Extracting form data
 
     const rawFormData = {
       username: formData.get("username") as string,
       password: formData.get("password") as string,
     };
 
-    const res = await fetch("http://localhost:3000/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rawFormData),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/signin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(rawFormData),
+      }
+    );
 
     if (!res.ok) {
       redirect(

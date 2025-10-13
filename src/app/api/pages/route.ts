@@ -9,7 +9,7 @@ export async function GET() {
         tags: { include: { tag: true } },
         revisions: {
           orderBy: { createdAt: "desc" },
-          take: 1, 
+          take: 1,
           include: { author: true },
         },
       },
