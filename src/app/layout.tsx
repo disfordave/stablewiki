@@ -7,6 +7,7 @@ import {
   WIKI_NAME,
 } from "@/lib/config";
 import Link from "next/link";
+import Header from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,12 +35,7 @@ export default function RootLayout({
         className={`${geistSans.className} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen p-4 mx-auto max-w-2xl">
-          <header className="flex justify-between">
-            <p className="text-xl font-bold">
-              <Link href={"/"}>{WIKI_NAME}</Link>
-            </p>
-            <Link href={"/signin"}>Sign In</Link>
-          </header>
+<Header />
           {children}
           <footer className="mt-4">
             <p className="text-sm text-gray-500">

@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function SignIn({
@@ -29,8 +30,16 @@ export default async function SignIn({
 
     const data = await res.json();
 
+            const cookieStore = await cookies()
+        cookieStore.set({
+          name: 'jwt',
+          value: data.user.token,
+          httpOnly: true,
+          sameSite: 'lax'
+        })
+
     redirect(
-      `/signin?success=${encodeURIComponent(
+      `/?success=${encodeURIComponent(
         "Successfully signed in, Hello " + data.user.username + "!"
       )}`
     );

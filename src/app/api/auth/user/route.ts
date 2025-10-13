@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
   const authHeader = request.headers.get("Authorization");
+
   if (!authHeader) {
     return Response.json(
       { error: "Error! Token was not provided." },
@@ -28,6 +31,7 @@ export async function GET(request: Request): Promise<Response> {
       { status: 200 }
     );
   } catch (error) {
+    console.log(token);
     console.error(error);
     return Response.json(
       { error: "Invalid or expired token." },
