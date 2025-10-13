@@ -1,5 +1,6 @@
 import { getUser } from "@/lib/auth/functions";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function SignIn({
@@ -60,7 +61,8 @@ export default async function SignIn({
   const error = params.error as string | undefined;
   const success = params.success as string | undefined;
   return (
-    <>
+    <div>
+      <h1>Sign In</h1>
       <form action={signIn}>
         <input name="username" type="text" placeholder="Username" required />
         <input
@@ -70,9 +72,10 @@ export default async function SignIn({
           required
         />
         <button type="submit">Login</button>
+        <Link href="/signup">Don&apos;t have an account? Sign Up</Link>
         <p className="text-green-500">{success && <span>{success}</span>}</p>
         <p className="text-red-500">{error && <span>{error}</span>}</p>
       </form>
-    </>
+    </div>
   );
 }
