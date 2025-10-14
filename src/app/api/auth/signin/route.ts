@@ -72,7 +72,7 @@ export async function POST(request: Request) {
 
     const response = Response.json({
       message: "Login successful! Happy reading!",
-      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role },
+      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role, token },
     });
 
     const cookieStore = await cookies();
