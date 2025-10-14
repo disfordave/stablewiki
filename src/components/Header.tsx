@@ -23,6 +23,7 @@ export default async function Header() {
         {user.username ? (
           <div className="flex gap-2 items-center">
             <p className="font-bold hover:underline"><Link href={`/dashboard`}>{user.username}</Link></p>
+            <p className="hover:underline"><Link className="hover:underline" href={"/upload"}>Upload</Link></p>
             <form action={signOutUser}>
               <button type="submit" className="cursor-pointer hover:underline">Sign Out</button>
             </form>
@@ -30,6 +31,7 @@ export default async function Header() {
         ) : (
           <Link className="hover:underline" href={"/signin"}>Sign In</Link>
         )}
+       
       </header>
       <form action={search} className="flex gap-2 w-full my-2">
         <input type="text" name="search" className="bg-white dark:bg-gray-800 px-4 py-2 rounded-full w-full" placeholder="Search..." />

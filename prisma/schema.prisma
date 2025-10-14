@@ -49,6 +49,7 @@ model Page {
   publishedAt DateTime?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  isMedia     Boolean      @default(false)
 }
 
 model Revision {
