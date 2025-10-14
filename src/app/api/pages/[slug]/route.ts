@@ -49,11 +49,16 @@ export async function POST(request: Request) {
   }
 
   try {
+    const revisionsCount = await prisma.revision.count({
+      where: { page: { slug } },
+    });
+    
     const page = await prisma.revision.create({
       data: {
         content,
         page: { connect: { slug } },
         author: { connect: { id: author.id } },
+        version: revisionsCount + 1,
       }
     });
 

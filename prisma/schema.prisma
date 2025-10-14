@@ -53,6 +53,7 @@ model Page {
 
 model Revision {
   id          String   @id @default(cuid())
+  version     Int      @default(1)
   pageId      String
   page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   authorId    String

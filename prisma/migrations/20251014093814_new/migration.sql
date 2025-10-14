@@ -37,6 +37,7 @@ CREATE TABLE "Page" (
 -- CreateTable
 CREATE TABLE "Revision" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "version" INTEGER NOT NULL DEFAULT 1,
     "pageId" TEXT NOT NULL,
     "authorId" TEXT NOT NULL,
     "content" TEXT NOT NULL,

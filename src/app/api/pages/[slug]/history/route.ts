@@ -26,7 +26,7 @@ export async function GET(
         revisions: page.revisions.map(rev => ({
             author: { id: rev.author.id, username: rev.author.username },
           id: rev.id,
-          version: page.revisions.length - page.revisions.indexOf(rev),
+          version: rev.version,
           content: rev.content,
           createdAt: rev.createdAt,
           summary: rev.summary || "No summary provided.",
