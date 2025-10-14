@@ -29,7 +29,7 @@ export async function GET(
       slug: page.slug,
       author: page.revisions.length > 0 ? { id: page.revisions[0].author.id, username: page.revisions[0].author.username } : { id: page.author.id, username: page.author.username },
       createdAt: page.createdAt,
-      updatedAt: page.updatedAt,
+      updatedAt: page.revisions.length > 0 ? page.revisions[0].createdAt : page.updatedAt,
       tags: page.tags.map(t => {
         return { id: t.tag.id, name: t.tag.name };
       })

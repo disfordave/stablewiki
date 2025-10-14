@@ -146,7 +146,7 @@ export default async function WikiEditPage({
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        <Link href={`/wiki/${page.slug}`}>{page.title}</Link>
+        <Link href={`/wiki/${page.slug}`}>Edit Page: {page.title}</Link>
       </h1>
       <p className="text-sm text-gray-500">
         By {page.author.username} on{" "}

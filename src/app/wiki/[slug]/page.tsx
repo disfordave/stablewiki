@@ -58,7 +58,9 @@ export default async function WikiPage({
       </h1>
       <p className="text-sm text-gray-500">
         By {page.author.username} on{" "}
-        {new Date(page.createdAt).toLocaleDateString()}
+        {new Date(page.updatedAt).toLocaleDateString('en-GB', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', timeZone: 'UTC'
+        })}
       </p>
       <div className="my-8 prose dark:prose-invert max-w-none prose-hr:mt-8 prose-hr:mb-8">
         <Markdown>{page.content}</Markdown>
