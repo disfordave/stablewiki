@@ -42,7 +42,7 @@ export async function POST(request: Request) {
           role: user.role,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "24h" }
       );
     } catch (err) {
       console.log(err);
