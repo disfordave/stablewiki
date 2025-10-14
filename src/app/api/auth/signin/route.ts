@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
       where: { username: username },
     });
 
-    if (!user || user.password !== password) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return Response.json(
         { error: "Invalid username or password" },
         { status: 401 }

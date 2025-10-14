@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -25,10 +26,12 @@ export async function POST(request: Request) {
       );
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         username: username,
-        password: password, // In a real application, make sure to hash the password before storing it
+        password: hashedPassword,
         role: "USER", // Default role
       },
     });
