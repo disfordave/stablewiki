@@ -1,4 +1,3 @@
-import { getUser } from "@/lib/auth/functions";
 import { prisma } from "@/lib/prisma";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
