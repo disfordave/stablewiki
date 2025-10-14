@@ -1,0 +1,41 @@
+import { prisma } from "@/lib/prisma";
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug: encodeURIComponent(slug) },
+      include: { author: true, tags: { include: { tag: true } }, revisions: {
+          orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
+          include: { author: true },
+        }, },
+    });
+
+    if (!page) {
+      return Response.json({
+        page: null,
+      });
+    }
+    return Response.json({
+      page: { 
+        id: page.id,
+        title: page.title,
+        revisions: page.revisions.map(rev => ({
+            author: { id: rev.author.id, username: rev.author.username },
+          id: rev.id,
+          version: page.revisions.length - page.revisions.indexOf(rev),
+          content: rev.content,
+          createdAt: rev.createdAt,
+          summary: rev.summary || "No summary provided.",
+        })),
+        slug: page.slug,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to fetch page" }, { status: 500 });
+  }
+}
