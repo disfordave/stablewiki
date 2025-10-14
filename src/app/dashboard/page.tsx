@@ -1,4 +1,5 @@
 import { getUser } from "@/lib/auth/functions";
+import { Role } from "@prisma/client";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -71,8 +72,15 @@ export default async function DashboardPage() {
       <p>Welcome to your dashboard!</p>
       <p>Here you can manage your account and view your activity.</p>
       <p>This is a placeholder page. More features will be added soon!</p>
-      <p>Your Role: {user.role}</p>
-      <pre className="overflow-auto p-4 rounded-2xl bg-white">
+      <p>Your Role: {user.role as Role | null}</p>
+      {user.role === Role.ADMIN && (
+        <p className="text-red-500 font-bold">
+          You have administrative privileges.
+        </p>
+      )}
+
+      <h2 className="text-xl font-bold mt-4 mb-2">User Details (Debug Info)</h2>
+      <pre className="overflow-auto p-4 rounded-2xl bg-white dark:bg-gray-800">
         {JSON.stringify(user, null, 2)}
       </pre>
       <p>

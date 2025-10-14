@@ -8,7 +8,7 @@ export async function GET(
   const { slug } = await params;
   try {
     const page = await prisma.page.findUnique({
-      where: { slug: slug },
+      where: { slug: encodeURIComponent(slug) },
       include: { author: true, tags: { include: { tag: true } }, revisions: {
           orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
           take: 1, 
@@ -72,7 +72,7 @@ export async function DELETE(
 
   try {
     const page = await prisma.page.delete({
-      where: { slug },
+      where: { slug: encodeURIComponent(slug) },
      
     });
     return Response.json(page, { status: 200 });

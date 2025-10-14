@@ -53,9 +53,9 @@ export async function POST(request: Request) {
   try {
     const page = await prisma.page.create({
       data: {
-        title,
-        content,
-        slug,
+        title: decodeURIComponent(title),
+        content: "",
+        slug: slug,
         author: { connect: { id: author.id } },
         revisions: {
           create: { content, author: { connect: { id: author.id } } },

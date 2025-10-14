@@ -53,12 +53,14 @@ export default async function WikiPage({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">{page.title}</h1>
+      <h1 className="text-3xl font-bold">
+        <Link href={`/wiki/${page.slug}`}>{page.title}</Link>
+      </h1>
       <p className="text-sm text-gray-500">
         By {page.author.username} on{" "}
         {new Date(page.createdAt).toLocaleDateString()}
       </p>
-      <div className="mt-4">
+      <div className="my-8 prose dark:prose-invert max-w-none prose-hr:mt-8 prose-hr:mb-8">
         <Markdown>{page.content}</Markdown>
       </div>
       {

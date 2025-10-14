@@ -1,9 +1,6 @@
 import WikiList from "@/components/WikiList";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      <WikiList />
-    </div>
-  );
+  return redirect("/wiki/Welcome");
 }

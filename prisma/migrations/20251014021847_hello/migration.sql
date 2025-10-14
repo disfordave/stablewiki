@@ -1,8 +1,16 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "email" TEXT NOT NULL,
+    "email" TEXT,
     "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "recoverKey" TEXT,
+    "recoveryQuestionFirst" TEXT,
+    "recoveryQuestionSecond" TEXT,
+    "recoveryQuestionThird" TEXT,
+    "recoveryAnswerFirst" TEXT,
+    "recoveryAnswerSecond" TEXT,
+    "recoveryAnswerThird" TEXT,
     "name" TEXT,
     "avatarUrl" TEXT,
     "role" TEXT NOT NULL DEFAULT 'USER',
@@ -34,7 +42,7 @@ CREATE TABLE "Revision" (
     "content" TEXT NOT NULL,
     "summary" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Revision_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Revision_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Revision_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -46,7 +54,7 @@ CREATE TABLE "Comment" (
     "content" TEXT NOT NULL,
     "parentId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Comment_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Comment_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Comment_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Comment_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Comment" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -65,7 +73,7 @@ CREATE TABLE "PageTag" (
     "tagId" TEXT NOT NULL,
 
     PRIMARY KEY ("pageId", "tagId"),
-    CONSTRAINT "PageTag_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "PageTag_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "PageTag_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -74,6 +82,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_recoverKey_key" ON "User"("recoverKey");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Page_slug_key" ON "Page"("slug");

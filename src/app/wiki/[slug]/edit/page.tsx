@@ -122,7 +122,7 @@ export default async function WikiEditPage({
               <textarea
                 name="content"
                 placeholder="Page content in Markdown"
-                className="w-full h-64 border border-gray-300 rounded p-2"
+                className="w-full h-[60vh] border border-gray-300 dark:border-gray-700 rounded p-2"
                 required
               ></textarea>
               <button
@@ -145,7 +145,9 @@ export default async function WikiEditPage({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">{page.title}</h1>
+      <h1 className="text-3xl font-bold">
+        <Link href={`/wiki/${page.slug}`}>{page.title}</Link>
+      </h1>
       <p className="text-sm text-gray-500">
         By {page.author.username} on{" "}
         {new Date(page.createdAt).toLocaleDateString()}
@@ -156,7 +158,7 @@ export default async function WikiEditPage({
             <textarea
               name="content"
               defaultValue={page.content}
-              className="w-full h-64 border border-gray-300 rounded p-2"
+              className="w-full h-[60vh] border border-gray-300 dark:border-gray-700 rounded p-2"
               required
             ></textarea>
             <button
