@@ -3,6 +3,10 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
+const JWT_EXPIRES_SECONDS = 60 * 60 * 24;
+const DUMMY_HASH =
+  "$2a$10$KIX/8sW3x3lP1n7i6E1w8u3hQKq5N7e2v1a8BqQH6G1nE7Hq1m0y."; // any valid bcrypt hash
+
 export async function POST(request: Request) {
   const body = await request.json();
   const { username, password } = body;
@@ -18,8 +22,10 @@ export async function POST(request: Request) {
     const user = await prisma.user.findUnique({
       where: { username: username },
     });
+    
+    const hash = user?.password ?? DUMMY_HASH;
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(password, hash))) {
       return Response.json(
         { error: "Invalid username or password" },
         { status: 401 }
@@ -42,7 +48,7 @@ export async function POST(request: Request) {
           role: user.role,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "24h" }
+        { expiresIn: JWT_EXPIRES_SECONDS }
       );
     } catch (err) {
       console.log(err);
@@ -52,9 +58,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const clientType = request.headers.get("X-Client-Type");
+    if (clientType === "mobile") {
+      return Response.json(
+        {
+          message: "Login successful! Happy reading!",
+          token: token,
+          user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role },
+        },
+        { status: 200 }
+      );
+    }
+
     const response = Response.json({
       message: "Login successful! Happy reading!",
-      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role, token },
+      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role },
     });
 
     const cookieStore = await cookies();
@@ -64,7 +82,7 @@ export async function POST(request: Request) {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      maxAge: 3600,
+      maxAge: JWT_EXPIRES_SECONDS,
     });
 
     return response;
