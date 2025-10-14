@@ -39,11 +39,11 @@ model Page {
   content     String
   authorId    String
   author      User         @relation("PageAuthors", fields: [authorId], references: [id])
-  revisions   Revision[]
+  revisions   Revision[]  
   tags        PageTag[]
   comments    Comment[]
   parentId    String?      
-  parent      Page?        @relation("SubPages", fields: [parentId], references: [id])
+  parent      Page?        @relation("SubPages", fields: [parentId], references: [id], onDelete: SetNull)
   children    Page[]       @relation("SubPages")
   isPublished Boolean      @default(false)
   publishedAt DateTime?
@@ -54,7 +54,7 @@ model Page {
 model Revision {
   id          String   @id @default(cuid())
   pageId      String
-  page        Page     @relation(fields: [pageId], references: [id])
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
   content     String   
@@ -65,7 +65,7 @@ model Revision {
 model Comment {
   id          String   @id @default(cuid())
   pageId      String
-  page        Page     @relation(fields: [pageId], references: [id])
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
   content     String
@@ -86,7 +86,7 @@ model Tag {
 model PageTag {
   pageId String
   tagId  String
-  page   Page @relation(fields: [pageId], references: [id])
+  page   Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
   tag    Tag  @relation(fields: [tagId], references: [id])
 
   @@id([pageId, tagId])

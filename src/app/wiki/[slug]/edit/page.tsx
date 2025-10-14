@@ -87,6 +87,26 @@ export default async function WikiEditPage({
     redirect(`/wiki/${slug}`);
   }
 
+  async function deletePage() {
+    "use server";
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to delete page");
+    }
+
+    redirect(`/`);
+  }
+
   if (!page) {
     return (
       <div>
@@ -130,7 +150,7 @@ export default async function WikiEditPage({
         By {page.author.username} on{" "}
         {new Date(page.createdAt).toLocaleDateString()}
       </p>
-      {user && (
+      {user.username && (
         <div className="mt-4">
           <form action={editPage}>
             <textarea
@@ -146,9 +166,14 @@ export default async function WikiEditPage({
               Save Changes
             </button>
           </form>
+          <form action={deletePage}>
+              <button className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+                Delete Page
+              </button>
+            </form>
         </div>
       )}
-      {!user && (
+      {!user.username && (
         <div className="mt-4">
           <p>You must be signed in to edit this page.</p>
           <Link href="/signin">Go to Sign In</Link>

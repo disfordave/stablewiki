@@ -63,3 +63,21 @@ export async function POST(request: Request) {
     return Response.json({ error: "Failed to create page" }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+
+  try {
+    const page = await prisma.page.delete({
+      where: { slug },
+     
+    });
+    return Response.json(page, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to delete page" }, { status: 500 });
+  }
+}
