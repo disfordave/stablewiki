@@ -2,7 +2,7 @@ import WikiList from "@/components/WikiList";
 import type { Page } from "@/lib/types";
 import Link from "next/link";
 
-export default async function Page({
+export default async function SearchPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
