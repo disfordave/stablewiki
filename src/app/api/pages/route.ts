@@ -1,9 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/lib/types";
+import { type NextRequest } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+
+  const searchParams = request.nextUrl.searchParams
+  const query = searchParams.get('q') || ''
+  
   try {
     const pages = await prisma.page.findMany({
+      where: {
+        title: {
+          contains: query,
+        },
+      },
       include: {
         author: true,
         tags: { include: { tag: true } },

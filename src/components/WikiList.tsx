@@ -1,18 +1,19 @@
 import { Page } from "@/lib/types";
 
-export default async function WikiList() {
+export default async function WikiList({
+  pages
+}: {
+  pages: Page[] | undefined;
+}) {
   let pagesList: Page[] = [];
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pages`);
-    if (!res.ok) throw new Error("Failed to fetch pages");
-    const pages = await res.json();
+  if (pages) {
     pagesList = pages;
-  } catch (err) {
-    console.error(err);
-    return <p className="text-red-500">Failed to load pages 😢</p>;
   }
 
+  if (pagesList.length === 0) {
+    return <p className="mt-4">No pages found.</p>;
+  }
+  
   return (
     <>
       <ul className="flex flex-col gap-4 mt-4">

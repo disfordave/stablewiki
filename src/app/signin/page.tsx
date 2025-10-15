@@ -62,17 +62,18 @@ export default async function SignIn({
   const success = params.success as string | undefined;
   return (
     <div>
-      <h1>Sign In</h1>
-      <form action={signIn}>
-        <input name="username" type="text" placeholder="Username" required />
+      <h1 className="text-4xl font-bold mb-4">Sign In</h1>
+      <form action={signIn} className="flex flex-col gap-2">
+        <input className="secondaryBackground interactiveElement w-full" name="username" type="text" placeholder="Username" required />
         <input
+          className="secondaryBackground interactiveElement w-full"
           name="password"
           type="password"
           placeholder="Password"
           required
         />
-        <button type="submit">Login</button>
-        <Link href="/signup">Don&apos;t have an account? Sign Up</Link>
+        <button type="submit" className="interactiveElement w-full">Login</button>
+        <Link href="/signup" className="interactiveElement">Don&apos;t have an account? Sign Up</Link>
         <p className="text-green-500">{success && <span>{success}</span>}</p>
         <p className="text-red-500">{error && <span>{error}</span>}</p>
       </form>
