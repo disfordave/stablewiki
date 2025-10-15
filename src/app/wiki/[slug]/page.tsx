@@ -3,6 +3,15 @@ import { Page } from "@/lib/types";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
+function WikiMarkdown({ content }: { content: string }) {
+  const processed = content.replace(
+    /\[\[([^\]]+)\]\]/g,
+    (match, p1) => `[${p1}](/wiki/${encodeURIComponent(p1.trim())})`
+  );
+
+  return <Markdown>{processed}</Markdown>;
+}
+
 export default async function WikiPage({
   params,
 }: {
@@ -70,7 +79,7 @@ export default async function WikiPage({
         })}
       </p>
       <div className="my-8 prose dark:prose-invert max-w-none prose-hr:mt-8 prose-hr:mb-8">
-        <Markdown>{page.content}</Markdown>
+        <WikiMarkdown content={page.content} />
       </div>
       {user && (
         <div className="flex gap-2">
