@@ -139,7 +139,7 @@ export default async function WikiEditPage({
         ) : (
           <div>
             <p>You must be signed in to create a new page.</p>
-            <Link href="/signin">Go to Sign In</Link>
+            <Link href="/app/signin">Go to Sign In</Link>
           </div>
         )}
       </div>
@@ -181,7 +181,7 @@ export default async function WikiEditPage({
       {!user.username && (
         <div className="mt-4">
           <p>You must be signed in to edit this page.</p>
-          <Link href="/signin">Go to Sign In</Link>
+          <Link href="/app/signin">Go to Sign In</Link>
         </div>
       )}
     </div>

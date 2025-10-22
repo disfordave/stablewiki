@@ -1,6 +1,10 @@
+import { WIKI_DISABLE_SIGNUP, WIKI_HOMEPAGE_LINK } from "@/config";
 import { redirect } from "next/navigation";
 
 export default function SignupPage() {
+  if (WIKI_DISABLE_SIGNUP) {
+    redirect(WIKI_HOMEPAGE_LINK);
+  }
   async function handleSignup(formData: FormData) {
     "use server";
     const username = formData.get("username")?.toString() || "";
@@ -23,7 +27,7 @@ export default function SignupPage() {
     } else {
       const data = await res.json();
       redirect(
-        `/signup?error=${encodeURIComponent(
+        `/app/signup?error=${encodeURIComponent(
           data.error || "An unexpected error occurred"
         )}`
       );

@@ -18,7 +18,7 @@ export default async function WikiPage({
           History for: {decodeURIComponent(slug)} (ver. {version})
         </h1>
         <p>You must be signed in to view this page.</p>
-        <Link href="/signin">Go to Sign In</Link>
+        <Link href="/app/signin">Go to Sign In</Link>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default async function WikiPage({
         ) : (
           <div>
             <p>You must be signed in to create a new page.</p>
-            <Link href="/signin">Go to Sign In</Link>
+            <Link href="/app/signin">Go to Sign In</Link>
           </div>
         )}
       </div>

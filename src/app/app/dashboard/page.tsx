@@ -13,7 +13,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold">Access Denied</h1>
         <p>You must be signed in to view this page.</p>
         <p>
-          <Link href="/signin">
+          <Link href="/app/signin">
             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
               Go to Sign In
             </button>
@@ -41,12 +41,12 @@ export default async function DashboardPage() {
       const cookieStore = await cookies();
       cookieStore.delete("jwt");
       redirect(
-        `/signin?success=${encodeURIComponent("Account deleted successfully")}`
+        `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`
       );
     } else {
       const data = await res.json();
       redirect(
-        `/dashboard?error=${encodeURIComponent(
+        `/app/dashboard?error=${encodeURIComponent(
           data.error || "An unexpected error occurred"
         )}`
       );
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
           </button>
         </Link>
       </p>
-      <>
+      {/* <>
         <form action={deleteAccount}>
           <button
             type="submit"
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
             Delete Account
           </button>
         </form>
-      </>
+      </> */}
     </>
   );
 }

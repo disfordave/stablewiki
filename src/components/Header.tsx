@@ -22,10 +22,10 @@ export default async function Header() {
         {user.username ? (
           <div className="flex gap-2 items-center">
             <p className="font-bold hover:underline">
-              <Link href={`/dashboard`}>{user.username}</Link>
+              <Link href={`/app/dashboard`}>{user.username}</Link>
             </p>
             <p className="hover:underline">
-              <Link className="hover:underline" href={"/upload"}>
+              <Link className="hover:underline" href={"/app/upload"}>
                 Upload
               </Link>
             </p>
@@ -36,7 +36,7 @@ export default async function Header() {
             </form>
           </div>
         ) : (
-          <Link className="hover:underline" href={"/signin"}>
+          <Link className="hover:underline" href={"/app/signin"}>
             Sign In
           </Link>
         )}

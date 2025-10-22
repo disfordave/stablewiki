@@ -16,7 +16,7 @@ export default async function WikiHistoryPage({
           History for: {decodeURIComponent(slug)}
         </h1>
         <p>You must be signed in to view this page.</p>
-        <Link href="/signin">Go to Sign In</Link>
+        <Link href="/app/signin">Go to Sign In</Link>
       </div>
     );
   }

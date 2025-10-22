@@ -10,14 +10,14 @@ export default async function SignIn({
 }) {
   const user = await getUser();
   if (user.username) {
-    redirect(`/dashboard`);
+    redirect(`/app/dashboard`);
   }
 
   async function signIn(formData: FormData) {
     "use server";
 
     if (user.username) {
-      redirect(`/dashboard`);
+      redirect(`/app/dashboard`);
     }
 
     //Extracting form data
@@ -40,7 +40,7 @@ export default async function SignIn({
 
     if (!res.ok) {
       redirect(
-        `/signin?error=${encodeURIComponent("An unexpected error occurred")}`
+        `/app/signin?error=${encodeURIComponent("An unexpected error occurred")}`
       );
     }
 
@@ -54,7 +54,7 @@ export default async function SignIn({
       sameSite: "lax",
     });
 
-    redirect(`/dashboard`);
+    redirect(`/app/dashboard`);
   }
 
   const params = await searchParams;

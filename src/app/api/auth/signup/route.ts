@@ -2,10 +2,18 @@ import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
+import { WIKI_DISABLE_SIGNUP } from "@/config";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const { username, password } = body;
+
+  if (WIKI_DISABLE_SIGNUP) {
+    return Response.json(
+      { error: "User signup has been disabled." },
+      { status: 403 }
+    );
+  }
 
   if (!username || !password) {
     return Response.json(

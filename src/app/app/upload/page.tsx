@@ -47,7 +47,7 @@ export default async function UploadPage() {
 
   if (!user.username) {
     redirect(
-      `/signin?error=${encodeURIComponent(
+      `/app/signin?error=${encodeURIComponent(
         "You must be signed in to upload media"
       )}`
     );
