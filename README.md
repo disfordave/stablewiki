@@ -23,6 +23,16 @@ To install StableWiki, follow these steps:
    npm run dev
    ```
 
+## Configuration
+`src/config.ts` contains various configuration options for StableWiki. such as...
+
+ - `WIKI_NAME`: The name of your wiki.
+ - `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki.
+ - `WIKI_DESCRIPTION`: A brief description of your wiki.
+ - `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki.
+ - `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder.
+ - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads.
+
 ## Important Notes
 
 1. **StableWiki is a still in the very, very early stages of development.**

@@ -1,4 +1,4 @@
-import { WIKI_DISABLE_MEDIA } from "@/lib/config";
+import { WIKI_DISABLE_MEDIA } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { writeFile, mkdir } from "fs/promises";

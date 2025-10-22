@@ -1,5 +1,5 @@
 import { getUser, signOutUser } from "@/lib/auth/functions";
-import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/lib/config";
+import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

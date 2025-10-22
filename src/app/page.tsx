@@ -1,4 +1,4 @@
-import { WIKI_HOMEPAGE_LINK } from "@/lib/config";
+import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { redirect } from "next/navigation";
 
 export default function Home() {

@@ -6,7 +6,7 @@ import {
   WIKI_COPYRIGHT_HOLDER_URL,
   WIKI_DESCRIPTION,
   WIKI_NAME,
-} from "@/lib/config";
+} from "@/config";
 
 import Header from "@/components/Header";
 import Head from "next/head";

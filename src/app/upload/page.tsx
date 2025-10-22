@@ -1,5 +1,5 @@
 import { getUser } from "@/lib/auth/functions";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/lib/config";
+import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { redirect } from "next/navigation";
 
 export default async function UploadPage() {
