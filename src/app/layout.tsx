@@ -9,6 +9,7 @@ import {
 } from "@/lib/config";
 
 import Header from "@/components/Header";
+import Head from "next/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="apple-mobile-web-app-title" content="StableWiki" />
+      </Head>
       <body
         className={`${geistSans.className} ${geistMono.variable} antialiased background`}
       >
