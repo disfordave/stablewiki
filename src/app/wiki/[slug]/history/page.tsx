@@ -1,3 +1,4 @@
+import { getUser } from "@/lib/auth/functions";
 import Link from "next/link";
 
 export default async function WikiHistoryPage({
@@ -6,9 +7,26 @@ export default async function WikiHistoryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const user = await getUser();
+
+  if (!user.username) {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold">
+          History for: {decodeURIComponent(slug)}
+        </h1>
+        <p>You must be signed in to view this page.</p>
+        <Link href="/signin">Go to Sign In</Link>
+      </div>
+    );
+  }
 
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/history`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/history`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
   )
     .then((res) => res.json())
     .then((data) => data.page || []);

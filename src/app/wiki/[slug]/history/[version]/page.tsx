@@ -9,12 +9,29 @@ export default async function WikiPage({
   params: Promise<{ slug: string; version: string }>;
 }) {
   const { slug, version } = await params;
+  const user = await getUser();
+
+  if (!user.username) {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold">
+          History for: {decodeURIComponent(slug)} (ver. {version})
+        </h1>
+        <p>You must be signed in to view this page.</p>
+        <Link href="/signin">Go to Sign In</Link>
+      </div>
+    );
+  }
 
   let page: Page | null = null;
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/${version}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/${version}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        },
+      }
     );
     if (!res.ok) throw new Error("Failed to fetch page");
 
@@ -23,7 +40,7 @@ export default async function WikiPage({
     console.error(err);
     return <p className="text-red-500">Failed to load page 😢</p>;
   }
-  const user = await getUser();
+
 
   if (!page) {
     return (

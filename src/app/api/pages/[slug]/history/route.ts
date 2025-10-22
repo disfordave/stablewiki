@@ -1,17 +1,27 @@
 import { prisma } from "@/lib/prisma";
+import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+
+  if (!validAuthorizationWithJwt(request)) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const page = await prisma.page.findUnique({
       where: { slug: encodeURIComponent(slug) },
-      include: { author: true, tags: { include: { tag: true } }, revisions: {
+      include: {
+        author: true,
+        tags: { include: { tag: true } },
+        revisions: {
           orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
           include: { author: true },
-        }, },
+        },
+      },
     });
 
     if (!page) {
@@ -20,11 +30,11 @@ export async function GET(
       });
     }
     return Response.json({
-      page: { 
+      page: {
         id: page.id,
         title: page.title,
-        revisions: page.revisions.map(rev => ({
-            author: { id: rev.author.id, username: rev.author.username },
+        revisions: page.revisions.map((rev) => ({
+          author: { id: rev.author.id, username: rev.author.username },
           id: rev.id,
           version: rev.version,
           content: rev.content,

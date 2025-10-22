@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/lib/types";
+import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { type NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -55,6 +56,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
   const { title, content, author } = await request.json();
+
+    if (!validAuthorizationWithJwt(request)) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
   if (!title || !content || !author) {
     return Response.json({ error: "Missing fields" }, { status: 400 });

@@ -29,7 +29,7 @@ export default async function WikiEditPage({
     "use server";
     const content = formData.get("content") as string;
 
-    if (!user) {
+    if (!user.username) {
       throw new Error("User not found");
     }
 
@@ -37,6 +37,7 @@ export default async function WikiEditPage({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({
         title: decodeURIComponent(slug),
@@ -67,6 +68,7 @@ export default async function WikiEditPage({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
           title: decodeURIComponent(slug),
@@ -95,6 +97,9 @@ export default async function WikiEditPage({
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
     );
 
