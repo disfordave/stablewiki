@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StableWiki
 
-## Getting Started
+StableWiki is an open-source Next.js application designed to provide a user-friendly platform for collaborative knowledge sharing. 
 
-First, run the development server:
+## Installation
+To install StableWiki, follow these steps:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/stablewiki.git
+    ```
+2. Navigate to the project directory:
+   ```bash
+   cd stablewiki
+   ```
+3. Install the dependencies:
+   ```bash
+   npm install
+   ```
+4. Change .env.example to .env and configure your environment variables.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+5. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Important Notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **StableWiki is a still in the very, very early stages of development.**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. StableWiki relies on Node.js based modules that require a full Node.js environment to run properly. **Serverless platforms that do not support full Node.js modules nor persistent file storage will not be able to host StableWiki.** 
 
-## Learn More
+## Features
+- User authentication and authorization
+- Rich text editor for creating and editing articles
+- Version control for articles
+- Search functionality
+- Responsive design for mobile and desktop  
+- API integration for external data sources
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
+Contributions are welcome! Especially for contributions to make StableWiki compatible with serverless platforms and external storage solutions! 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Please follow these steps to contribute:
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Make your changes and commit them:
+   ```bash
+   git commit -m 'Add some feature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a pull request.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
