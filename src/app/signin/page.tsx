@@ -63,20 +63,44 @@ export default async function SignIn({
   return (
     <div>
       <h1 className="text-4xl font-bold mb-4">Sign In</h1>
-      <form action={signIn} className="flex flex-col gap-2">
-        <input className="secondaryBackground interactiveElement w-full" name="username" type="text" placeholder="Username" required />
-        <input
-          className="secondaryBackground interactiveElement w-full"
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-        />
-        <button type="submit" className="interactiveElement w-full">Login</button>
-        <Link href="/signup" className="interactiveElement">Don&apos;t have an account? Sign Up</Link>
-        <p className="text-green-500">{success && <span>{success}</span>}</p>
-        <p className="text-red-500">{error && <span>{error}</span>}</p>
+
+      <form action={signIn} className="flex flex-col gap-4 mt-4">
+        <div>
+          <label htmlFor="username" className="block mb-1">
+            Username:
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className="block mb-1">
+            Password:
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Sign Up
+        </button>
       </form>
+      <Link href="/signup" className="mt-4 inline-block">
+        Don&apos;t have an account? <span className="underline">Sign Up</span>
+      </Link>
+      <p className="text-green-500">{success && <span>{success}</span>}</p>
+      <p className="text-red-500">{error && <span>{error}</span>}</p>
     </div>
   );
 }
