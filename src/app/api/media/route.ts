@@ -1,9 +1,13 @@
 import { WIKI_DISABLE_MEDIA } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
+import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
+  if (!validAuthorizationWithJwt(request)) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
   
   const body = await request.formData();
   const title = body.get("title") as string;

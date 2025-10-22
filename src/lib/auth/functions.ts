@@ -13,6 +13,7 @@ export async function getUser() {
       Authorization: `Bearer ${token}`,
     },
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!res.ok) {

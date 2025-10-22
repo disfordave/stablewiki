@@ -3,7 +3,6 @@ import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/lib/config";
 import { redirect } from "next/navigation";
 
 export default async function UploadPage() {
-
   if (WIKI_DISABLE_MEDIA) {
     redirect(WIKI_HOMEPAGE_LINK);
   }
@@ -27,10 +26,16 @@ export default async function UploadPage() {
 
     formData.append("user", JSON.stringify(user));
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/media`, {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/media`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -41,7 +46,11 @@ export default async function UploadPage() {
   }
 
   if (!user.username) {
-    redirect(`/signin?error=${encodeURIComponent("You must be signed in to upload media")}`);
+    redirect(
+      `/signin?error=${encodeURIComponent(
+        "You must be signed in to upload media"
+      )}`
+    );
   }
 
   return (

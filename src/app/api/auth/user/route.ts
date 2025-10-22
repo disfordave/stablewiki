@@ -33,7 +33,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     };
 
     return Response.json(
-      { id: decodedToken.id, username: decodedToken.username, avatarUrl: decodedToken.avatarUrl, role: decodedToken.role },
+      { id: decodedToken.id, username: decodedToken.username, avatarUrl: decodedToken.avatarUrl, role: decodedToken.role, token },
       { status: 200 }
     );
   } catch (error) {
