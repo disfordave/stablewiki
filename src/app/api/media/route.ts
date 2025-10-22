@@ -5,6 +5,13 @@ import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
+  if (WIKI_DISABLE_MEDIA) {
+    return Response.json(
+      { error: "Media uploads are disabled" },
+      { status: 403 },
+    );
+  }
+
   if (!validAuthorizationWithJwt(request)) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -18,13 +25,6 @@ export async function POST(request: NextRequest) {
     avatarUrl?: string;
     role: string;
   } = JSON.parse(body.get("user") as string);
-
-  if (WIKI_DISABLE_MEDIA) {
-    return Response.json(
-      { error: "Media uploads are disabled" },
-      { status: 403 },
-    );
-  }
 
   if (!title || !media || !user) {
     return Response.json({ error: "Missing fields" }, { status: 400 });

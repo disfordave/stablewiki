@@ -93,10 +93,10 @@ export default async function SignIn({
           type="submit"
           className="rounded bg-blue-500 px-4 py-2 text-white"
         >
-          Sign Up
+          Sign In
         </button>
       </form>
-      <Link href="/signup" className="mt-4 inline-block">
+      <Link href="/app/signup" className="mt-4 inline-block">
         Don&apos;t have an account? <span className="underline">Sign Up</span>
       </Link>
       <p className="text-green-500">{success && <span>{success}</span>}</p>

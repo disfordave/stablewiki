@@ -35,6 +35,7 @@ To install StableWiki, follow these steps:
 - `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki.
 - `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder.
 - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads.
+- `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup.
 
 ## Important Notes
 
