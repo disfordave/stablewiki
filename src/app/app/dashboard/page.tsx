@@ -1,8 +1,8 @@
 import { getUser } from "@/lib/auth/functions";
 import { Role } from "@prisma/client";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
+// import { redirect } from "next/navigation";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -23,35 +23,35 @@ export default async function DashboardPage() {
     );
   }
 
-  async function deleteAccount() {
-    "use server";
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/danger/user`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: user.username }),
-      },
-    );
+  // async function deleteAccount() {
+  //   "use server";
+  //   const res = await fetch(
+  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/danger/user`,
+  //     {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ username: user.username }),
+  //     },
+  //   );
 
-    if (res.ok) {
-      // Redirect to signin page with success message
-      const cookieStore = await cookies();
-      cookieStore.delete("jwt");
-      redirect(
-        `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`,
-      );
-    } else {
-      const data = await res.json();
-      redirect(
-        `/app/dashboard?error=${encodeURIComponent(
-          data.error || "An unexpected error occurred",
-        )}`,
-      );
-    }
-  }
+  //   if (res.ok) {
+  //     // Redirect to signin page with success message
+  //     const cookieStore = await cookies();
+  //     cookieStore.delete("jwt");
+  //     redirect(
+  //       `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`,
+  //     );
+  //   } else {
+  //     const data = await res.json();
+  //     redirect(
+  //       `/app/dashboard?error=${encodeURIComponent(
+  //         data.error || "An unexpected error occurred",
+  //       )}`,
+  //     );
+  //   }
+  // }
 
   return (
     <>
