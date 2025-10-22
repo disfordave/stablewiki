@@ -50,7 +50,7 @@ export default async function WikiHistoryPage({
       <h1 className="text-3xl font-bold">
         History for: {decodeURIComponent(slug)}
       </h1>
-      <ul className="flex flex-col gap-4 mt-4">
+      <ul className="mt-4 flex flex-col gap-4">
         {revisions.map(
           (rev: {
             id: string;
@@ -76,7 +76,7 @@ export default async function WikiHistoryPage({
         )}
       </ul>
       <Link href={`/wiki/${slug}`}>
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+        <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
           Back to Page
         </button>
       </Link>

@@ -37,9 +37,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
       </Head>
       <body
-        className={`${geistSans.className} ${geistMono.variable} antialiased background`}
+        className={`${geistSans.className} ${geistMono.variable} background antialiased`}
       >
-        <div className="min-h-screen p-4 mx-auto max-w-2xl">
+        <div className="mx-auto min-h-screen max-w-2xl p-4">
           <Header />
           {children}
           <footer className="mt-4">

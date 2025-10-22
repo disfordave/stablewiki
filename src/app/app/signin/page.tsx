@@ -62,11 +62,11 @@ export default async function SignIn({
   const success = params.success as string | undefined;
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-4">Sign In</h1>
+      <h1 className="mb-4 text-4xl font-bold">Sign In</h1>
 
-      <form action={signIn} className="flex flex-col gap-4 mt-4">
+      <form action={signIn} className="mt-4 flex flex-col gap-4">
         <div>
-          <label htmlFor="username" className="block mb-1">
+          <label htmlFor="username" className="mb-1 block">
             Username:
           </label>
           <input
@@ -74,11 +74,11 @@ export default async function SignIn({
             id="username"
             name="username"
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
           />
         </div>
         <div>
-          <label htmlFor="password" className="block mb-1">
+          <label htmlFor="password" className="mb-1 block">
             Password:
           </label>
           <input
@@ -86,12 +86,12 @@ export default async function SignIn({
             id="password"
             name="password"
             required
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
           />
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="rounded bg-blue-500 px-4 py-2 text-white"
         >
           Sign Up
         </button>

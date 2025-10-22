@@ -14,7 +14,7 @@ export default async function DashboardPage() {
         <p>You must be signed in to view this page.</p>
         <p>
           <Link href="/app/signin">
-            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+            <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
               Go to Sign In
             </button>
           </Link>
@@ -74,18 +74,18 @@ export default async function DashboardPage() {
       <p>This is a placeholder page. More features will be added soon!</p>
       <p>Your Role: {user.role as Role | null}</p>
       {user.role === Role.ADMIN && (
-        <p className="text-red-500 font-bold">
+        <p className="font-bold text-red-500">
           You have administrative privileges.
         </p>
       )}
 
-      <h2 className="text-xl font-bold mt-4 mb-2">User Details (Debug Info)</h2>
-      <pre className="overflow-auto p-4 rounded-2xl bg-white dark:bg-gray-800">
+      <h2 className="mt-4 mb-2 text-xl font-bold">User Details (Debug Info)</h2>
+      <pre className="overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
         {JSON.stringify(user, null, 2)}
       </pre>
       <p>
         <Link href="/">
-          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+          <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
             Go to Home
           </button>
         </Link>

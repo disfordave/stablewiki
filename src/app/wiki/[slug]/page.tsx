@@ -45,7 +45,7 @@ export default async function WikiPage({
         {user.username ? (
           <div>
             <Link href={`/wiki/${slug}/edit`}>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded">
+              <button className="rounded bg-blue-500 px-4 py-2 text-white">
                 Create Page
               </button>
             </Link>
@@ -78,21 +78,21 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <div className="my-8 prose dark:prose-invert max-w-none prose-hr:mt-8 prose-hr:mb-8">
+      <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 my-8 max-w-none">
         <WikiMarkdown content={page.content} />
       </div>
       {user && (
         <div className="flex gap-2">
           <div className="mt-4">
             <Link href={`/wiki/${page.slug}/edit`}>
-              <button className="px-4 py-2 bg-green-500 text-white rounded">
+              <button className="rounded bg-green-500 px-4 py-2 text-white">
                 Edit Page
               </button>
             </Link>
           </div>
           <div className="mt-4">
             <Link href={`/wiki/${page.slug}/history`}>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded">
+              <button className="rounded bg-blue-500 px-4 py-2 text-white">
                 History
               </button>
             </Link>

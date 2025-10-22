@@ -58,27 +58,27 @@ export default async function UploadPage() {
       <h1 className="text-3xl font-bold">Upload Media</h1>
       <form action={uploadMedia} className="mt-4 flex flex-col gap-4">
         <div>
-          <label className="block mb-2 font-medium">Title</label>
+          <label className="mb-2 block font-medium">Title</label>
           <input
             type="text"
             name="title"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
             required
           />
         </div>
         <div>
-          <label className="block mb-2 font-medium">File</label>
+          <label className="mb-2 block font-medium">File</label>
           <input
             type="file"
             name="media"
             accept="image/*"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
             required
           />
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="rounded bg-blue-500 px-4 py-2 text-white"
         >
           Upload
         </button>

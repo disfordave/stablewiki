@@ -16,11 +16,11 @@ export default async function WikiList({
 
   return (
     <>
-      <ul className="flex flex-col gap-4 mt-4">
+      <ul className="mt-4 flex flex-col gap-4">
         {pagesList.map((page) => (
           <li key={page.id}>
             <a href={`/wiki/${page.slug}`} className="hover:underline">
-              <div className="p-4 rounded-2xl bg-white dark:bg-gray-800">
+              <div className="rounded-2xl bg-white p-4 dark:bg-gray-800">
                 <h2 className="text-2xl font-bold">{page.title}</h2>
                 <p className="text-sm text-gray-500">
                   By {page.author.username} on{" "}

@@ -20,7 +20,7 @@ export default async function Header() {
           <Link href={WIKI_HOMEPAGE_LINK}>{WIKI_NAME}</Link>
         </p>
         {user.username ? (
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <p className="font-bold hover:underline">
               <Link href={`/app/dashboard`}>{user.username}</Link>
             </p>
@@ -41,16 +41,16 @@ export default async function Header() {
           </Link>
         )}
       </header>
-      <form action={search} className="flex gap-2 w-full my-2">
+      <form action={search} className="my-2 flex w-full gap-2">
         <input
           type="text"
           name="search"
-          className="bg-white dark:bg-gray-800 interactiveElement w-full"
+          className="interactiveElement w-full bg-white dark:bg-gray-800"
           placeholder="Search..."
         />
         <button
           type="submit"
-          className=" bg-blue-500 text-white interactiveElement"
+          className="interactiveElement bg-blue-500 text-white"
         >
           Search
         </button>

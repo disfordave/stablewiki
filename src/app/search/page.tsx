@@ -18,7 +18,7 @@ export default async function SearchPage({
   if (!results.ok) {
     return (
       <div>
-        <h1 className="text-2xl font-bold mb-4">Search Results for {query}</h1>
+        <h1 className="mb-4 text-2xl font-bold">Search Results for {query}</h1>
         <p>Failed to fetch search results.</p>
       </div>
     );
@@ -28,7 +28,7 @@ export default async function SearchPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Search Results for {query}</h1>
+      <h1 className="mb-4 text-2xl font-bold">Search Results for {query}</h1>
       {/* Placeholder for search results */}
       {data.length === 0 ? (
         <>

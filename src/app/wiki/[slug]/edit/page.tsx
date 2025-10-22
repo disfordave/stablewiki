@@ -125,12 +125,12 @@ export default async function WikiEditPage({
               <textarea
                 name="content"
                 placeholder="Page content in Markdown"
-                className="w-full h-[60vh] border border-gray-300 dark:border-gray-700 rounded p-2"
+                className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
                 required
               ></textarea>
               <button
                 type="submit"
-                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                className="mt-2 rounded bg-blue-500 px-4 py-2 text-white"
               >
                 Create Page
               </button>
@@ -161,18 +161,18 @@ export default async function WikiEditPage({
             <textarea
               name="content"
               defaultValue={page.content}
-              className="w-full h-[60vh] border border-gray-300 dark:border-gray-700 rounded p-2"
+              className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
               required
             ></textarea>
             <button
               type="submit"
-              className="mt-2 px-4 py-2 bg-green-500 text-white rounded"
+              className="mt-2 rounded bg-green-500 px-4 py-2 text-white"
             >
               Save Changes
             </button>
           </form>
           <form action={deletePage}>
-            <button className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+            <button className="mt-2 rounded bg-red-500 px-4 py-2 text-white">
               Delete Page
             </button>
           </form>
