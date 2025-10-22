@@ -6,7 +6,7 @@ StableWiki is an open-source Next.js application designed to provide a user-frie
 To install StableWiki, follow these steps:
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/stablewiki.git
+   git clone https://github.com/disfordave/stablewiki.git
     ```
 2. Navigate to the project directory:
    ```bash
