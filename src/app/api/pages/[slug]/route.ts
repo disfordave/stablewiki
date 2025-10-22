@@ -42,21 +42,21 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const { title, content, slug, author } = await request.json();
+  const { title, content, author } = await request.json();
 
-  if (!title || !content || !slug || !author) {
+  if (!title || !content || !author) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
   try {
     const revisionsCount = await prisma.revision.count({
-      where: { page: { slug } },
+      where: { page: { slug: encodeURIComponent(title) } },
     });
     
     const page = await prisma.revision.create({
       data: {
         content,
-        page: { connect: { slug } },
+        page: { connect: { slug: encodeURIComponent(title) } },
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
       }

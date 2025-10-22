@@ -54,18 +54,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const { title, content, slug, author } = await request.json();
+  const { title, content, author } = await request.json();
 
-  if (!title || !content || !slug || !author) {
+  if (!title || !content || !author) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
   try {
     const page = await prisma.page.create({
       data: {
-        title: decodeURIComponent(title),
+        title,
         content: "",
-        slug: slug,
+        slug: encodeURIComponent(title),
         author: { connect: { id: author.id } },
         revisions: {
           create: { content, author: { connect: { id: author.id } } },

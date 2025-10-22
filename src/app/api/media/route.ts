@@ -6,12 +6,9 @@ export async function POST(request: NextRequest) {
   
   const body = await request.formData();
   const title = body.get("title") as string;
-  const slug = body.get("slug") as string;
   const media = body.get("media") as File;
   const user: { id: string; username: string; avatarUrl?: string; role: string } = JSON.parse(body.get("user") as string);
-  
-
-  if (!title || !media || !slug || !user) {
+  if (!title || !media || !user) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
@@ -39,13 +36,13 @@ export async function POST(request: NextRequest) {
   try {
     const page = await prisma.page.create({
       data: {
-        title: `Media:${decodeURIComponent(title)}`,
+        title: `Media:${title}`,
         content: "",
-        slug: `MEDIA_PAGE_${slug}`,
+        slug: `${encodeURIComponent("Media:" + title)}`,
         author: { connect: { id: user.id } },
         revisions: {
           create: {
-            content: `![${decodeURIComponent(title)}](${publicFilePath})`,
+            content: `![${title}](${publicFilePath})`,
             author: { connect: { id: user.id } },
           },
         },

@@ -11,12 +11,11 @@ export default async function UploadPage() {
     }
 
     const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
     const media = formData.get("media") as File;
 
-    console.log({ title, slug, media });
+    console.log({ title, media });
 
-    if (!title || !slug || !media) {
+    if (!title || !media) {
       throw new Error("Missing fields");
     }
 
@@ -32,7 +31,7 @@ export default async function UploadPage() {
       throw new Error(errorData.error || "Failed to upload media");
     }
 
-    redirect(`/wiki/MEDIA_PAGE_${encodeURIComponent(title)}`);
+    redirect(`/wiki/${encodeURIComponent("Media:" + title)}`);
   }
 
   if (!user.username) {
@@ -48,15 +47,6 @@ export default async function UploadPage() {
           <input
             type="text"
             name="title"
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2 font-medium">Slug</label>
-          <input
-            type="text"
-            name="slug"
             className="w-full p-2 border border-gray-300 rounded"
             required
           />

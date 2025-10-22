@@ -39,9 +39,8 @@ export default async function WikiEditPage({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: slug,
+        title: decodeURIComponent(slug),
         content,
-        slug,
         author: user,
       }),
     });
@@ -70,9 +69,8 @@ export default async function WikiEditPage({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: slug,
+          title: decodeURIComponent(slug),
           content,
-          slug,
           author: user,
         }),
       }
