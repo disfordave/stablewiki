@@ -7,7 +7,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   if (!authHeader) {
     return Response.json(
       { error: "Error! Token was not provided." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   if (!token) {
     return Response.json(
       { error: "Error! Token was not provided." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -33,15 +33,21 @@ export async function GET(request: NextRequest): Promise<Response> {
     };
 
     return Response.json(
-      { id: decodedToken.id, username: decodedToken.username, avatarUrl: decodedToken.avatarUrl, role: decodedToken.role, token },
-      { status: 200 }
+      {
+        id: decodedToken.id,
+        username: decodedToken.username,
+        avatarUrl: decodedToken.avatarUrl,
+        role: decodedToken.role,
+        token,
+      },
+      { status: 200 },
     );
   } catch (error) {
     console.log(token);
     console.error(error);
     return Response.json(
       { error: "Invalid or expired token." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 }

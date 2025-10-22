@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   if (!username || !password) {
     return Response.json(
       { error: "Username and password are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -22,13 +22,13 @@ export async function POST(request: Request) {
     const user = await prisma.user.findUnique({
       where: { username: username },
     });
-    
+
     const hash = user?.password ?? DUMMY_HASH;
 
     if (!user || !(await bcrypt.compare(password, hash))) {
       return Response.json(
         { error: "Invalid username or password" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -48,13 +48,13 @@ export async function POST(request: Request) {
           role: user.role,
         },
         process.env.JWT_SECRET,
-        { expiresIn: JWT_EXPIRES_SECONDS }
+        { expiresIn: JWT_EXPIRES_SECONDS },
       );
     } catch (err) {
       console.log(err);
       return Response.json(
         { error: "Failed to sign in user from JWT" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -64,15 +64,26 @@ export async function POST(request: Request) {
         {
           message: "Login successful! Happy reading!",
           token: token,
-          user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role },
+          user: {
+            id: user.id,
+            username: user.username,
+            avatarUrl: user.avatarUrl,
+            role: user.role,
+          },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
     const response = Response.json({
       message: "Login successful! Happy reading!",
-      user: { id: user.id, username: user.username, avatarUrl: user.avatarUrl, role: user.role, token },
+      user: {
+        id: user.id,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+        role: user.role,
+        token,
+      },
     });
 
     const cookieStore = await cookies();

@@ -4,9 +4,12 @@ export async function DELETE(): Promise<Response> {
   // const body = await request.json();
   // const { username } = body;
 
-  return Response.json({
-    error: "The user deletion endpoint has been disabled."
-  }, { status: 403 });
+  return Response.json(
+    {
+      error: "The user deletion endpoint has been disabled.",
+    },
+    { status: 403 },
+  );
 
   // if (!username) {
   //   return Response.json({ error: "Username is required" }, { status: 400 });

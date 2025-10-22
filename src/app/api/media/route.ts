@@ -8,16 +8,24 @@ export async function POST(request: NextRequest) {
   if (!validAuthorizationWithJwt(request)) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
-  
+
   const body = await request.formData();
   const title = body.get("title") as string;
   const media = body.get("media") as File;
-  const user: { id: string; username: string; avatarUrl?: string; role: string } = JSON.parse(body.get("user") as string);
+  const user: {
+    id: string;
+    username: string;
+    avatarUrl?: string;
+    role: string;
+  } = JSON.parse(body.get("user") as string);
 
   if (WIKI_DISABLE_MEDIA) {
-    return Response.json({ error: "Media uploads are disabled" }, { status: 403 });
+    return Response.json(
+      { error: "Media uploads are disabled" },
+      { status: 403 },
+    );
   }
-  
+
   if (!title || !media || !user) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
@@ -25,14 +33,14 @@ export async function POST(request: NextRequest) {
   if (!(media instanceof File)) {
     return Response.json({ error: "Invalid media file" }, { status: 400 });
   }
-  
+
   // Ensure the media is not too large (e.g., max 5MB)
   if (media.size > 5 * 1024 * 1024) {
     return Response.json({ error: "Media file is too large" }, { status: 400 });
   }
 
   // Save the media file to the public directory
-  
+
   const buffer = Buffer.from(await media.arrayBuffer());
   const filename = media.name.replaceAll(" ", "_");
   console.log(filename);

@@ -11,14 +11,14 @@ export async function POST(request: Request) {
   if (WIKI_DISABLE_SIGNUP) {
     return Response.json(
       { error: "User signup has been disabled." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
   if (!username || !password) {
     return Response.json(
       { error: "Username and password are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     if (existingUser) {
       return Response.json(
         { error: "Username already taken" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -60,19 +60,25 @@ export async function POST(request: Request) {
           role: newUser.role,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "1h" },
       );
     } catch (err) {
       console.log(err);
       return Response.json(
         { error: "Failed to sign up user from JWT" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     const response = Response.json({
       message: "Signup successful! Welcome aboard!",
-      user: { id: newUser.id, username: newUser.username, avatarUrl: newUser.avatarUrl, role: newUser.role, token },
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        avatarUrl: newUser.avatarUrl,
+        role: newUser.role,
+        token,
+      },
     });
 
     const cookieStore = await cookies();

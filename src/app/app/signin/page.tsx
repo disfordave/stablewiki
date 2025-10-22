@@ -35,12 +35,12 @@ export default async function SignIn({
           "Content-Type": "application/json",
         },
         body: JSON.stringify(rawFormData),
-      }
+      },
     );
 
     if (!res.ok) {
       redirect(
-        `/app/signin?error=${encodeURIComponent("An unexpected error occurred")}`
+        `/app/signin?error=${encodeURIComponent("An unexpected error occurred")}`,
       );
     }
 

@@ -27,11 +27,12 @@ export default async function WikiPage({
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/${version}`, {
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/${version}`,
+      {
         headers: {
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${user.token}`,
         },
-      }
+      },
     );
     if (!res.ok) throw new Error("Failed to fetch page");
 
@@ -40,7 +41,6 @@ export default async function WikiPage({
     console.error(err);
     return <p className="text-red-500">Failed to load page 😢</p>;
   }
-
 
   if (!page) {
     return (
@@ -71,7 +71,9 @@ export default async function WikiPage({
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        <Link href={`/wiki/${page.slug}/history/${version}`}>{page.title} (ver. {version})</Link>
+        <Link href={`/wiki/${page.slug}/history/${version}`}>
+          {page.title} (ver. {version})
+        </Link>
       </h1>
       <p className="text-sm text-gray-500">
         By {page.author.username} on{" "}

@@ -18,7 +18,7 @@ export default function SignupPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
-      }
+      },
     );
 
     if (res.ok) {
@@ -28,8 +28,8 @@ export default function SignupPage() {
       const data = await res.json();
       redirect(
         `/app/signup?error=${encodeURIComponent(
-          data.error || "An unexpected error occurred"
-        )}`
+          data.error || "An unexpected error occurred",
+        )}`,
       );
     }
   }

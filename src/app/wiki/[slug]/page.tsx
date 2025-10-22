@@ -6,7 +6,7 @@ import Markdown from "react-markdown";
 function WikiMarkdown({ content }: { content: string }) {
   const processed = content.replace(
     /\[\[([^\]]+)\]\]/g,
-    (match, p1) => `[${p1}](/wiki/${encodeURIComponent(p1.trim())})`
+    (match, p1) => `[${p1}](/wiki/${encodeURIComponent(p1.trim())})`,
   );
 
   return <Markdown>{processed}</Markdown>;
@@ -23,7 +23,7 @@ export default async function WikiPage({
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
     );
     if (!res.ok) throw new Error("Failed to fetch page");
 

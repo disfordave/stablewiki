@@ -1,4 +1,3 @@
-import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { redirect } from "next/navigation";
 

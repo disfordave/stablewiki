@@ -28,7 +28,5 @@ export async function signOutUser() {
   "use server";
   const cookieStore = await cookies();
   cookieStore.delete("jwt");
-  redirect(
-    `/signin?success=${encodeURIComponent("Successfully signed out!")}`
-  );
+  redirect(`/signin?success=${encodeURIComponent("Successfully signed out!")}`);
 }

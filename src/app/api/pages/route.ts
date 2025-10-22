@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
           tags: page.tags.map((t) => {
             return { id: t.tag.id, name: t.tag.name };
           }),
-        })) as Page[]
+        })) as Page[],
     );
   } catch (error) {
     console.error(error);

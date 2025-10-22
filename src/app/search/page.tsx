@@ -11,8 +11,8 @@ export default async function SearchPage({
 
   const results = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(
-      query as string
-    )}`
+      query as string,
+    )}`,
   );
 
   if (!results.ok) {

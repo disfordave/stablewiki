@@ -4,7 +4,7 @@ import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string; version: string }> }
+  { params }: { params: Promise<{ slug: string; version: string }> },
 ) {
   const { slug, version } = await params;
 

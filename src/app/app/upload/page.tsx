@@ -34,7 +34,7 @@ export default async function UploadPage() {
         },
         method: "POST",
         body: formData,
-      }
+      },
     );
 
     if (!response.ok) {
@@ -48,8 +48,8 @@ export default async function UploadPage() {
   if (!user.username) {
     redirect(
       `/app/signin?error=${encodeURIComponent(
-        "You must be signed in to upload media"
-      )}`
+        "You must be signed in to upload media",
+      )}`,
     );
   }
 

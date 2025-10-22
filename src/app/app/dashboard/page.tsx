@@ -33,7 +33,7 @@ export default async function DashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username: user.username }),
-      }
+      },
     );
 
     if (res.ok) {
@@ -41,14 +41,14 @@ export default async function DashboardPage() {
       const cookieStore = await cookies();
       cookieStore.delete("jwt");
       redirect(
-        `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`
+        `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`,
       );
     } else {
       const data = await res.json();
       redirect(
         `/app/dashboard?error=${encodeURIComponent(
-          data.error || "An unexpected error occurred"
-        )}`
+          data.error || "An unexpected error occurred",
+        )}`,
       );
     }
   }
@@ -56,7 +56,7 @@ export default async function DashboardPage() {
   return (
     <>
       <h1 className="text-2xl font-bold">{user.username}&apos;s Dashboard</h1>
-      
+
       {user.avatarUrl && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -4,7 +4,7 @@ import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   try {
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
 

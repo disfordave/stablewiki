@@ -22,11 +22,12 @@ export default async function WikiHistoryPage({
   }
 
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/history`, {
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}/history`,
+    {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
-    }
+    },
   )
     .then((res) => res.json())
     .then((data) => data.page || []);
@@ -71,7 +72,7 @@ export default async function WikiHistoryPage({
                 <p>Summary: {rev.summary || "No summary provided."}</p>
               </Link>
             </li>
-          )
+          ),
         )}
       </ul>
       <Link href={`/wiki/${slug}`}>

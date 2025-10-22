@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
-export function validAuthorizationWithJwt(request: NextRequest | Request): boolean {
+export function validAuthorizationWithJwt(
+  request: NextRequest | Request,
+): boolean {
   try {
     const authHeader = request.headers.get("Authorization");
 

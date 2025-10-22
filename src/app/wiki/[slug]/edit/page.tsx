@@ -14,7 +14,7 @@ export default async function WikiEditPage({
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
     );
     if (!res.ok) throw new Error("Failed to fetch page");
 
@@ -75,7 +75,7 @@ export default async function WikiEditPage({
           content,
           author: user,
         }),
-      }
+      },
     );
 
     if (!res.ok) {
@@ -89,7 +89,7 @@ export default async function WikiEditPage({
 
   async function deletePage() {
     "use server";
-    
+
     if (!user) {
       throw new Error("User not found");
     }
@@ -100,7 +100,7 @@ export default async function WikiEditPage({
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
-      }
+      },
     );
 
     if (!res.ok) {
@@ -172,10 +172,10 @@ export default async function WikiEditPage({
             </button>
           </form>
           <form action={deletePage}>
-              <button className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
-                Delete Page
-              </button>
-            </form>
+            <button className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+              Delete Page
+            </button>
+          </form>
         </div>
       )}
       {!user.username && (
