@@ -1,7 +1,13 @@
 import { getUser } from "@/lib/auth/functions";
+import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/lib/config";
 import { redirect } from "next/navigation";
 
 export default async function UploadPage() {
+
+  if (WIKI_DISABLE_MEDIA) {
+    redirect(WIKI_HOMEPAGE_LINK);
+  }
+
   const user = await getUser();
   async function uploadMedia(formData: FormData) {
     "use server";

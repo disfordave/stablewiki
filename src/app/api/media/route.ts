@@ -1,3 +1,4 @@
+import { WIKI_DISABLE_MEDIA } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
@@ -8,6 +9,11 @@ export async function POST(request: NextRequest) {
   const title = body.get("title") as string;
   const media = body.get("media") as File;
   const user: { id: string; username: string; avatarUrl?: string; role: string } = JSON.parse(body.get("user") as string);
+
+  if (WIKI_DISABLE_MEDIA) {
+    return Response.json({ error: "Media uploads are disabled" }, { status: 403 });
+  }
+  
   if (!title || !media || !user) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
