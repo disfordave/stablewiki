@@ -1,7 +1,11 @@
 import { getUser } from "@/lib/auth/functions";
 import { WIKI_DISABLE_MEDIA, WIKI_NAME } from "@/config";
 import { redirect } from "next/navigation";
-import { DisabledMessage, MustSignInMessage, TransitionFormButton } from "@/components/ui";
+import {
+  DisabledMessage,
+  MustSignInMessage,
+  TransitionFormButton,
+} from "@/components/ui";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 
 export const metadata = {
@@ -53,9 +57,7 @@ export default async function UploadPage() {
   }
 
   if (!user.username) {
-    return (
-      <MustSignInMessage />
-    )
+    return <MustSignInMessage />;
   }
 
   return (

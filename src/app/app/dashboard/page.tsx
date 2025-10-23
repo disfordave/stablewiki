@@ -1,4 +1,8 @@
-import { MustSignInMessage, TransitionFormButton, TransitionLinkButton } from "@/components/ui";
+import {
+  MustSignInMessage,
+  TransitionFormButton,
+  TransitionLinkButton,
+} from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
 import {

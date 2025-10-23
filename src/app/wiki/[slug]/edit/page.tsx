@@ -1,4 +1,8 @@
-import { TransitionFormButton, WikiEditor, MustSignInMessage } from "@/components/ui";
+import {
+  TransitionFormButton,
+  WikiEditor,
+  MustSignInMessage,
+} from "@/components/ui";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
@@ -230,9 +234,7 @@ export default async function WikiEditPage({
           </details>
         </div>
       )}
-      {!user.username && (
-        <MustSignInMessage />
-      )}
+      {!user.username && <MustSignInMessage />}
     </div>
   );
 }
