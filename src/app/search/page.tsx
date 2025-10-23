@@ -1,7 +1,23 @@
 import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
+import { WIKI_NAME } from "@/config";
 import type { Page } from "@/lib/types";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  // read search params
+  const { q } = await searchParams;
+
+  return {
+    title: `Search Results for "${q}" | ${WIKI_NAME}`,
+    description: `Search results for "${q}".`,
+  };
+}
 
 export default async function SearchPage({
   searchParams,

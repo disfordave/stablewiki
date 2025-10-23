@@ -1,5 +1,5 @@
 import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
 import {
   HomeIcon,
@@ -10,6 +10,11 @@ import { Role } from "@prisma/client";
 // import { cookies } from "next/headers";
 // import { redirect } from "next/navigation";
 import Link from "next/link";
+
+export const metadata = {
+  title: "Dashboard | " + WIKI_NAME,
+  description: "Your personal dashboard on " + WIKI_NAME + ".",
+};
 
 export default async function DashboardPage() {
   const user = await getUser();

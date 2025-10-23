@@ -1,10 +1,15 @@
 import { TransitionFormButton } from "@/components/ui";
-import { WIKI_DISABLE_SIGNUP } from "@/config";
+import { WIKI_DISABLE_SIGNUP, WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: "Sign In | " + WIKI_NAME,
+  description: "Sign in to your " + WIKI_NAME + " account.",
+};
 
 export default async function SignIn({
   searchParams,

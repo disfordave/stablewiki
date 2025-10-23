@@ -1,9 +1,14 @@
 import { getUser } from "@/lib/auth/functions";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { TransitionFormButton } from "@/components/ui";
 import { PhotoIcon } from "@heroicons/react/24/solid";
+
+export const metadata = {
+  title: "Upload Media | " + WIKI_NAME,
+  description: "Upload media files to " + WIKI_NAME + ".",
+};
 
 export default async function UploadPage() {
   if (WIKI_DISABLE_MEDIA) {

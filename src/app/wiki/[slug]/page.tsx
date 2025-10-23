@@ -1,9 +1,11 @@
 import { TransitionLinkButton } from "@/components/ui";
+import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
@@ -14,6 +16,42 @@ function WikiMarkdown({ content }: { content: string }) {
   );
 
   return <Markdown>{processed}</Markdown>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  // read route params
+  const { slug } = await params;
+
+  // fetch data
+  let page: Page | null = null;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch page");
+    }
+
+    page = (await res.json()).page;
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (!page) {
+    return {
+      title: `New Page: ${decodeURIComponent(slug)} | ${WIKI_NAME}`,
+      description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(slug)}".`,
+    };
+  }
+
+  return {
+    title: page.title + " | " + WIKI_NAME,
+    description: `Wiki page titled "${page.title}" last edited by ${page.author.username}.`,
+  };
 }
 
 export default async function WikiPage({

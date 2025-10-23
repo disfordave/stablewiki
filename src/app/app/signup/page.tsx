@@ -1,8 +1,13 @@
 import { TransitionFormButton } from "@/components/ui";
-import { WIKI_DISABLE_SIGNUP, WIKI_HOMEPAGE_LINK } from "@/config";
+import { WIKI_DISABLE_SIGNUP, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: "Sign Up | " + WIKI_NAME,
+  description: "Sign up for your " + WIKI_NAME + " account.",
+};
 
 export default async function SignupPage({
   searchParams,
