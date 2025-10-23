@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 // Simple in-memory rate limiter for Next.js
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX = 50; // max 5 requests per window
+const RATE_LIMIT_MAX = 25; // max 25 requests per window
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();

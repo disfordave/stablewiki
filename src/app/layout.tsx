@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {
-  WIKI_COPYRIGHT_HOLDER,
-  WIKI_COPYRIGHT_HOLDER_URL,
-  WIKI_DESCRIPTION,
-  WIKI_NAME,
-} from "@/config";
+import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
-import Header from "@/components/Header";
+import { Header, Footer } from "@/components";
 import Head from "next/head";
 
 const geistSans = Geist({
@@ -35,6 +30,16 @@ export default function RootLayout({
     <html lang="en">
       <Head>
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
+        <meta
+          name="theme-color"
+          content="#f3f4f6"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#101828"
+          media="(prefers-color-scheme: dark)"
+        />
       </Head>
       <body
         className={`${geistSans.className} ${geistMono.variable} background antialiased`}
@@ -42,19 +47,7 @@ export default function RootLayout({
         <div className="mx-auto min-h-screen max-w-2xl p-4">
           <Header />
           {children}
-          <footer className="mt-4">
-            <p className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()}{" "}
-              <a
-                href={WIKI_COPYRIGHT_HOLDER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                {WIKI_COPYRIGHT_HOLDER}
-              </a>
-            </p>
-          </footer>
+          <Footer />
         </div>
       </body>
     </html>
