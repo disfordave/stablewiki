@@ -1,3 +1,4 @@
+import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import Link from "next/link";
 
@@ -75,11 +76,12 @@ export default async function WikiHistoryPage({
           ),
         )}
       </ul>
-      <Link href={`/wiki/${slug}`}>
-        <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
-          Back to Page
-        </button>
-      </Link>
+      <TransitionLinkButton
+        href={`/wiki/${slug}`}
+        className="mt-4 bg-blue-500 text-white hover:bg-blue-600 w-fit"
+      >
+        Back to Page
+      </TransitionLinkButton>
     </div>
   );
 }

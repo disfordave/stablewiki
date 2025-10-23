@@ -84,7 +84,7 @@ export default async function DashboardPage() {
       <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
         {JSON.stringify(user, null, 2)}
       </pre>
-      <div className="mt-4 flex gap-4">
+      <div className="mt-4 flex gap-2">
         <TransitionLinkButton
           href="/"
           className="bg-blue-500 text-white hover:bg-blue-600"

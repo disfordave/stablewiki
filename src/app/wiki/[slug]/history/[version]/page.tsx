@@ -1,3 +1,4 @@
+import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
 import Link from "next/link";
@@ -91,24 +92,21 @@ export default async function WikiPage({
       <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 my-8 max-w-none">
         <Markdown>{page.content}</Markdown>
       </div>
-      {user && (
-        <div className="flex gap-2">
-          <div className="mt-4">
-            <Link href={`/wiki/${page.slug}`}>
-              <button className="rounded bg-green-500 px-4 py-2 text-white">
-                Latest Page
-              </button>
-            </Link>
-          </div>
-          <div className="mt-4">
-            <Link href={`/wiki/${page.slug}/history`}>
-              <button className="rounded bg-blue-500 px-4 py-2 text-white">
-                Back to History
-              </button>
-            </Link>
-          </div>
-        </div>
-      )}
+
+      <div className="mt-4 flex gap-2">
+        <TransitionLinkButton
+          href={`/wiki/${page.slug}`}
+          className="bg-green-500 text-white hover:bg-green-600"
+        >
+          Latest Page
+        </TransitionLinkButton>
+        <TransitionLinkButton
+          href={`/wiki/${page.slug}/history`}
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
+          Back to History
+        </TransitionLinkButton>
+      </div>
     </div>
   );
 }
