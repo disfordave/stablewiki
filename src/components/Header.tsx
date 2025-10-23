@@ -6,6 +6,7 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { TransitionLinkButton, TransitionFormButton } from "@/components/ui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 
 export default async function Header() {
   const user = await getUser();
@@ -40,7 +41,7 @@ export default async function Header() {
               className="bg-violet-500 text-white hover:bg-violet-600"
             >
               <UserCircleIcon className="inline size-5" />
-              {user.username}
+              <span className="font-bold">{user.username}</span>
             </TransitionLinkButton>
 
             {WIKI_DISABLE_MEDIA ? null : (
@@ -57,7 +58,7 @@ export default async function Header() {
             href="/app/signin"
             className="bg-violet-500 text-white hover:bg-violet-600"
           >
-            <UserCircleIcon className="inline size-5" />
+            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
             Sign In
           </TransitionLinkButton>
         )}
@@ -71,11 +72,11 @@ export default async function Header() {
           required
         />
         <TransitionFormButton
+          title="Search"
           useButtonWithoutForm={true}
-          className="absolute end-0 bg-blue-500 text-white hover:bg-blue-600"
+          className="absolute end-0 h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"
         >
-          <MagnifyingGlassIcon className="inline size-5" />
-          Search
+          <MagnifyingGlassIcon className="inline size-4" />
         </TransitionFormButton>
       </form>
     </header>

@@ -5,6 +5,8 @@ import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
 import { Header, Footer } from "@/components";
 import Head from "next/head";
+import { TransitionLinkButton } from "@/components/ui";
+import { ArrowUpIcon } from "@heroicons/react/24/solid";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -54,8 +56,9 @@ export default function RootLayout({
       </Head>
       <body
         className={`${ibmPlexSans.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        id="top"
       >
-        <div className="background h-full min-h-screen w-full">
+        <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
           <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4">
             <Header />
             <main className="flex-grow overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
@@ -63,6 +66,13 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
+          <TransitionLinkButton
+            href="#top"
+            className="fixed end-4 bottom-4 size-12 bg-gray-300/50 hover:bg-gray-400/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50"
+            title="Back to Top"
+          >
+            <ArrowUpIcon className="inline size-5" />
+          </TransitionLinkButton>
         </div>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export default async function WikiHistoryPage({
@@ -80,6 +81,7 @@ export default async function WikiHistoryPage({
         href={`/wiki/${slug}`}
         className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
       >
+        <ArrowUturnLeftIcon className="inline size-5" />
         Back to Page
       </TransitionLinkButton>
     </div>

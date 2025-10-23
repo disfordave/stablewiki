@@ -63,11 +63,14 @@ export default async function SignIn({
   const success = params.success as string | undefined;
   return (
     <div>
-      <h1 className="mb-4 text-4xl font-bold">Sign In</h1>
+      <h1 className="mb-4 text-center text-4xl font-bold">Sign In</h1>
 
-      <form action={signIn} className="mt-4 flex flex-col gap-4">
+      <form
+        action={signIn}
+        className="mx-auto mt-4 flex max-w-sm flex-col gap-4"
+      >
         <div>
-          <label htmlFor="username" className="mb-1 block">
+          <label htmlFor="username" className="block">
             Username:
           </label>
           <input
@@ -75,11 +78,11 @@ export default async function SignIn({
             id="username"
             name="username"
             required
-            className="w-full rounded-full border border-gray-300 px-2 py-1 dark:border-gray-600"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
         </div>
         <div>
-          <label htmlFor="password" className="mb-1 block">
+          <label htmlFor="password" className="block">
             Password:
           </label>
           <input
@@ -87,21 +90,23 @@ export default async function SignIn({
             id="password"
             name="password"
             required
-            className="w-full rounded-full border border-gray-300 px-2 py-1 dark:border-gray-600"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
         </div>
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className="bg-blue-500 text-white hover:bg-blue-600"
+          className="bg-violet-500 text-white hover:bg-violet-600"
         >
           Sign In
         </TransitionFormButton>
       </form>
-      <Link href="/app/signup" className="mt-4 inline-block">
-        Don&apos;t have an account? <span className="underline">Sign Up</span>
-      </Link>
-      <p className="text-green-500">{success && <span>{success}</span>}</p>
-      <p className="text-red-500">{error && <span>{error}</span>}</p>
+      <div className="text-center">
+        <Link href="/app/signup" className="mt-4 inline-block">
+          Don&apos;t have an account? <span className="underline">Sign Up</span>
+        </Link>
+        <p className="text-green-500">{success && <span>{success}</span>}</p>
+        <p className="text-red-500">{error && <span>{error}</span>}</p>
+      </div>
     </div>
   );
 }

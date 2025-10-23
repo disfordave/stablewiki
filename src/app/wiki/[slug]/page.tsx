@@ -1,6 +1,8 @@
 import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { DocumentTextIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
@@ -92,6 +94,7 @@ export default async function WikiPage({
               href={`/wiki/${page.slug}/edit`}
               className="bg-green-500 text-white hover:bg-green-600"
             >
+              <PencilSquareIcon className="inline size-5" />
               Edit Page
             </TransitionLinkButton>
           </div>
@@ -100,6 +103,7 @@ export default async function WikiPage({
               href={`/wiki/${page.slug}/history`}
               className="bg-blue-500 text-white hover:bg-blue-600"
             >
+              <DocumentTextIcon className="inline size-5" />
               History
             </TransitionLinkButton>
           </div>

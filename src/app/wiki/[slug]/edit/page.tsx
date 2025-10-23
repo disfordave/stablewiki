@@ -1,6 +1,7 @@
 import { TransitionFormButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -128,24 +129,27 @@ export default async function WikiEditPage({
 
         {user.username ? (
           <div>
-            <p>Creating as {user.username}</p>
+            <p className="mb-2">
+              Creating as <span className="font-bold">{user.username}</span>
+            </p>
             <form action={createPage}>
               <textarea
                 name="content"
                 placeholder="Page content in Markdown"
-                className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+                className="h-[60vh] w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
                 required
               ></textarea>
               <input
                 type="text"
                 name="summary"
                 placeholder="Edit summary (optional)"
-                className="mt-2 w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+                className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
               />
               <TransitionFormButton
                 useButtonWithoutForm={true}
                 className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
               >
+                <PencilSquareIcon className="inline size-5" />
                 Create Page
               </TransitionFormButton>
             </form>
@@ -166,36 +170,40 @@ export default async function WikiEditPage({
         <Link href={`/wiki/${page.slug}`}>Edit Page: {page.title}</Link>
       </h1>
       <p className="text-sm text-gray-500">
-        By {page.author.username} on{" "}
+        Last edited by {page.author.username} on{" "}
         {new Date(page.createdAt).toLocaleDateString()}
       </p>
       {user.username && (
-        <div className="mt-4">
+        <div className="">
+          <p className="mb-2">
+            Editing as <span className="font-bold">{user.username}</span>
+          </p>
           <form action={editPage}>
             <textarea
               name="content"
               defaultValue={page.content}
-              className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+              className="h-[60vh] w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
               required
             ></textarea>
             <input
               type="text"
               name="summary"
               placeholder="Edit summary (optional)"
-              className="mt-2 w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+              className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
             />
             <TransitionFormButton
               useButtonWithoutForm={true}
               className="mt-2 bg-green-500 text-white hover:bg-green-600"
             >
+              <PencilSquareIcon className="inline size-5" />
               Save Changes
             </TransitionFormButton>
           </form>
           <details className="mt-4">
-            <summary className="cursor-pointer text-red-500">
+            <summary className="cursor-pointer font-semibold text-red-500">
               Delete this page
             </summary>
-            <p className="mt-2">
+            <p className="mt-2 animate-pulse font-bold">
               Warning: This action is irreversible. All page history will be
               lost.
             </p>
@@ -203,6 +211,7 @@ export default async function WikiEditPage({
               action={deletePage}
               className="mt-4 bg-red-500 text-white hover:bg-red-600"
             >
+              <TrashIcon className="inline size-5" />
               Delete Page
             </TransitionFormButton>
           </details>

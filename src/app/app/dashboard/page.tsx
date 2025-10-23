@@ -1,5 +1,8 @@
 import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
+import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
+import { HomeIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
 // import { cookies } from "next/headers";
 // import { redirect } from "next/navigation";
@@ -86,15 +89,17 @@ export default async function DashboardPage() {
       </pre>
       <div className="mt-4 flex gap-2">
         <TransitionLinkButton
-          href="/"
+          href={WIKI_HOMEPAGE_LINK}
           className="bg-blue-500 text-white hover:bg-blue-600"
         >
+          <HomeIcon className="inline size-5" />
           Go to Home
         </TransitionLinkButton>
         <TransitionFormButton
           action={signOutUser}
           className="bg-red-500 text-white hover:bg-red-600"
         >
+          <ArrowLeftStartOnRectangleIcon className="inline size-5" />
           Sign Out
         </TransitionFormButton>
       </div>
