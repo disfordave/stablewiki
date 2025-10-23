@@ -11,7 +11,7 @@ function TransitionLinkButton({
 }) {
   return (
     <Link
-      className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 transition-colors duration-300 text-nowrap ${className || ""}`}
+      className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 text-nowrap transition-colors duration-300 ${className || ""}`}
       href={href}
     >
       {children}

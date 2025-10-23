@@ -78,7 +78,7 @@ export default async function WikiHistoryPage({
       </ul>
       <TransitionLinkButton
         href={`/wiki/${slug}`}
-        className="mt-4 bg-blue-500 text-white hover:bg-blue-600 w-fit"
+        className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
       >
         Back to Page
       </TransitionLinkButton>

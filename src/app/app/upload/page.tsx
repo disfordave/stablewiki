@@ -7,12 +7,12 @@ export default async function UploadPage() {
   if (WIKI_DISABLE_MEDIA) {
     return (
       <>
-      <div>Media uploads are disabled.</div>
-      <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
-        Go to Homepage
-      </Link>
+        <div>Media uploads are disabled.</div>
+        <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
+          Go to Homepage
+        </Link>
       </>
-    )
+    );
   }
 
   const user = await getUser();

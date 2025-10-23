@@ -78,7 +78,7 @@ export async function POST(request: Request) {
         page: { connect: { slug: encodeURIComponent(title) } },
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
-        summary
+        summary,
       },
     });
 

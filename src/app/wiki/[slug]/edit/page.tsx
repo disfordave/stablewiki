@@ -12,7 +12,7 @@ export default async function WikiEditPage({
   const { slug } = await params;
 
   let page: Page | null = null;
-let errorMsg: string | null = null;
+  let errorMsg: string | null = null;
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
@@ -20,7 +20,7 @@ let errorMsg: string | null = null;
     if (!res.ok) {
       errorMsg = res.statusText;
       throw new Error("Failed to fetch page");
-    };
+    }
 
     page = (await res.json()).page;
   } catch (err) {
@@ -200,11 +200,11 @@ let errorMsg: string | null = null;
               lost.
             </p>
             <TransitionFormButton
-            action={deletePage}
-            className="mt-4 bg-red-500 text-white hover:bg-red-600"
-          >
-            Delete Page
-          </TransitionFormButton>
+              action={deletePage}
+              className="mt-4 bg-red-500 text-white hover:bg-red-600"
+            >
+              Delete Page
+            </TransitionFormButton>
           </details>
         </div>
       )}

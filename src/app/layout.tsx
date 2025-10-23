@@ -33,6 +33,16 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
         <meta
           name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#1e2939"
+          media="(prefers-color-scheme: dark)"
+        />
+        {/* <meta
+          name="theme-color"
           content="#f3f4f6"
           media="(prefers-color-scheme: light)"
         />
@@ -40,14 +50,14 @@ export default function RootLayout({
           name="theme-color"
           content="#101828"
           media="(prefers-color-scheme: dark)"
-        />
+        /> */}
       </Head>
       <body
         className={`${ibmPlexSans.className} ${ibmPlexMono.style} background antialiased`}
       >
         <div className="mx-auto min-h-screen max-w-2xl p-4">
           <Header />
-          <main className="rounded-2xl bg-white p-4 dark:bg-gray-800 mt-4 overflow-auto">
+          <main className="-mx-4 overflow-auto rounded-2xl bg-white p-4 sm:mx-0 dark:bg-gray-800">
             {children}
           </main>
           <Footer />

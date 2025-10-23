@@ -1,4 +1,4 @@
-import { getUser, signOutUser } from "@/lib/auth/functions";
+import { getUser } from "@/lib/auth/functions";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -18,8 +18,8 @@ export default async function Header() {
   }
 
   return (
-    <header className="p-4 rounded-2xl bg-white dark:bg-gray-800">
-      <div className="flex items-center justify-between flex-wrap gap-2">
+    <header className="-mx-4 -mt-4 mb-4 rounded-b-2xl bg-white p-4 sm:mx-0 sm:mt-0 sm:rounded-2xl dark:bg-gray-800">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xl font-bold">
           <Link href={WIKI_HOMEPAGE_LINK} className="flex items-center gap-1">
             <Image
@@ -28,7 +28,9 @@ export default async function Header() {
               width={24}
               height={24}
             />
-            <span className="hover:text-violet-500 transition-colors duration-300">{WIKI_NAME}</span>
+            <span className="transition-colors duration-300 hover:text-violet-500">
+              {WIKI_NAME}
+            </span>
           </Link>
         </p>
         {user.username ? (
@@ -60,22 +62,22 @@ export default async function Header() {
           </TransitionLinkButton>
         )}
       </div>
-      <form action={search} className="flex w-full gap-2 mt-2 relative">
+      <form action={search} className="relative mt-2 flex w-full gap-2">
         <input
           type="text"
           name="search"
-          className="w-full rounded-full bg-gray-100 px-4 py-1 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           placeholder="Search..."
           required
         />
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className="bg-blue-500 text-white hover:bg-blue-600 absolute end-0"
+          className="absolute end-0 bg-blue-500 text-white hover:bg-blue-600"
         >
           <MagnifyingGlassIcon className="inline size-5" />
           Search
         </TransitionFormButton>
       </form>
-      </header>
+    </header>
   );
 }
