@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
 import { Header, Footer } from "@/components";
 import Head from "next/head";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -42,11 +43,13 @@ export default function RootLayout({
         />
       </Head>
       <body
-        className={`${geistSans.className} ${geistMono.variable} background antialiased`}
+        className={`${ibmPlexSans.className} ${ibmPlexMono.style} background antialiased`}
       >
         <div className="mx-auto min-h-screen max-w-2xl p-4">
           <Header />
-          {children}
+          <main className="rounded-2xl bg-white p-4 dark:bg-gray-800 mt-4 overflow-auto">
+            {children}
+          </main>
           <Footer />
         </div>
       </body>

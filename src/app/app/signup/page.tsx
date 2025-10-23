@@ -1,9 +1,17 @@
 import { WIKI_DISABLE_SIGNUP, WIKI_HOMEPAGE_LINK } from "@/config";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {
-    redirect(WIKI_HOMEPAGE_LINK);
+    return (
+      <>
+      <div>Signups are disabled.</div>
+      <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
+        Go to Homepage
+      </Link>
+      </>
+    )
   }
   async function handleSignup(formData: FormData) {
     "use server";

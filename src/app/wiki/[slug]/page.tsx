@@ -1,3 +1,4 @@
+import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
 import Link from "next/link";
@@ -20,17 +21,20 @@ export default async function WikiPage({
   const { slug } = await params;
 
   let page: Page | null = null;
-
+  let errorMsg: string | null = null;
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
     );
-    if (!res.ok) throw new Error("Failed to fetch page");
+    if (!res.ok) {
+      errorMsg = res.statusText;
+      throw new Error("Failed to fetch page");
+    }
 
     page = (await res.json()).page;
   } catch (err) {
     console.error(err);
-    return <p className="text-red-500">Failed to load page 😢</p>;
+    return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
   }
   const user = await getUser();
 
@@ -84,18 +88,20 @@ export default async function WikiPage({
       {user && (
         <div className="flex gap-2">
           <div className="mt-4">
-            <Link href={`/wiki/${page.slug}/edit`}>
-              <button className="rounded bg-green-500 px-4 py-2 text-white">
-                Edit Page
-              </button>
-            </Link>
+            <TransitionLinkButton
+              href={`/wiki/${page.slug}/edit`}
+              className="bg-green-500 text-white hover:bg-green-600"
+            >
+              Edit Page
+            </TransitionLinkButton>
           </div>
           <div className="mt-4">
-            <Link href={`/wiki/${page.slug}/history`}>
-              <button className="rounded bg-blue-500 px-4 py-2 text-white">
-                History
-              </button>
-            </Link>
+            <TransitionLinkButton
+              href={`/wiki/${page.slug}/history`}
+              className="bg-blue-500 text-white hover:bg-blue-600"
+            >
+              History
+            </TransitionLinkButton>
           </div>
         </div>
       )}

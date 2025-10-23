@@ -1,4 +1,5 @@
-import { getUser } from "@/lib/auth/functions";
+import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
+import { getUser, signOutUser } from "@/lib/auth/functions";
 import { Role } from "@prisma/client";
 // import { cookies } from "next/headers";
 // import { redirect } from "next/navigation";
@@ -80,16 +81,24 @@ export default async function DashboardPage() {
       )}
 
       <h2 className="mt-4 mb-2 text-xl font-bold">User Details (Debug Info)</h2>
-      <pre className="overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
+      <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
         {JSON.stringify(user, null, 2)}
       </pre>
-      <p>
-        <Link href="/">
-          <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
-            Go to Home
-          </button>
-        </Link>
-      </p>
+      <div className="mt-4 flex gap-4">
+        <TransitionLinkButton
+          href="/"
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
+          Go to Home
+        </TransitionLinkButton>
+        <TransitionFormButton
+          action={signOutUser}
+          className="bg-red-500 text-white hover:bg-red-600"
+        >
+          Sign Out
+        </TransitionFormButton>
+      </div>
+
       {/* <>
         <form action={deleteAccount}>
           <button

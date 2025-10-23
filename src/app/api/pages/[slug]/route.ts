@@ -57,7 +57,7 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const { title, content, author } = await request.json();
+  const { title, content, author, summary } = await request.json();
 
   if (!(await validAuthorizationWithJwt(request))) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -78,6 +78,7 @@ export async function POST(request: Request) {
         page: { connect: { slug: encodeURIComponent(title) } },
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
+        summary
       },
     });
 

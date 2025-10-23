@@ -1,3 +1,4 @@
+import { TransitionFormButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
 import Link from "next/link";
@@ -11,23 +12,27 @@ export default async function WikiEditPage({
   const { slug } = await params;
 
   let page: Page | null = null;
-
+let errorMsg: string | null = null;
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
     );
-    if (!res.ok) throw new Error("Failed to fetch page");
+    if (!res.ok) {
+      errorMsg = res.statusText;
+      throw new Error("Failed to fetch page");
+    };
 
     page = (await res.json()).page;
   } catch (err) {
     console.error(err);
-    return <p className="text-red-500">Failed to load page 😢</p>;
+    return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
   }
   const user = await getUser();
 
   async function createPage(formData: FormData) {
     "use server";
     const content = formData.get("content") as string;
+    const summary = formData.get("summary") as string;
 
     if (!user.username) {
       throw new Error("User not found");
@@ -43,6 +48,7 @@ export default async function WikiEditPage({
         title: decodeURIComponent(slug),
         content,
         author: user,
+        summary,
       }),
     });
 
@@ -57,6 +63,7 @@ export default async function WikiEditPage({
   async function editPage(formData: FormData) {
     "use server";
     const content = formData.get("content") as string;
+    const summary = formData.get("summary") as string;
 
     if (!user) {
       throw new Error("User not found");
@@ -74,6 +81,7 @@ export default async function WikiEditPage({
           title: decodeURIComponent(slug),
           content,
           author: user,
+          summary,
         }),
       },
     );
@@ -128,12 +136,18 @@ export default async function WikiEditPage({
                 className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
                 required
               ></textarea>
-              <button
-                type="submit"
-                className="mt-2 rounded bg-blue-500 px-4 py-2 text-white"
+              <input
+                type="text"
+                name="summary"
+                placeholder="Edit summary (optional)"
+                className="mt-2 w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+              />
+              <TransitionFormButton
+                useButtonWithoutForm={true}
+                className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
               >
                 Create Page
-              </button>
+              </TransitionFormButton>
             </form>
           </div>
         ) : (
@@ -164,18 +178,34 @@ export default async function WikiEditPage({
               className="h-[60vh] w-full rounded border border-gray-300 p-2 dark:border-gray-700"
               required
             ></textarea>
-            <button
-              type="submit"
-              className="mt-2 rounded bg-green-500 px-4 py-2 text-white"
+            <input
+              type="text"
+              name="summary"
+              placeholder="Edit summary (optional)"
+              className="mt-2 w-full rounded border border-gray-300 p-2 dark:border-gray-700"
+            />
+            <TransitionFormButton
+              useButtonWithoutForm={true}
+              className="mt-2 bg-green-500 text-white hover:bg-green-600"
             >
               Save Changes
-            </button>
+            </TransitionFormButton>
           </form>
-          <form action={deletePage}>
-            <button className="mt-2 rounded bg-red-500 px-4 py-2 text-white">
-              Delete Page
-            </button>
-          </form>
+          <details className="mt-4">
+            <summary className="cursor-pointer text-red-500">
+              Delete this page
+            </summary>
+            <p className="mt-2">
+              Warning: This action is irreversible. All page history will be
+              lost.
+            </p>
+            <TransitionFormButton
+            action={deletePage}
+            className="mt-4 bg-red-500 text-white hover:bg-red-600"
+          >
+            Delete Page
+          </TransitionFormButton>
+          </details>
         </div>
       )}
       {!user.username && (

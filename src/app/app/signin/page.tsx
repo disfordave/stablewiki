@@ -1,3 +1,4 @@
+import { TransitionFormButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -74,7 +75,7 @@ export default async function SignIn({
             id="username"
             name="username"
             required
-            className="w-full rounded border border-gray-300 p-2"
+            className="w-full rounded-full border border-gray-300 px-2 py-1"
           />
         </div>
         <div>
@@ -86,15 +87,15 @@ export default async function SignIn({
             id="password"
             name="password"
             required
-            className="w-full rounded border border-gray-300 p-2"
+            className="w-full rounded-full border border-gray-300 px-2 py-1"
           />
         </div>
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white"
+        <TransitionFormButton
+          useButtonWithoutForm={true}
+          className="bg-blue-500 text-white hover:bg-blue-600"
         >
           Sign In
-        </button>
+        </TransitionFormButton>
       </form>
       <Link href="/app/signup" className="mt-4 inline-block">
         Don&apos;t have an account? <span className="underline">Sign Up</span>

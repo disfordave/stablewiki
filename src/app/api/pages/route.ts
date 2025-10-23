@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const { title, content, author } = await request.json();
+  const { title, content, author, summary } = await request.json();
 
   if (!(await validAuthorizationWithJwt(request))) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
         slug: encodeURIComponent(title),
         author: { connect: { id: author.id } },
         revisions: {
-          create: { content, author: { connect: { id: author.id } } },
+          create: { content, author: { connect: { id: author.id } }, summary },
         },
       },
     });

@@ -27,6 +27,11 @@ export function middleware(request: NextRequest) {
     return;
   }
 
+  // Only rate limit POST requests
+  if (request.method !== "POST") {
+    return;
+  }
+
   // Get IP address
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded

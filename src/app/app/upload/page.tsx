@@ -1,10 +1,18 @@
 import { getUser } from "@/lib/auth/functions";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function UploadPage() {
   if (WIKI_DISABLE_MEDIA) {
-    redirect(WIKI_HOMEPAGE_LINK);
+    return (
+      <>
+      <div>Media uploads are disabled.</div>
+      <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
+        Go to Homepage
+      </Link>
+      </>
+    )
   }
 
   const user = await getUser();
