@@ -41,7 +41,7 @@ To install StableWiki, follow these steps:
 
 1. **StableWiki is a still in the very, very early stages of development.**
 
-2. StableWiki relies on Node.js based modules that require a full Node.js environment to run properly. **Serverless platforms that do not support full Node.js modules nor persistent file storage will not be able to host StableWiki.**
+2. The persistent storage of StableWiki relies on Node.js fs modules that require a full Node.js environment with file system access to run properly. **Although you can run StableWiki on Serverless platforms, persistent file storage will not be working properly. If you don't need media uploads, I recommend `const WIKI_DISABLE_MEDIA = true` in `src/config.ts` to disable media uploads.**
 
 ## Features
 
