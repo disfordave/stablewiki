@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
@@ -24,6 +24,13 @@ export const metadata: Metadata = {
   description: WIKI_DESCRIPTION,
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1e2939" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,26 +40,6 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <Head>
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
-        <meta
-          name="theme-color"
-          content="#ffffff"
-          media="(prefers-color-scheme: light)"
-        />
-        <meta
-          name="theme-color"
-          content="#1e2939"
-          media="(prefers-color-scheme: dark)"
-        />
-        {/* <meta
-          name="theme-color"
-          content="#f3f4f6"
-          media="(prefers-color-scheme: light)"
-        />
-        <meta
-          name="theme-color"
-          content="#101828"
-          media="(prefers-color-scheme: dark)"
-        /> */}
       </Head>
       <body
         className={`${ibmPlexSans.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
