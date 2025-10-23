@@ -1,6 +1,7 @@
 import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -59,7 +60,13 @@ export default async function WikiPage({
         ) : (
           <div>
             <p>You must be signed in to create a new page.</p>
-            <Link href="/app/signin">Go to Sign In</Link>
+                      <TransitionLinkButton
+            href="/app/signin"
+            className="bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+            Sign In
+          </TransitionLinkButton>
           </div>
         )}
       </div>
@@ -72,7 +79,7 @@ export default async function WikiPage({
         <Link href={`/wiki/${page.slug}`}>{page.title}</Link>
       </h1>
       <p className="text-sm text-gray-500">
-        By {page.author.username} on{" "}
+        Last edited by {page.author.username} on{" "}
         {new Date(page.updatedAt).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",

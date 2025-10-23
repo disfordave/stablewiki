@@ -7,6 +7,7 @@ import { TransitionLinkButton, TransitionFormButton } from "@/components/ui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon } from "@heroicons/react/24/solid";
 
 export default async function Header() {
   const user = await getUser();
@@ -43,15 +44,6 @@ export default async function Header() {
               <UserCircleIcon className="inline size-5" />
               <span className="font-bold">{user.username}</span>
             </TransitionLinkButton>
-
-            {WIKI_DISABLE_MEDIA ? null : (
-              <TransitionLinkButton
-                href="/app/upload"
-                className="bg-green-500 text-white hover:bg-green-600"
-              >
-                Upload
-              </TransitionLinkButton>
-            )}
           </div>
         ) : (
           <TransitionLinkButton

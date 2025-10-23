@@ -1,5 +1,6 @@
 import { TransitionFormButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -39,23 +40,26 @@ export default async function SignIn({
       },
     );
 
-    if (!res.ok) {
+    if (res.ok) {
+      const data = await res.json();
+
+      const cookieStore = await cookies();
+      cookieStore.set({
+        name: "jwt",
+        value: data.user.token,
+        httpOnly: true,
+        sameSite: "lax",
+      });
+
+      redirect(`/app/dashboard`);
+    } else {
+      const data = await res.json();
       redirect(
-        `/app/signin?error=${encodeURIComponent("An unexpected error occurred")}`,
+        `/app/signin?error=${encodeURIComponent(
+          data.error || "An unexpected error occurred",
+        )}`,
       );
     }
-
-    const data = await res.json();
-
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: "jwt",
-      value: data.user.token,
-      httpOnly: true,
-      sameSite: "lax",
-    });
-
-    redirect(`/app/dashboard`);
   }
 
   const params = await searchParams;
@@ -64,7 +68,6 @@ export default async function SignIn({
   return (
     <div>
       <h1 className="mb-4 text-center text-4xl font-bold">Sign In</h1>
-
       <form
         action={signIn}
         className="mx-auto mt-4 flex max-w-sm flex-col gap-4"
@@ -95,8 +98,9 @@ export default async function SignIn({
         </div>
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className="bg-violet-500 text-white hover:bg-violet-600"
+          className="w-full bg-violet-500 text-white hover:bg-violet-600"
         >
+          <ArrowLeftEndOnRectangleIcon className="inline size-5" />
           Sign In
         </TransitionFormButton>
       </form>

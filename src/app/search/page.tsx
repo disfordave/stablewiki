@@ -1,5 +1,7 @@
+import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
 import type { Page } from "@/lib/types";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export default async function SearchPage({
@@ -18,7 +20,7 @@ export default async function SearchPage({
   if (!results.ok) {
     return (
       <div>
-        <h1 className="mb-4 text-2xl font-bold">Search Results for {query}</h1>
+        <h1 className="text-2xl font-bold">Search Results for {query}</h1>
         <p>Failed to fetch search results.</p>
       </div>
     );
@@ -28,17 +30,19 @@ export default async function SearchPage({
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Search Results for {query}</h1>
+      <h1 className="text-2xl font-bold">Search Results for {query}</h1>
       {/* Placeholder for search results */}
       {data.length === 0 ? (
         <>
           <p>No results found.</p>
-          <Link
+          <TransitionLinkButton
             href={`/wiki/${query}/edit`}
-            className="text-blue-500 hover:underline"
+            className="mt-2 bg-green-500 text-white hover:bg-green-600"
           >
-            Create a new page
-          </Link>
+            <PencilSquareIcon className="inline size-5" />
+            Create Page &quot;{query}&quot;
+          </TransitionLinkButton>
+          
         </>
       ) : (
         <WikiList pages={data as Page[]} />

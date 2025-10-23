@@ -1,5 +1,6 @@
 import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
@@ -18,7 +19,13 @@ export default async function WikiHistoryPage({
           History for: {decodeURIComponent(slug)}
         </h1>
         <p>You must be signed in to view this page.</p>
-        <Link href="/app/signin">Go to Sign In</Link>
+                 <TransitionLinkButton
+            href="/app/signin"
+            className="bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+            Sign In
+          </TransitionLinkButton>
       </div>
     );
   }
@@ -62,16 +69,16 @@ export default async function WikiHistoryPage({
             author: { id: string; username: string };
             summary: string;
           }) => (
-            <li key={rev.id} className="rounded">
+            <li key={rev.id} className="rounded hover:underline">
               <Link href={`/wiki/${slug}/history/${rev.version}`}>
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-lg font-semibold">
                   Revision ID: {rev.version}
                 </h2>
+                <p className="border-s-4 border-gray-300 dark:border-gray-700 ps-2">{rev.summary || "No summary provided."}</p>
                 <p className="text-sm text-gray-500">
-                  By {rev.author.username} on{" "}
+                  Edited by {rev.author.username} on{" "}
                   {new Date(rev.createdAt).toLocaleString()}
                 </p>
-                <p>Summary: {rev.summary || "No summary provided."}</p>
               </Link>
             </li>
           ),

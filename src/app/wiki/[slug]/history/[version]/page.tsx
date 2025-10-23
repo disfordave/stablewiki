@@ -1,6 +1,7 @@
 import { TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { ArrowPathIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -20,7 +21,13 @@ export default async function WikiPage({
           History for: {decodeURIComponent(slug)} (ver. {version})
         </h1>
         <p>You must be signed in to view this page.</p>
-        <Link href="/app/signin">Go to Sign In</Link>
+                  <TransitionLinkButton
+            href="/app/signin"
+            className="bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+            Sign In
+          </TransitionLinkButton>
       </div>
     );
   }
@@ -78,7 +85,7 @@ export default async function WikiPage({
         </Link>
       </h1>
       <p className="text-sm text-gray-500">
-        By {page.author.username} on{" "}
+        Edited by {page.author.username} on{" "}
         {new Date(page.updatedAt).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
@@ -93,7 +100,6 @@ export default async function WikiPage({
       <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 my-8 max-w-none">
         <Markdown>{page.content}</Markdown>
       </div>
-
       <div className="mt-4 flex gap-2">
         <TransitionLinkButton
           href={`/wiki/${page.slug}`}

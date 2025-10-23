@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Invalid media file" }, { status: 400 });
   }
 
-  // Ensure the media is not too large (e.g., max 5MB)
-  if (media.size > 5 * 1024 * 1024) {
+  // Ensure the media is not too large (e.g., max 1MB)
+  if (media.size > 1 * 1024 * 1024) {
     return Response.json({ error: "Media file is too large" }, { status: 400 });
   }
 

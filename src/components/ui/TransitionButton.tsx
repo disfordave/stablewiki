@@ -13,7 +13,7 @@ function TransitionLinkButton({
 }) {
   return (
     <Link
-      className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium text-nowrap transition-colors duration-300 ${className || ""}`}
+      className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium text-nowrap transition-colors duration-300 w-fit ${className || ""}`}
       href={href}
       title={title}
       aria-label={title}
@@ -42,7 +42,7 @@ function TransitionFormButton({
         type="submit"
         title={title}
         aria-label={title}
-        className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 ${className || ""}`}
+        className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 w-fit ${className || ""}`}
       >
         {children}
       </button>
@@ -53,7 +53,7 @@ function TransitionFormButton({
     <form action={action}>
       <button
         type="submit"
-        className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 ${className || ""}`}
+        className={`flex cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 w-fit ${className || ""}`}
       >
         {children}
       </button>

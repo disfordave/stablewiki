@@ -1,6 +1,7 @@
-import { TransitionFormButton } from "@/components/ui";
+import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -157,7 +158,13 @@ export default async function WikiEditPage({
         ) : (
           <div>
             <p>You must be signed in to create a new page.</p>
-            <Link href="/app/signin">Go to Sign In</Link>
+            <TransitionLinkButton
+              href="/app/signin"
+              className="bg-violet-500 text-white hover:bg-violet-600"
+            >
+              <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+              Sign In
+            </TransitionLinkButton>
           </div>
         )}
       </div>
@@ -218,9 +225,15 @@ export default async function WikiEditPage({
         </div>
       )}
       {!user.username && (
-        <div className="mt-4">
+        <div className="">
           <p>You must be signed in to edit this page.</p>
-          <Link href="/app/signin">Go to Sign In</Link>
+          <TransitionLinkButton
+            href="/app/signin"
+            className="bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+            Sign In
+          </TransitionLinkButton>
         </div>
       )}
     </div>

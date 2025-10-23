@@ -2,6 +2,8 @@ import { getUser } from "@/lib/auth/functions";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { TransitionFormButton } from "@/components/ui";
+import { PhotoIcon } from "@heroicons/react/24/solid";
 
 export default async function UploadPage() {
   if (WIKI_DISABLE_MEDIA) {
@@ -70,7 +72,8 @@ export default async function UploadPage() {
           <input
             type="text"
             name="title"
-            className="w-full rounded border border-gray-300 p-2"
+            placeholder="Title of image"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
             required
           />
         </div>
@@ -80,16 +83,18 @@ export default async function UploadPage() {
             type="file"
             name="media"
             accept="image/*"
-            className="w-full rounded border border-gray-300 p-2"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
             required
           />
         </div>
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white"
+        <p>Allowed file types: images (max size: 1MB).</p>
+        <TransitionFormButton
+          useButtonWithoutForm={true}
+          className="bg-green-500 text-white hover:bg-green-600"
         >
-          Upload
-        </button>
+          <PhotoIcon className="inline size-5" />
+          Upload Media
+        </TransitionFormButton>
       </form>
     </div>
   );

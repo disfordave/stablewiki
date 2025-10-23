@@ -1,8 +1,14 @@
+import { TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP, WIKI_HOMEPAGE_LINK } from "@/config";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default function SignupPage() {
+export default async function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   if (WIKI_DISABLE_SIGNUP) {
     return (
       <>
@@ -17,6 +23,15 @@ export default function SignupPage() {
     "use server";
     const username = formData.get("username")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
+    const consent = formData.get("consent") === "on";
+
+    if (!consent) {
+      redirect(
+        `/app/signup?error=${encodeURIComponent(
+          "You must agree to the terms and conditions",
+        )}`,
+      );
+    }
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/signup`,
@@ -31,7 +46,9 @@ export default function SignupPage() {
 
     if (res.ok) {
       // Redirect to signin page with success message
-      redirect(`/`);
+      redirect(
+        `/app/signin?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
+      );
     } else {
       const data = await res.json();
       redirect(
@@ -41,12 +58,17 @@ export default function SignupPage() {
       );
     }
   }
+  const params = await searchParams;
+  const error = params.error as string | undefined;
   return (
     <div>
-      <h1 className="mb-4 text-4xl font-bold">Sign Up</h1>
-      <form action={handleSignup} className="mt-4 flex flex-col gap-4">
+      <h1 className="mb-4 text-center text-4xl font-bold">Sign Up</h1>
+      <form
+        action={handleSignup}
+        className="mx-auto mt-4 flex max-w-sm flex-col gap-4"
+      >
         <div>
-          <label htmlFor="username" className="mb-1 block">
+          <label htmlFor="username" className="block">
             Username:
           </label>
           <input
@@ -54,11 +76,11 @@ export default function SignupPage() {
             id="username"
             name="username"
             required
-            className="w-full rounded border border-gray-300 p-2"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
         </div>
         <div>
-          <label htmlFor="password" className="mb-1 block">
+          <label htmlFor="password" className="block">
             Password:
           </label>
           <input
@@ -66,16 +88,35 @@ export default function SignupPage() {
             id="password"
             name="password"
             required
-            className="w-full rounded border border-gray-300 p-2"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
         </div>
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white"
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="consent"
+            name="consent"
+            required
+            className="h-4 w-4 accent-violet-500"
+          />
+          <label htmlFor="consent" className="select-none">
+            I agree to the terms and conditions.
+          </label>
+        </div>
+        <TransitionFormButton
+          useButtonWithoutForm={true}
+          className="w-full bg-violet-500 text-white hover:bg-violet-600"
         >
+          <UserPlusIcon className="inline size-5" />
           Sign Up
-        </button>
+        </TransitionFormButton>
       </form>
+      <div className="text-center">
+        <Link href="/app/signin" className="mt-4 inline-block">
+          Already have an account? <span className="underline">Sign In</span>
+        </Link>
+        <p className="text-red-500">{error && <span>{error}</span>}</p>
+      </div>
     </div>
   );
 }
