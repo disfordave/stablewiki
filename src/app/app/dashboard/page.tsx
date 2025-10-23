@@ -1,7 +1,11 @@
 import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
-import { HomeIcon, PhotoIcon, ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/solid";
+import {
+  HomeIcon,
+  PhotoIcon,
+  ArrowLeftStartOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
 // import { cookies } from "next/headers";
 // import { redirect } from "next/navigation";
@@ -86,24 +90,24 @@ export default async function DashboardPage() {
       <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
         {JSON.stringify(user, null, 2)}
       </pre>
-      <div className="mt-4 flex gap-2 items-center justify-between flex-wrap">
-        <div className="flex gap-2 items-center flex-wrap">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <TransitionLinkButton
-          href={WIKI_HOMEPAGE_LINK}
-          className="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          <HomeIcon className="inline size-5" />
-          Go to Home
-        </TransitionLinkButton>
-        {WIKI_DISABLE_MEDIA ? null : (
-          <TransitionLinkButton
-            href="/app/upload"
-            className="bg-green-500 text-white hover:bg-green-600"
+            href={WIKI_HOMEPAGE_LINK}
+            className="bg-blue-500 text-white hover:bg-blue-600"
           >
-            <PhotoIcon className="inline size-5" />
-            Upload
+            <HomeIcon className="inline size-5" />
+            Go to Home
           </TransitionLinkButton>
-        )}
+          {WIKI_DISABLE_MEDIA ? null : (
+            <TransitionLinkButton
+              href="/app/upload"
+              className="bg-green-500 text-white hover:bg-green-600"
+            >
+              <PhotoIcon className="inline size-5" />
+              Upload
+            </TransitionLinkButton>
+          )}
         </div>
         <TransitionFormButton
           action={signOutUser}

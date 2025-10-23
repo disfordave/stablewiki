@@ -68,7 +68,7 @@ export default function RootLayout({
           </div>
           <TransitionLinkButton
             href="#top"
-            className="fixed end-4 bottom-4 size-12 aspect-square bg-gray-300/50 hover:bg-gray-400/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50"
+            className="fixed end-4 bottom-4 aspect-square size-12 bg-gray-300/50 hover:bg-gray-400/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50"
             title="Back to Top"
           >
             <ArrowUpIcon className="inline size-5" />

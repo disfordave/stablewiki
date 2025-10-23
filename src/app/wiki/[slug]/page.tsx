@@ -60,13 +60,13 @@ export default async function WikiPage({
         ) : (
           <div>
             <p>You must be signed in to create a new page.</p>
-                      <TransitionLinkButton
-            href="/app/signin"
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-            Sign In
-          </TransitionLinkButton>
+            <TransitionLinkButton
+              href="/app/signin"
+              className="bg-violet-500 text-white hover:bg-violet-600"
+            >
+              <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+              Sign In
+            </TransitionLinkButton>
           </div>
         )}
       </div>

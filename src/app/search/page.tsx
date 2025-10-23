@@ -2,7 +2,6 @@ import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
 import type { Page } from "@/lib/types";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 
 export default async function SearchPage({
   searchParams,
@@ -42,7 +41,6 @@ export default async function SearchPage({
             <PencilSquareIcon className="inline size-5" />
             Create Page &quot;{query}&quot;
           </TransitionLinkButton>
-          
         </>
       ) : (
         <WikiList pages={data as Page[]} />

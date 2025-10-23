@@ -1,4 +1,5 @@
 import { TransitionFormButton } from "@/components/ui";
+import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
@@ -105,9 +106,17 @@ export default async function SignIn({
         </TransitionFormButton>
       </form>
       <div className="text-center">
-        <Link href="/app/signup" className="mt-4 inline-block">
-          Don&apos;t have an account? <span className="underline">Sign Up</span>
-        </Link>
+        {WIKI_DISABLE_SIGNUP ? (
+          <p className="mt-4 inline-block max-w-md">
+            Signups are currently disabled. If you need an account, please
+            contact the wiki administrator.
+          </p>
+        ) : (
+          <Link href="/app/signup" className="mt-4 inline-block">
+            Don&apos;t have an account?{" "}
+            <span className="underline">Sign Up</span>
+          </Link>
+        )}
         <p className="text-green-500">{success && <span>{success}</span>}</p>
         <p className="text-red-500">{error && <span>{error}</span>}</p>
       </div>

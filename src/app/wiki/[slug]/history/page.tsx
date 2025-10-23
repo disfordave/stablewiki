@@ -19,13 +19,13 @@ export default async function WikiHistoryPage({
           History for: {decodeURIComponent(slug)}
         </h1>
         <p>You must be signed in to view this page.</p>
-                 <TransitionLinkButton
-            href="/app/signin"
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-            Sign In
-          </TransitionLinkButton>
+        <TransitionLinkButton
+          href="/app/signin"
+          className="bg-violet-500 text-white hover:bg-violet-600"
+        >
+          <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+          Sign In
+        </TransitionLinkButton>
       </div>
     );
   }
@@ -74,7 +74,9 @@ export default async function WikiHistoryPage({
                 <h2 className="text-lg font-semibold">
                   Revision ID: {rev.version}
                 </h2>
-                <p className="border-s-4 border-gray-300 dark:border-gray-700 ps-2">{rev.summary || "No summary provided."}</p>
+                <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700">
+                  {rev.summary || "No summary provided."}
+                </p>
                 <p className="text-sm text-gray-500">
                   Edited by {rev.author.username} on{" "}
                   {new Date(rev.createdAt).toLocaleString()}

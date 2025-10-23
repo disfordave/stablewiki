@@ -21,13 +21,13 @@ export default async function WikiPage({
           History for: {decodeURIComponent(slug)} (ver. {version})
         </h1>
         <p>You must be signed in to view this page.</p>
-                  <TransitionLinkButton
-            href="/app/signin"
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-            Sign In
-          </TransitionLinkButton>
+        <TransitionLinkButton
+          href="/app/signin"
+          className="bg-violet-500 text-white hover:bg-violet-600"
+        >
+          <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+          Sign In
+        </TransitionLinkButton>
       </div>
     );
   }
