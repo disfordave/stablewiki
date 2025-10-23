@@ -55,10 +55,10 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
       >
-        <div className="background h-full w-full">
-          <div className="mx-auto min-h-screen max-w-2xl p-4">
+        <div className="background h-full min-h-screen w-full">
+          <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4">
             <Header />
-            <main className="-mx-4 overflow-auto rounded-2xl bg-white p-4 sm:mx-0 dark:bg-gray-800">
+            <main className="flex-grow overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
               {children}
             </main>
             <Footer />

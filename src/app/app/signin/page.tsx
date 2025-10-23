@@ -75,7 +75,7 @@ export default async function SignIn({
             id="username"
             name="username"
             required
-            className="w-full rounded-full border border-gray-300 px-2 py-1"
+            className="w-full rounded-full border border-gray-300 px-2 py-1 dark:border-gray-600"
           />
         </div>
         <div>
@@ -87,7 +87,7 @@ export default async function SignIn({
             id="password"
             name="password"
             required
-            className="w-full rounded-full border border-gray-300 px-2 py-1"
+            className="w-full rounded-full border border-gray-300 px-2 py-1 dark:border-gray-600"
           />
         </div>
         <TransitionFormButton

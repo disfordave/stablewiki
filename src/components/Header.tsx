@@ -18,7 +18,7 @@ export default async function Header() {
   }
 
   return (
-    <header className="-mx-4 -mt-4 mb-4 rounded-b-2xl bg-white p-4 sm:mx-0 sm:mt-0 sm:rounded-2xl dark:bg-gray-800">
+    <header className="rounded-b-2xl bg-white p-4 sm:rounded-2xl dark:bg-gray-800">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xl font-bold">
           <Link href={WIKI_HOMEPAGE_LINK} className="flex items-center gap-1">
