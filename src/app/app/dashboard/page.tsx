@@ -1,4 +1,4 @@
-import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
+import { MustSignInMessage, TransitionFormButton, TransitionLinkButton } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
 import {
@@ -7,9 +7,6 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
-// import { cookies } from "next/headers";
-// import { redirect } from "next/navigation";
-import Link from "next/link";
 
 export const metadata = {
   title: "Dashboard | " + WIKI_NAME,
@@ -23,14 +20,7 @@ export default async function DashboardPage() {
     return (
       <>
         <h1 className="text-2xl font-bold">Access Denied</h1>
-        <p>You must be signed in to view this page.</p>
-        <p>
-          <Link href="/app/signin">
-            <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
-              Go to Sign In
-            </button>
-          </Link>
-        </p>
+        <MustSignInMessage />
       </>
     );
   }

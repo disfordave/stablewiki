@@ -1,8 +1,7 @@
 import { getUser } from "@/lib/auth/functions";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_NAME } from "@/config";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { TransitionFormButton } from "@/components/ui";
+import { DisabledMessage, MustSignInMessage, TransitionFormButton } from "@/components/ui";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 
 export const metadata = {
@@ -12,14 +11,7 @@ export const metadata = {
 
 export default async function UploadPage() {
   if (WIKI_DISABLE_MEDIA) {
-    return (
-      <>
-        <div>Media uploads are disabled.</div>
-        <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
-          Go to Homepage
-        </Link>
-      </>
-    );
+    return <DisabledMessage message="Media uploads are disabled." />;
   }
 
   const user = await getUser();
@@ -61,11 +53,9 @@ export default async function UploadPage() {
   }
 
   if (!user.username) {
-    redirect(
-      `/app/signin?error=${encodeURIComponent(
-        "You must be signed in to upload media",
-      )}`,
-    );
+    return (
+      <MustSignInMessage />
+    )
   }
 
   return (

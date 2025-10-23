@@ -5,8 +5,7 @@ import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
 import { Header, Footer } from "@/components";
 import Head from "next/head";
-import { TransitionLinkButton } from "@/components/ui";
-import { ArrowUpIcon } from "@heroicons/react/24/solid";
+import { BackToTopButton } from "@/components/ui";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -53,13 +52,7 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
-          <TransitionLinkButton
-            href="#top"
-            className="fixed end-6 bottom-6 aspect-square size-12 bg-gray-300/50 hover:bg-gray-400/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50"
-            title="Back to Top"
-          >
-            <ArrowUpIcon className="inline size-5" />
-          </TransitionLinkButton>
+          <BackToTopButton />
         </div>
       </body>
     </html>

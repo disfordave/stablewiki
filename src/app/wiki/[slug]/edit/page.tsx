@@ -1,8 +1,7 @@
-import { TransitionFormButton, TransitionLinkButton } from "@/components/ui";
+import { TransitionFormButton, WikiEditor, MustSignInMessage } from "@/components/ui";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -172,18 +171,7 @@ export default async function WikiEditPage({
               Creating as <span className="font-bold">{user.username}</span>
             </p>
             <form action={createPage}>
-              <textarea
-                name="content"
-                placeholder="Page content in Markdown"
-                className="h-[60vh] w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-                required
-              ></textarea>
-              <input
-                type="text"
-                name="summary"
-                placeholder="Edit summary (optional)"
-                className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-              />
+              <WikiEditor />
               <TransitionFormButton
                 useButtonWithoutForm={true}
                 className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
@@ -194,16 +182,7 @@ export default async function WikiEditPage({
             </form>
           </div>
         ) : (
-          <div>
-            <p>You must be signed in to create a new page.</p>
-            <TransitionLinkButton
-              href="/app/signin"
-              className="bg-violet-500 text-white hover:bg-violet-600"
-            >
-              <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-              Sign In
-            </TransitionLinkButton>
-          </div>
+          <MustSignInMessage />
         )}
       </div>
     );
@@ -224,18 +203,7 @@ export default async function WikiEditPage({
             Editing as <span className="font-bold">{user.username}</span>
           </p>
           <form action={editPage}>
-            <textarea
-              name="content"
-              defaultValue={page.content}
-              className="h-[60vh] w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-              required
-            ></textarea>
-            <input
-              type="text"
-              name="summary"
-              placeholder="Edit summary (optional)"
-              className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-            />
+            <WikiEditor defaultValue={page.content} />
             <TransitionFormButton
               useButtonWithoutForm={true}
               className="mt-2 bg-green-500 text-white hover:bg-green-600"
@@ -263,16 +231,7 @@ export default async function WikiEditPage({
         </div>
       )}
       {!user.username && (
-        <div className="">
-          <p>You must be signed in to edit this page.</p>
-          <TransitionLinkButton
-            href="/app/signin"
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-            Sign In
-          </TransitionLinkButton>
-        </div>
+        <MustSignInMessage />
       )}
     </div>
   );

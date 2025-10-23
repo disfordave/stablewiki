@@ -1,8 +1,7 @@
-import { TransitionLinkButton } from "@/components/ui";
+import { MustSignInMessage, TransitionLinkButton } from "@/components/ui";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -57,14 +56,7 @@ export default async function WikiHistoryPage({
         <h1 className="text-3xl font-bold">
           History for: {decodeURIComponent(slug)}
         </h1>
-        <p>You must be signed in to view this page.</p>
-        <TransitionLinkButton
-          href="/app/signin"
-          className="bg-violet-500 text-white hover:bg-violet-600"
-        >
-          <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-          Sign In
-        </TransitionLinkButton>
+        <MustSignInMessage />
       </div>
     );
   }
