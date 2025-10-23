@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest): Promise<Response> {
@@ -25,12 +25,9 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as {
-      id: string;
-      username: string;
-      avatarUrl?: string;
-      role: string;
-    };
+    const decodedToken = await jose
+      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+      .then((result) => result.payload);
 
     return Response.json(
       {

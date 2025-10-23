@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
 
@@ -50,25 +49,25 @@ export async function POST(request: Request) {
     }
 
     let token;
-    try {
-      //Creating jwt token
-      token = jwt.sign(
-        {
-          id: newUser.id,
-          username: newUser.username,
-          avatarUrl: newUser.avatarUrl,
-          role: newUser.role,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" },
-      );
-    } catch (err) {
-      console.log(err);
-      return Response.json(
-        { error: "Failed to sign up user from JWT" },
-        { status: 500 },
-      );
-    }
+    // try {
+    //   //Creating jwt token
+    //   // token = jwt.sign(
+    //   //   {
+    //   //     id: newUser.id,
+    //   //     username: newUser.username,
+    //   //     avatarUrl: newUser.avatarUrl,
+    //   //     role: newUser.role,
+    //   //   },
+    //   //   process.env.JWT_SECRET,
+    //   //   { expiresIn: "1h" },
+    //   // );
+    // } catch (err) {
+    //   console.log(err);
+    //   return Response.json(
+    //     { error: "Failed to sign up user from JWT" },
+    //     { status: 500 },
+    //   );
+    // }
 
     const response = Response.json({
       message: "Signup successful! Welcome aboard!",
@@ -81,15 +80,15 @@ export async function POST(request: Request) {
       },
     });
 
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: "jwt",
-      value: token,
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 3600,
-    });
+    // const cookieStore = await cookies();
+    // cookieStore.set({
+    //   name: "jwt",
+    //   value: token,
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   path: "/",
+    //   maxAge: 3600,
+    // });
 
     return response;
   } catch (error) {

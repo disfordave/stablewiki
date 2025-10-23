@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const { slug, version } = await params;
 
-  if (!validAuthorizationWithJwt(request)) {
+  if (!(await validAuthorizationWithJwt(request))) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {

@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 
-export function validAuthorizationWithJwt(
+export async function validAuthorizationWithJwt(
   request: NextRequest | Request,
-): boolean {
+): Promise<boolean> {
   try {
     const authHeader = request.headers.get("Authorization");
 
@@ -20,12 +20,9 @@ export function validAuthorizationWithJwt(
       return false;
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as {
-      id: string;
-      username: string;
-      avatarUrl?: string;
-      role: string;
-    };
+    const decodedToken = await jose
+      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+      .then((result) => result.payload);
 
     if (!decodedToken) {
       return false;

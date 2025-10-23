@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   const { title, content, author } = await request.json();
 
-  if (!validAuthorizationWithJwt(request)) {
+  if (!(await validAuthorizationWithJwt(request))) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 

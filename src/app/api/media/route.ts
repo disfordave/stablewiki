@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!validAuthorizationWithJwt(request)) {
+  if (!(await validAuthorizationWithJwt(request))) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 

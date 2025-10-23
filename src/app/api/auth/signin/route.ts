@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
+import * as jose from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
@@ -40,16 +41,16 @@ export async function POST(request: Request) {
     let token;
     try {
       //Creating jwt token
-      token = jwt.sign(
-        {
-          id: user.id,
-          username: user.username,
-          avatarUrl: user.avatarUrl,
-          role: user.role,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: JWT_EXPIRES_SECONDS },
-      );
+      token = await new jose.SignJWT({
+        id: user.id,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+        role: user.role,
+      })
+        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+        .setIssuedAt()
+        .setExpirationTime(`24h`) // Change this line
+        .sign(new TextEncoder().encode(process.env.JWT_SECRET));
     } catch (err) {
       console.log(err);
       return Response.json(
