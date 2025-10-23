@@ -53,14 +53,16 @@ export default function RootLayout({
         /> */}
       </Head>
       <body
-        className={`${ibmPlexSans.className} ${ibmPlexMono.style} background antialiased`}
+        className={`${ibmPlexSans.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
       >
-        <div className="mx-auto min-h-screen max-w-2xl p-4">
-          <Header />
-          <main className="-mx-4 overflow-auto rounded-2xl bg-white p-4 sm:mx-0 dark:bg-gray-800">
-            {children}
-          </main>
-          <Footer />
+        <div className="background h-full w-full">
+          <div className="mx-auto min-h-screen max-w-2xl p-4">
+            <Header />
+            <main className="-mx-4 overflow-auto rounded-2xl bg-white p-4 sm:mx-0 dark:bg-gray-800">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </div>
       </body>
     </html>
