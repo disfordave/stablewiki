@@ -2,7 +2,7 @@ import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
 import { WIKI_NAME } from "@/config";
 import type { Page } from "@/lib/types";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 
 export default async function SearchPage({
@@ -49,7 +49,16 @@ export default async function SearchPage({
           </TransitionLinkButton>
         </>
       ) : (
+        <>
+        <TransitionLinkButton
+            href={`/wiki/${query}`}
+            className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
+          >
+            <DocumentTextIcon className="inline size-5" />
+            Go to &quot;{query}&quot;
+          </TransitionLinkButton>
         <WikiList pages={data as Page[]} />
+        </>
       )}
     </div>
   );
