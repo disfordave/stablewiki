@@ -1,13 +1,21 @@
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-function WikiMarkdown({ content }: { content: string }) {
+export function WikiMarkdown({ content }: { content: string }) {
+  // Replace [[Page]] and [[Page || Label]] with proper Markdown links
   const processed = content.replace(
-    /\[\[([^\]]+)\]\]/g,
-    (match, p1) => `[${p1}](/wiki/${encodeURIComponent(p1.trim())})`,
+    /\[\[([^[\]|]+)(?:\s*\|\|\s*([^[\]]+))?\]\]/g,
+    (match, page, label) => {
+      const pageName = page.trim();
+      const linkLabel = label ? label.trim() : pageName;
+      const slug = encodeURIComponent(pageName);
+      return `[${linkLabel}](/wiki/${slug})`;
+    }
   );
 
-  return <Markdown>{processed}</Markdown>;
+  return <Markdown remarkPlugins={[remarkGfm]}>{processed}</Markdown>;
 }
+
 
 export default function StableMarkdown({
     content,
