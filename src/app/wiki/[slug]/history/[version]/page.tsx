@@ -92,8 +92,12 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <StableMarkdown oldVersion slug={slug} content={page.content} showRaw={showRaw} />
-      
+      <StableMarkdown
+        oldVersion
+        slug={slug}
+        content={page.content}
+        showRaw={showRaw}
+      />
     </div>
   );
 }

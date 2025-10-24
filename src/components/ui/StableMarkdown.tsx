@@ -39,7 +39,7 @@ export default function StableMarkdown({
     <>
       {showRaw ? (
         <div>
-          <pre className="my-4 overflow-x-auto sm:rounded-xl bg-gray-100 p-4 sm:mx-0 -mx-4 break-words whitespace-pre-wrap dark:bg-gray-900">
+          <pre className="-mx-4 my-4 overflow-x-auto bg-gray-100 p-4 break-words whitespace-pre-wrap sm:mx-0 sm:rounded-xl dark:bg-gray-900">
             {content}
           </pre>
         </div>
@@ -79,12 +79,11 @@ export default function StableMarkdown({
           href={`?raw=${showRaw ? "false" : "true"}`}
           className="bg-gray-500 text-white hover:bg-gray-600"
         >
-            {showRaw ? (
-                <DocumentChartBarIcon className="inline size-5" />
-            ) : (
-                
-                <CodeBracketIcon className="inline size-5" />
-            )}
+          {showRaw ? (
+            <DocumentChartBarIcon className="inline size-5" />
+          ) : (
+            <CodeBracketIcon className="inline size-5" />
+          )}
           {showRaw ? "View Rendered" : "View Raw Markdown"}
         </TransitionLinkButton>
       </div>
