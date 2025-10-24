@@ -9,8 +9,11 @@ export async function GET(
 ) {
   const { slug } = await params;
   try {
-    const page = await prisma.page.findUnique({
-      where: { slug: encodeURIComponent(slug) },
+    const page = await prisma.page.findFirst({
+      where: { slug: {
+        equals: encodeURIComponent(slug),
+        mode: "insensitive"
+      } },
       include: {
         author: true,
         tags: { include: { tag: true } },
