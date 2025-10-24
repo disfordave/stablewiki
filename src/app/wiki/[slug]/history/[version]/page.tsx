@@ -1,19 +1,21 @@
-import { MustSignInMessage, TransitionLinkButton } from "@/components/ui";
+import { MustSignInMessage } from "@/components/ui";
 import StableMarkdown from "@/components/ui/StableMarkdown";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
-import { ArrowPathIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
 
 export default async function WikiPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string; version: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug, version } = await params;
   const user = await getUser();
+  const showRaw = (await searchParams).raw === "true";
 
   if (!user.username) {
     return (
@@ -90,23 +92,8 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <StableMarkdown content={page.content} />
-      <div className="flex gap-2 flex-wrap items-center">
-        <TransitionLinkButton
-          href={`/wiki/${page.slug}`}
-          className="bg-green-500 text-white hover:bg-green-600"
-        >
-          <ArrowPathIcon className="inline size-5" />
-          Latest Page
-        </TransitionLinkButton>
-        <TransitionLinkButton
-          href={`/wiki/${page.slug}/history`}
-          className="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          <ArrowUturnLeftIcon className="inline size-5" />
-          Back to History
-        </TransitionLinkButton>
-      </div>
+      <StableMarkdown oldVersion slug={slug} content={page.content} showRaw={showRaw} />
+      
     </div>
   );
 }

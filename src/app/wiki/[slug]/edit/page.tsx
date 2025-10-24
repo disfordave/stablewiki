@@ -142,7 +142,7 @@ export default async function WikiEditPage({
               <WikiEditor />
               <TransitionFormButton
                 useButtonWithoutForm={true}
-                className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
+                className="mt-3 bg-blue-500 text-white hover:bg-blue-600"
               >
                 <PencilSquareIcon className="inline size-5" />
                 Create Page
@@ -181,7 +181,7 @@ export default async function WikiEditPage({
             </TransitionFormButton>
           </form>
           {user.role === "ADMIN" && (
-            <details className="mt-4">
+            <details className="mt-3">
               <summary className="cursor-pointer font-semibold text-red-500">
                 Delete this page
               </summary>

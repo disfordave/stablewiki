@@ -1,20 +1,20 @@
-import { MustSignInMessage, TransitionLinkButton } from "@/components/ui";
+import { MustSignInMessage } from "@/components/ui";
 import StableMarkdown from "@/components/ui/StableMarkdown";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
-import { DocumentTextIcon } from "@heroicons/react/24/solid";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
 
 export default async function WikiPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-
+  const showRaw = (await searchParams).raw === "true";
   let page: Page | null = null;
   let errorMsg: string | null = null;
   try {
@@ -76,29 +76,7 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <StableMarkdown content={page.content} />
-      {user && (
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="">
-            <TransitionLinkButton
-              href={`/wiki/${page.slug}/edit`}
-              className="bg-green-500 text-white hover:bg-green-600"
-            >
-              <PencilSquareIcon className="inline size-5" />
-              Edit Page
-            </TransitionLinkButton>
-          </div>
-          <div className="">
-            <TransitionLinkButton
-              href={`/wiki/${page.slug}/history`}
-              className="bg-blue-500 text-white hover:bg-blue-600"
-            >
-              <DocumentTextIcon className="inline size-5" />
-              History
-            </TransitionLinkButton>
-          </div>
-        </div>
-      )}
+      <StableMarkdown slug={slug} content={page.content} showRaw={showRaw} />
     </div>
   );
 }
