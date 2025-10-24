@@ -13,6 +13,7 @@ export default function Footer() {
         >
           {WIKI_COPYRIGHT_HOLDER}
         </a>
+        . All rights reserved.
       </p>
       <p className="text-xs text-gray-500">StableWiki Engine v0.0.1</p>
     </footer>

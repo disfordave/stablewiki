@@ -10,10 +10,12 @@ export async function GET(
   const { slug } = await params;
   try {
     const page = await prisma.page.findFirst({
-      where: { slug: {
-        equals: encodeURIComponent(slug),
-        mode: "insensitive"
-      } },
+      where: {
+        title: {
+          equals: decodeURIComponent(slug),
+          mode: "insensitive",
+        },
+      },
       include: {
         author: true,
         tags: { include: { tag: true } },
@@ -24,7 +26,7 @@ export async function GET(
         },
       },
     });
-    // let isRedirect = false;
+
     if (!page) {
       return Response.json({
         page: null,
