@@ -129,7 +129,7 @@ export default async function WikiPage({
       <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 my-8 max-w-none">
         <Markdown>{page.content}</Markdown>
       </div>
-      <div className="mt-4 flex gap-2">
+      <div className="flex gap-2 flex-wrap items-center">
         <TransitionLinkButton
           href={`/wiki/${page.slug}`}
           className="bg-green-500 text-white hover:bg-green-600"

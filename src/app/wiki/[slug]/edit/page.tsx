@@ -210,28 +210,30 @@ export default async function WikiEditPage({
             <WikiEditor defaultValue={page.content} />
             <TransitionFormButton
               useButtonWithoutForm={true}
-              className="mt-2 bg-green-500 text-white hover:bg-green-600"
+              className="mt-3 bg-green-500 text-white hover:bg-green-600"
             >
               <PencilSquareIcon className="inline size-5" />
               Save Changes
             </TransitionFormButton>
           </form>
-          <details className="mt-4">
-            <summary className="cursor-pointer font-semibold text-red-500">
-              Delete this page
-            </summary>
-            <p className="mt-2 animate-pulse font-bold">
-              Warning: This action is irreversible. All page history will be
-              lost.
-            </p>
-            <TransitionFormButton
-              action={deletePage}
-              className="mt-4 bg-red-500 text-white hover:bg-red-600"
-            >
-              <TrashIcon className="inline size-5" />
-              Delete Page
-            </TransitionFormButton>
-          </details>
+          {user.role === "ADMIN" && (
+            <details className="mt-4">
+              <summary className="cursor-pointer font-semibold text-red-500">
+                Delete this page
+              </summary>
+              <p className="mt-2 animate-pulse font-bold">
+                Warning: This action is irreversible. All page history will be
+                lost.
+              </p>
+              <TransitionFormButton
+                action={deletePage}
+                className="mt-4 bg-red-500 text-white hover:bg-red-600"
+              >
+                <TrashIcon className="inline size-5" />
+                Delete Page
+              </TransitionFormButton>
+            </details>
+          )}
         </div>
       )}
       {!user.username && <MustSignInMessage />}

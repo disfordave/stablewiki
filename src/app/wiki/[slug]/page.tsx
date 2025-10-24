@@ -125,8 +125,8 @@ export default async function WikiPage({
         <WikiMarkdown content={page.content} />
       </div>
       {user && (
-        <div className="flex gap-2">
-          <div className="mt-4">
+        <div className="flex gap-2 flex-wrap items-center">
+          <div className="">
             <TransitionLinkButton
               href={`/wiki/${page.slug}/edit`}
               className="bg-green-500 text-white hover:bg-green-600"
@@ -135,7 +135,7 @@ export default async function WikiPage({
               Edit Page
             </TransitionLinkButton>
           </div>
-          <div className="mt-4">
+          <div className="">
             <TransitionLinkButton
               href={`/wiki/${page.slug}/history`}
               className="bg-blue-500 text-white hover:bg-blue-600"
