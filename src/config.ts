@@ -1,9 +1,9 @@
 const WIKI_NAME = "StableWiki";
 const WIKI_HOMEPAGE_LINK = "/wiki/WelcomePage";
-const WIKI_DESCRIPTION = "A simple wiki built with Next.js and Markdown files.";
+const WIKI_DESCRIPTION = "StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
 const WIKI_COPYRIGHT_HOLDER = "@disfordave";
 const WIKI_COPYRIGHT_HOLDER_URL = "https://disfordave.com";
-const WIKI_DISABLE_MEDIA = false;
+const WIKI_DISABLE_MEDIA = true;
 const WIKI_DISABLE_SIGNUP = true;
 
 export {
