@@ -5,6 +5,7 @@ import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
 import { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function WikiPage({
   params,
@@ -45,6 +46,10 @@ export default async function WikiPage({
   } catch (err) {
     console.error(err);
     return <p className="text-red-500">Failed to load page 😢</p>;
+  }
+
+  if (page && page.slug !== slug) {
+    redirect(`/wiki/${page.slug}/history/${version}`);
   }
 
   if (!page) {

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
+import { normalizeSlug } from "../route";
 
 export async function GET(
   request: Request,
@@ -13,7 +14,7 @@ export async function GET(
 
   try {
     const page = await prisma.page.findUnique({
-      where: { slug: encodeURIComponent(slug) },
+      where: { slug: encodeURIComponent(normalizeSlug(slug)) },
       include: {
         author: true,
         tags: { include: { tag: true } },

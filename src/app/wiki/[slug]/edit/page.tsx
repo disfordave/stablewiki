@@ -36,6 +36,11 @@ export default async function WikiEditPage({
     console.error(err);
     return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
   }
+
+  if (page && page.slug !== slug) {
+    redirect(`/wiki/${page.slug}/edit`);
+  }
+
   const user = await getUser();
 
   async function createPage(formData: FormData) {

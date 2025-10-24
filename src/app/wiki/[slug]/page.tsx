@@ -40,8 +40,12 @@ export default async function WikiPage({
 
   if (page && page.isRedirect && !preventRedirect) {
     redirect(
-      `/wiki/${encodeURIComponent(page.redirectTargetSlug || "")}?redirectedFrom=${encodeURIComponent(slug)}`,
+      `/wiki/${page.redirectTargetSlug || ""}?redirectedFrom=${page.slug}`,
     );
+  }
+
+  if (page && page.slug !== slug) {
+    redirect(`/wiki/${page.slug}`);
   }
 
   const user = await getUser();

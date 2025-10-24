@@ -5,6 +5,7 @@ import { Page } from "@/lib/types";
 import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function WikiHistoryPage({
   params,
@@ -37,6 +38,11 @@ export default async function WikiHistoryPage({
     .then((data) => data.page || []);
 
   const revisions = data.revisions || [];
+  const page = data;
+
+  if (page && page.slug !== slug) {
+    redirect(`/wiki/${page.slug}/history/`);
+  }
 
   if (revisions.length === 0) {
     return (
