@@ -26,9 +26,13 @@ export default async function SearchPage({
 }) {
   const query = (await searchParams).q;
 
+  const removeTrailingSpace = (str: string) => {
+    return str.replace(/\s+$/, "");
+  };
+
   const results = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(
-      query as string,
+      removeTrailingSpace(query as string),
     )}`,
   );
 
