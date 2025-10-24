@@ -4,16 +4,14 @@ import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 
 export function normalizeSlug(raw: string) {
-  // 1. Decode URL-encoded parts (%20 → space)
   const decoded = decodeURIComponent(raw);
-
-  // 2. Trim spaces, collapse multiple spaces
   const trimmed = decoded.trim().replace(/\s+/g, " ");
+  if (!trimmed) return trimmed;
 
-  // 3. Lowercase everything, then capitalize the first letter
-  const lower = trimmed.toLowerCase();
-  return lower.charAt(0).toUpperCase() + lower.slice(1);
+  // Capitalize the first letter only, preserve the rest as-is
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
+
 
 export async function GET(
   request: Request,

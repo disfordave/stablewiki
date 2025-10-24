@@ -63,7 +63,7 @@ export default function StableMarkdown({
           </pre>
         </div>
       ) : (
-        <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl my-8 max-w-none">
+        <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl my-8 max-w-none prose-blue prose-a:no-underline prose-a:hover:underline ">
           <WikiMarkdown content={content} />
         </div>
       )}
