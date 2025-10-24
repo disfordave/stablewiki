@@ -9,7 +9,7 @@ export function checkRedirect(
   const match = content.match(/^#REDIRECT\s+\[\[([^\]]+)\]\]/im);
   if (match) {
     const targetSlug = match[1].trim();
-    if (targetSlug.toLowerCase() === slug.toLowerCase()) {
+    if (targetSlug === slug) {
       return { isLoop: true, targetSlug: null, isRedirect: false };
     }
     return { isLoop: false, targetSlug, isRedirect: true };
