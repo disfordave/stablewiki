@@ -42,6 +42,7 @@ export async function GET(
           summary: rev.summary || "No summary provided.",
         })),
         slug: page.slug,
+        isRedirect: page.isRedirect,
       },
     });
   } catch (error) {

@@ -13,14 +13,11 @@ export function WikiMarkdown({ content }: { content: string }) {
   let processed = content;
 
   // ---- 1. Media embeds ----
-  processed = processed.replace(
-    /!\[\[([^[\]]+)\]\]/g,
-    (_, fileName) => {
-      const clean = fileName.trim();
-      const encoded = encodeURIComponent(clean);
-      return `![${clean}](/media/${encoded})`;
-    }
-  );
+  processed = processed.replace(/!\[\[([^[\]]+)\]\]/g, (_, fileName) => {
+    const clean = fileName.trim();
+    const encoded = encodeURIComponent(clean);
+    return `![${clean}](/media/${encoded})`;
+  });
 
   // ---- 2. Wiki links ----
   processed = processed.replace(
@@ -38,23 +35,24 @@ export function WikiMarkdown({ content }: { content: string }) {
 
       // You can store `normalized` if you want to rewrite the file consistently
       return `[${linkLabel}](/wiki/${slug})`;
-    }
+    },
   );
 
   return <Markdown remarkPlugins={[remarkGfm]}>{processed}</Markdown>;
 }
-
 
 export default function StableMarkdown({
   content,
   showRaw = false,
   oldVersion = false,
   slug = "",
+  isRedirect = false,
 }: {
   content: string;
   showRaw?: boolean;
   oldVersion?: boolean;
   slug: string;
+  isRedirect?: boolean;
 }) {
   return (
     <>
@@ -72,7 +70,7 @@ export default function StableMarkdown({
       <div className="flex flex-wrap items-center gap-2">
         {oldVersion ? (
           <TransitionLinkButton
-            href={`/wiki/${slug}`}
+            href={`/wiki/${slug}${isRedirect ? "?preventRedirect=true" : ""}`}
             className="bg-green-500 text-white hover:bg-green-600"
           >
             <ArrowPathIcon className="inline size-5" />
@@ -97,7 +95,7 @@ export default function StableMarkdown({
         </TransitionLinkButton>
         <div className="flex-1"></div>
         <TransitionLinkButton
-          href={`?raw=${showRaw ? "false" : "true"}`}
+          href={`?raw=${showRaw ? "false" : "true"}${isRedirect ? "&preventRedirect=true" : ""}`}
           className="bg-gray-500 text-white hover:bg-gray-600"
         >
           {showRaw ? (

@@ -93,6 +93,7 @@ export default async function WikiPage({
         })}
       </p>
       <StableMarkdown
+        isRedirect={page.isRedirect}
         oldVersion
         slug={slug}
         content={page.content}

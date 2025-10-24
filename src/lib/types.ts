@@ -13,4 +13,6 @@ export interface Page {
     id: string;
     name: string;
   }[];
+  isRedirect?: boolean;
+  redirectTargetSlug?: string;
 }

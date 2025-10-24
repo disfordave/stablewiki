@@ -50,14 +50,14 @@ export default async function SearchPage({
         </>
       ) : (
         <>
-        <TransitionLinkButton
+          <TransitionLinkButton
             href={`/wiki/${query}`}
             className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
           >
             <DocumentTextIcon className="inline size-5" />
             Go to &quot;{query}&quot;
           </TransitionLinkButton>
-        <WikiList pages={data as Page[]} />
+          <WikiList pages={data as Page[]} />
         </>
       )}
     </div>

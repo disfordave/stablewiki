@@ -82,7 +82,7 @@ export default async function WikiHistoryPage({
         )}
       </ul>
       <TransitionLinkButton
-        href={`/wiki/${slug}`}
+        href={`/wiki/${slug}${data.isRedirect ? "?preventRedirect=true" : ""}`}
         className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
       >
         <ArrowUturnLeftIcon className="inline size-5" />

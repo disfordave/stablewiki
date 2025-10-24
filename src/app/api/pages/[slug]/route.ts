@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/lib/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
+import { checkRedirect } from "@/utils/api/checkRedirect";
 
 export async function GET(
   request: Request,
@@ -20,12 +21,13 @@ export async function GET(
         },
       },
     });
-
+    // let isRedirect = false;
     if (!page) {
       return Response.json({
         page: null,
       });
     }
+
     return Response.json({
       page: {
         id: page.id,
@@ -48,6 +50,11 @@ export async function GET(
         tags: page.tags.map((t) => {
           return { id: t.tag.id, name: t.tag.name };
         }),
+        isRedirect: page.isRedirect,
+        redirectTargetSlug:
+          page.revisions.length > 0
+            ? page.revisions[0].redirectTargetSlug
+            : undefined,
       } as Page,
     });
   } catch (error) {
@@ -67,6 +74,8 @@ export async function POST(request: Request) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  const redirection = checkRedirect(content, title);
+
   try {
     const revisionsCount = await prisma.revision.count({
       where: { page: { slug: encodeURIComponent(title) } },
@@ -79,8 +88,19 @@ export async function POST(request: Request) {
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
         summary,
+        isRedirect: redirection.isRedirect,
+        redirectTargetSlug: redirection.targetSlug,
       },
     });
+
+    const updatedPage = await prisma.page.update({
+      where: { slug: encodeURIComponent(title) },
+      data: {
+        isRedirect: redirection.isRedirect,
+      },
+    });
+
+    console.log("Updated page redirect status:", updatedPage);
 
     return Response.json(page, { status: 201 });
   } catch (error) {

@@ -50,6 +50,7 @@ model Page {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   isMedia     Boolean      @default(false)
+  isRedirect  Boolean      @default(false)
 }
 
 model Revision {
@@ -62,6 +63,8 @@ model Revision {
   content     String   
   summary     String?
   createdAt   DateTime @default(now())
+  isRedirect Boolean  @default(false)
+  redirectTargetSlug String?
 }
 
 model Comment {

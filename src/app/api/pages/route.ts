@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/lib/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
+import { checkRedirect } from "@/utils/api/checkRedirect";
 import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -63,10 +64,18 @@ export async function GET(request: NextRequest) {
                 }
               : { id: page.author.id, username: page.author.username },
           createdAt: page.createdAt,
-          updatedAt: page.updatedAt,
+          updatedAt:
+            page.revisions.length > 0
+              ? page.revisions[0].createdAt
+              : page.updatedAt,
           tags: page.tags.map((t) => {
             return { id: t.tag.id, name: t.tag.name };
           }),
+          isRedirect: page.isRedirect,
+          redirectTargetSlug:
+            page.revisions.length > 0
+              ? page.revisions[0].redirectTargetSlug
+              : undefined,
         })) as Page[],
     );
   } catch (error) {
@@ -94,8 +103,15 @@ export async function POST(request: Request) {
         slug: encodeURIComponent(title),
         author: { connect: { id: author.id } },
         revisions: {
-          create: { content, author: { connect: { id: author.id } }, summary },
+          create: {
+            content,
+            author: { connect: { id: author.id } },
+            summary,
+            isRedirect: checkRedirect(content, title).isRedirect,
+            redirectTargetSlug: checkRedirect(content, title).targetSlug,
+          },
         },
+        isRedirect: checkRedirect(content, title).isRedirect,
       },
     });
 

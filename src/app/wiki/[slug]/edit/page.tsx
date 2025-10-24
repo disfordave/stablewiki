@@ -13,8 +13,10 @@ import { redirect } from "next/navigation";
 
 export default async function WikiEditPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
 
@@ -60,7 +62,9 @@ export default async function WikiEditPage({
     });
 
     if (!res.ok) {
-      throw new Error("Failed to create page");
+      redirect(
+        `/wiki/${slug}/edit?error=${encodeURIComponent("Failed to create page")}`,
+      );
     }
 
     const data = await res.json();
@@ -94,7 +98,9 @@ export default async function WikiEditPage({
     );
 
     if (!res.ok) {
-      throw new Error("Failed to create page");
+      redirect(
+        `/wiki/${slug}/edit?error=${encodeURIComponent("Failed to edit page")}`,
+      );
     }
 
     const data = await res.json();
@@ -119,11 +125,15 @@ export default async function WikiEditPage({
     );
 
     if (!res.ok) {
-      throw new Error("Failed to delete page");
+      redirect(
+        `/wiki/${slug}/edit?error=${encodeURIComponent("Failed to delete page")}`,
+      );
     }
 
     redirect(`/`);
   }
+
+  const error = (await searchParams).error as string | undefined;
 
   if (!page) {
     return (
@@ -132,7 +142,7 @@ export default async function WikiEditPage({
           New Page: {decodeURIComponent(slug)}
         </h1>
         <p>This page does not exist yet. You can create it!</p>
-
+        {error && <p className="mt-2 text-red-500">Error: {error}</p>}
         {user.username ? (
           <div>
             <p className="mb-2">
@@ -165,6 +175,7 @@ export default async function WikiEditPage({
         Last edited by {page.author.username} on{" "}
         {new Date(page.createdAt).toLocaleDateString()}
       </p>
+      {error && <p className="mt-2 text-red-500">Error: {error}</p>}
       {user.username && (
         <div className="">
           <p className="mb-2">
@@ -180,24 +191,24 @@ export default async function WikiEditPage({
               Save Changes
             </TransitionFormButton>
           </form>
-          {user.role === "ADMIN" && (
-            <details className="mt-3">
-              <summary className="cursor-pointer font-semibold text-red-500">
-                Delete this page
-              </summary>
-              <p className="mt-2 animate-pulse font-bold">
-                Warning: This action is irreversible. All page history will be
-                lost.
-              </p>
-              <TransitionFormButton
-                action={deletePage}
-                className="mt-4 bg-red-500 text-white hover:bg-red-600"
-              >
-                <TrashIcon className="inline size-5" />
-                Delete Page
-              </TransitionFormButton>
-            </details>
-          )}
+          {/* {user.role === "ADMIN" && ( */}
+          <details className="mt-3">
+            <summary className="cursor-pointer font-semibold text-red-500">
+              Delete this page
+            </summary>
+            <p className="mt-2 animate-pulse font-bold">
+              Warning: This action is irreversible. All page history will be
+              lost.
+            </p>
+            <TransitionFormButton
+              action={deletePage}
+              className="mt-4 bg-red-500 text-white hover:bg-red-600"
+            >
+              <TrashIcon className="inline size-5" />
+              Delete Page
+            </TransitionFormButton>
+          </details>
+          {/* )} */}
         </div>
       )}
       {!user.username && <MustSignInMessage />}

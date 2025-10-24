@@ -52,6 +52,7 @@ export async function GET(
         tags: page.tags.map((t) => {
           return { id: t.tag.id, name: t.tag.name };
         }),
+        isRedirect: page.isRedirect,
       } as Page,
     });
   } catch (error) {

@@ -6,6 +6,7 @@ import { Page } from "@/lib/types";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function WikiPage({
   params,
@@ -16,6 +17,10 @@ export default async function WikiPage({
 }) {
   const { slug } = await params;
   const showRaw = (await searchParams).raw === "true";
+  const redirectedFrom = (await searchParams).redirectedFrom as
+    | string
+    | undefined;
+  const preventRedirect = (await searchParams).preventRedirect === "true";
   let page: Page | null = null;
   let errorMsg: string | null = null;
   try {
@@ -32,6 +37,13 @@ export default async function WikiPage({
     console.error(err);
     return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
   }
+
+  if (page && page.isRedirect && !preventRedirect) {
+    redirect(
+      `/wiki/${encodeURIComponent(page.redirectTargetSlug || "")}?redirectedFrom=${encodeURIComponent(slug)}`,
+    );
+  }
+
   const user = await getUser();
 
   if (!page) {
@@ -79,7 +91,26 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <StableMarkdown slug={slug} content={page.content} showRaw={showRaw} />
+      {redirectedFrom && (
+        <div className="mt-1 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+          <p className="">
+            You were redirected here from{" "}
+            <Link
+              href={`/wiki/${redirectedFrom}?preventRedirect=true`}
+              className="underline"
+            >
+              {decodeURIComponent(redirectedFrom)}
+            </Link>
+            .
+          </p>
+        </div>
+      )}
+      <StableMarkdown
+        isRedirect={page.isRedirect}
+        slug={slug}
+        content={page.content}
+        showRaw={showRaw}
+      />
     </div>
   );
 }
