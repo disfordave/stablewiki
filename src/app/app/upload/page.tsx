@@ -53,7 +53,10 @@ export default async function UploadPage() {
       throw new Error(errorData.error || "Failed to upload media");
     }
 
-    redirect(`/wiki/${encodeURIComponent("Media:" + title)}`);
+    const data = await response.json();
+    console.log("Upload successful:", data);
+
+    redirect(`/wiki/${encodeURIComponent(data.title)}`);
   }
 
   if (!user.username) {

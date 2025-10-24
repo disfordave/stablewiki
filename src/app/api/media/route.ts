@@ -41,26 +41,28 @@ export async function POST(request: NextRequest) {
 
   // Save the media file to the public directory
 
+  const extension = media.name.split(".").pop();
   const buffer = Buffer.from(await media.arrayBuffer());
   const filename = media.name.replaceAll(" ", "_");
   console.log(filename);
 
+  const fullTitle = extension ? `${title}.${extension}` : title;
+  console.log({ fullTitle });
   await mkdir("./public/media", { recursive: true });
-  const filePath = `/public/media/${Date.now()}-${filename}`;
-  const publicFilePath = `/media/${Date.now()}-${filename}`;
+  const filePath = `/public/media/${fullTitle}`;
 
   await writeFile(`.${filePath}`, buffer);
 
   try {
     const page = await prisma.page.create({
       data: {
-        title: `Media:${title}`,
+        title: `Media:${fullTitle}`,
         content: "",
-        slug: `${encodeURIComponent("Media:" + title)}`,
+        slug: `${encodeURIComponent("Media:" + fullTitle)}`,
         author: { connect: { id: user.id } },
         revisions: {
           create: {
-            content: `![${title}](${publicFilePath})`,
+            content: `![[${fullTitle}]]`,
             author: { connect: { id: user.id } },
           },
         },

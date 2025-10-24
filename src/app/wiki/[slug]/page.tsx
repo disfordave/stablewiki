@@ -1,8 +1,9 @@
-import { MustSignInMessage } from "@/components/ui";
+import { MustSignInMessage, TransitionLinkButton } from "@/components/ui";
 import StableMarkdown from "@/components/ui/StableMarkdown";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -42,12 +43,14 @@ export default async function WikiPage({
         <p>This page does not exist yet. You can create it!</p>
 
         {user.username ? (
-          <div>
-            <Link href={`/wiki/${slug}/edit`}>
-              <button className="rounded bg-blue-500 px-4 py-2 text-white">
-                Create Page
-              </button>
-            </Link>
+          <div className="mt-2">
+            <TransitionLinkButton
+              href={`/wiki/${slug}/edit`}
+              className="bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <PencilSquareIcon className="inline size-5" />
+              Create Page
+            </TransitionLinkButton>
           </div>
         ) : (
           <div>
