@@ -1,4 +1,5 @@
 import { MustSignInMessage, TransitionLinkButton } from "@/components/ui";
+import StableMarkdown from "@/components/ui/StableMarkdown";
 import { WIKI_NAME } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { Page } from "@/lib/types";
@@ -6,52 +7,6 @@ import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
-import Markdown from "react-markdown";
-
-function WikiMarkdown({ content }: { content: string }) {
-  const processed = content.replace(
-    /\[\[([^\]]+)\]\]/g,
-    (match, p1) => `[${p1}](/wiki/${encodeURIComponent(p1.trim())})`,
-  );
-
-  return <Markdown>{processed}</Markdown>;
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  // read route params
-  const { slug } = await params;
-
-  // fetch data
-  let page: Page | null = null;
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
-    );
-    if (!res.ok) {
-      throw new Error("Failed to fetch page");
-    }
-
-    page = (await res.json()).page;
-  } catch (err) {
-    console.error(err);
-  }
-
-  if (!page) {
-    return {
-      title: `New Page: ${decodeURIComponent(slug)} | ${WIKI_NAME}`,
-      description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(slug)}".`,
-    };
-  }
-
-  return {
-    title: page.title + " | " + WIKI_NAME,
-    description: `Wiki page titled "${page.title}" last edited by ${page.author.username}.`,
-  };
-}
 
 export default async function WikiPage({
   params,
@@ -121,11 +76,9 @@ export default async function WikiPage({
           timeZone: "UTC",
         })}
       </p>
-      <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 my-8 max-w-none">
-        <WikiMarkdown content={page.content} />
-      </div>
+      <StableMarkdown content={page.content} />
       {user && (
-        <div className="flex gap-2 flex-wrap items-center">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="">
             <TransitionLinkButton
               href={`/wiki/${page.slug}/edit`}
@@ -148,4 +101,40 @@ export default async function WikiPage({
       )}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  // read route params
+  const { slug } = await params;
+
+  // fetch data
+  let page: Page | null = null;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch page");
+    }
+
+    page = (await res.json()).page;
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (!page) {
+    return {
+      title: `New Page: ${decodeURIComponent(slug)} | ${WIKI_NAME}`,
+      description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(slug)}".`,
+    };
+  }
+
+  return {
+    title: page.title + " | " + WIKI_NAME,
+    description: `Wiki page titled "${page.title}" last edited by ${page.author.username}.`,
+  };
 }

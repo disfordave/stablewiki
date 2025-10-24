@@ -6,42 +6,6 @@ import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  // read route params
-  const { slug } = await params;
-
-  // fetch data
-  let page: Page | null = null;
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
-    );
-    if (!res.ok) {
-      throw new Error("Failed to fetch page");
-    }
-
-    page = (await res.json()).page;
-  } catch (err) {
-    console.error(err);
-  }
-
-  if (!page) {
-    return {
-      title: `History: New Page: ${decodeURIComponent(slug)} | ${WIKI_NAME}`,
-      description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(slug)}".`,
-    };
-  }
-
-  return {
-    title: `History: ${page.title} | ${WIKI_NAME}`,
-    description: `Revision histories for wiki page titled "${page.title}".`,
-  };
-}
-
 export default async function WikiHistoryPage({
   params,
 }: {
@@ -126,4 +90,40 @@ export default async function WikiHistoryPage({
       </TransitionLinkButton>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  // read route params
+  const { slug } = await params;
+
+  // fetch data
+  let page: Page | null = null;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch page");
+    }
+
+    page = (await res.json()).page;
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (!page) {
+    return {
+      title: `History: New Page: ${decodeURIComponent(slug)} | ${WIKI_NAME}`,
+      description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(slug)}".`,
+    };
+  }
+
+  return {
+    title: `History: ${page.title} | ${WIKI_NAME}`,
+    description: `Revision histories for wiki page titled "${page.title}".`,
+  };
 }
