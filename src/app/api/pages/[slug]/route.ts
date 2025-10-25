@@ -8,8 +8,7 @@ export function normalizeSlug(raw: string) {
   const trimmed = decoded.trim().replace(/\s+/g, " ");
   if (!trimmed) return trimmed;
 
-  const lower = trimmed.toLowerCase();
-  return lower.charAt(0).toUpperCase() + lower.slice(1);
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
 
 export async function GET(
