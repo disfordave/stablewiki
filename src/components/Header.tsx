@@ -37,7 +37,7 @@ export default async function Header() {
         {user.username ? (
           <div className="flex items-center gap-2">
             <TransitionLinkButton
-              href="/app/dashboard"
+              href="/wiki/System_Dashboard"
               className="bg-violet-500 text-white hover:bg-violet-600"
             >
               <UserCircleIcon className="inline size-5" />
@@ -46,7 +46,7 @@ export default async function Header() {
           </div>
         ) : (
           <TransitionLinkButton
-            href="/app/signin"
+            href="/wiki/System_SignIn"
             className="bg-violet-500 text-white hover:bg-violet-600"
           >
             <ArrowLeftEndOnRectangleIcon className="inline size-5" />

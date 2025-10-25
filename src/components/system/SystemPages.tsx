@@ -2,6 +2,9 @@ import { Suspense } from "react";
 import StableSearch from "./StableSearch";
 import { WIKI_DISABLE_MEDIA } from "@/config";
 import { LoadingSkeleton } from "../ui";
+import DashboardPage from "./auth/DashboardPage";
+import SignInPage from "./auth/SignInPage";
+import SignupPage from "./auth/SignUpPage";
 
 export default function SystemPages({
   slug,
@@ -21,6 +24,12 @@ export default function SystemPages({
           </Suspense>
         </div>
       );
+    case "SignIn":
+      return <SignInPage />;
+    case "Dashboard":
+      return <DashboardPage />;
+    case "SignUp":
+      return <SignupPage />;
     case "Upload":
       return (
         <div>

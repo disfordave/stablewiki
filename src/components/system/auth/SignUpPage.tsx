@@ -1,19 +1,10 @@
 import { DisabledMessage, TransitionFormButton } from "@/components/ui";
-import { WIKI_DISABLE_SIGNUP, WIKI_NAME } from "@/config";
+import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Sign Up | " + WIKI_NAME,
-  description: "Sign up for your " + WIKI_NAME + " account.",
-};
-
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {
     return <DisabledMessage message="Signups are disabled." />;
   }
@@ -25,7 +16,7 @@ export default async function SignupPage({
 
     if (!consent) {
       redirect(
-        `/app/signup?error=${encodeURIComponent(
+        `/wiki/System_SignUp?error=${encodeURIComponent(
           "You must agree to the terms and conditions",
         )}`,
       );
@@ -45,19 +36,19 @@ export default async function SignupPage({
     if (res.ok) {
       // Redirect to signin page with success message
       redirect(
-        `/app/signin?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
+        `/wiki/System_SignIn?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
       );
     } else {
       const data = await res.json();
       redirect(
-        `/app/signup?error=${encodeURIComponent(
+        `/wiki/System_SignUp?error=${encodeURIComponent(
           data.error || "An unexpected error occurred",
         )}`,
       );
     }
   }
-  const params = await searchParams;
-  const error = params.error as string | undefined;
+//   const params = await searchParams;
+//   const error = params.error as string | undefined;
   return (
     <div>
       <h1 className="mb-4 text-center text-4xl font-bold">Sign Up</h1>
@@ -110,10 +101,10 @@ export default async function SignupPage({
         </TransitionFormButton>
       </form>
       <div className="text-center">
-        <Link href="/app/signin" className="mt-4 inline-block">
+        <Link href="/wiki/System_SignIn" className="mt-4 inline-block">
           Already have an account? <span className="underline">Sign In</span>
         </Link>
-        <p className="text-red-500">{error && <span>{error}</span>}</p>
+        {/* <p className="text-red-500">{error && <span>{error}</span>}</p> */}
       </div>
     </div>
   );

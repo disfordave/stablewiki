@@ -3,7 +3,7 @@ import {
   TransitionFormButton,
   TransitionLinkButton,
 } from "@/components/ui";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser, signOutUser } from "@/lib/auth/functions";
 import {
   HomeIcon,
@@ -11,11 +11,6 @@ import {
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
-
-export const metadata = {
-  title: "Dashboard | " + WIKI_NAME,
-  description: "Your personal dashboard on " + WIKI_NAME + ".",
-};
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -47,12 +42,12 @@ export default async function DashboardPage() {
   //     const cookieStore = await cookies();
   //     cookieStore.delete("jwt");
   //     redirect(
-  //       `/app/signin?success=${encodeURIComponent("Account deleted successfully")}`,
+  //       `/wiki/System_SignIn?success=${encodeURIComponent("Account deleted successfully")}`,
   //     );
   //   } else {
   //     const data = await res.json();
   //     redirect(
-  //       `/app/dashboard?error=${encodeURIComponent(
+  //       `/wiki/System_Dashboard?error=${encodeURIComponent(
   //         data.error || "An unexpected error occurred",
   //       )}`,
   //     );
@@ -100,7 +95,7 @@ export default async function DashboardPage() {
           </TransitionLinkButton>
           {WIKI_DISABLE_MEDIA ? null : (
             <TransitionLinkButton
-              href="/app/upload"
+              href="/wiki/System_Upload"
               className="bg-green-500 text-white hover:bg-green-600"
             >
               <PhotoIcon className="inline size-5" />

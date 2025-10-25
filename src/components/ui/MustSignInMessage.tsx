@@ -13,7 +13,7 @@ export function MustSignInMessage({
           {customMessage || "You must be signed in to access this page."}
         </p>
         <TransitionLinkButton
-          href="/app/signin"
+          href="/wiki/System_SignIn"
           className="bg-violet-500 text-white hover:bg-violet-600"
         >
           <ArrowLeftEndOnRectangleIcon className="inline size-5" />

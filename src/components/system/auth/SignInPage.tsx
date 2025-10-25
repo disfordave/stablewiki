@@ -1,31 +1,23 @@
 import { TransitionFormButton } from "@/components/ui";
-import { WIKI_DISABLE_SIGNUP, WIKI_NAME } from "@/config";
+import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { getUser } from "@/lib/auth/functions";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Sign In | " + WIKI_NAME,
-  description: "Sign in to your " + WIKI_NAME + " account.",
-};
 
-export default async function SignIn({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function SignIn() {
   const user = await getUser();
   if (user.username) {
-    redirect(`/app/dashboard`);
+    redirect(`/wiki/System_Dashboard`);
   }
 
   async function signIn(formData: FormData) {
     "use server";
 
     if (user.username) {
-      redirect(`/app/dashboard`);
+      redirect(`/wiki/System_Dashboard`);
     }
 
     //Extracting form data
@@ -57,20 +49,17 @@ export default async function SignIn({
         sameSite: "lax",
       });
 
-      redirect(`/app/dashboard`);
+      redirect(`/wiki/System_Dashboard`);
     } else {
       const data = await res.json();
       redirect(
-        `/app/signin?error=${encodeURIComponent(
+        `/wiki/System_SignIn?error=${encodeURIComponent(
           data.error || "An unexpected error occurred",
         )}`,
       );
     }
   }
 
-  const params = await searchParams;
-  const error = params.error as string | undefined;
-  const success = params.success as string | undefined;
   return (
     <div>
       <h1 className="mb-4 text-center text-4xl font-bold">Sign In</h1>
@@ -117,13 +106,13 @@ export default async function SignIn({
             contact the wiki administrator.
           </p>
         ) : (
-          <Link href="/app/signup" className="mt-4 inline-block">
+          <Link href="/wiki/System_SignUp" className="mt-4 inline-block">
             Don&apos;t have an account?{" "}
             <span className="underline">Sign Up</span>
           </Link>
         )}
-        <p className="text-green-500">{success && <span>{success}</span>}</p>
-        <p className="text-red-500">{error && <span>{error}</span>}</p>
+        {/* <p className="text-green-500">{success && <span>{success}</span>}</p>
+        <p className="text-red-500">{error && <span>{error}</span>}</p> */}
       </div>
     </div>
   );

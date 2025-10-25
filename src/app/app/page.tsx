@@ -5,8 +5,8 @@ export default async function App() {
   const user = await getUser();
 
   if (!user.username) {
-    return redirect("/app/signin");
+    return redirect("/wiki/System_SignIn");
   }
 
-  return redirect("/app/dashboard");
+  return redirect("/wiki/System_Dashboard");
 }
