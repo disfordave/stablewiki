@@ -210,13 +210,13 @@ export async function POST(request: Request) {
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const { slug } = await params;
 
   try {
     const page = await prisma.page.delete({
-      where: { slug: encodeURIComponent(slug) },
+      where: { slug: encodeURIComponent(normalizeSlug(slug)) },
     });
     return Response.json(page, { status: 200 });
   } catch (error) {
