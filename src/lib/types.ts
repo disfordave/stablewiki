@@ -2,8 +2,8 @@ export interface Page {
   id: string;
   title: string;
   content: string;
-  slug: string;
-  author: {
+  slug: string[];
+  author?: {
     id: string;
     username: string;
   };

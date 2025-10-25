@@ -3,31 +3,121 @@ import { Page } from "@/lib/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 
-export function normalizeSlug(raw: string) {
-  const decoded = decodeURIComponent(raw);
-  const trimmed = decoded.trim().replace(/\s+/g, " ");
-  if (!trimmed) return trimmed;
+export function normalizeSlug(raw: string[]): string {
+  raw = raw.map((s) => {
+    const decoded = decodeURIComponent(s);
+    const trimmed = decoded.trim().replace(/\s+/g, " ");
+    if (!trimmed) return trimmed;
 
-  // Capitalize the first letter only, preserve the rest as-is
-  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    // Capitalize the first letter only, preserve the rest as-is
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  });
+  return raw.join("/");
 }
-
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const { slug } = await params;
+  const { searchParams } = new URL(request.url);
+  const action = searchParams.get("action");
+  const ver = searchParams.get("ver");
+
+  if (action === "history" && ver) {
+    try {
+      const page = await prisma.page.findUnique({
+        where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+        include: {
+          revisions: {
+            where: { version: Number(ver) },
+            include: { author: { select: { id: true, username: true } } },
+          },
+        },
+      });
+
+      if (!page) {
+        return Response.json({
+          page: null,
+        });
+      }
+
+      return Response.json({
+        page: {
+          id: page.id,
+          title: page.title,
+          content:
+            page.revisions.length > 0
+              ? page.revisions[0].content
+              : page.content,
+          slug: [page.slug],
+          author:
+            page.revisions.length > 0
+              ? {
+                  id: page.revisions[0].author.id,
+                  username: page.revisions[0].author.username,
+                }
+              : null,
+          createdAt: page.createdAt,
+          updatedAt:
+            page.revisions.length > 0
+              ? page.revisions[0].createdAt
+              : page.updatedAt,
+          tags: [], // Tags can be fetched via a separate endpoint if needed
+        } as Page,
+      });
+    } catch (error) {
+      console.error(error);
+      return Response.json({ error: "Failed to fetch page" }, { status: 500 });
+    }
+  } else if (action === "history") {
+    try {
+      const page = await prisma.page.findUnique({
+        where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+        include: {
+          revisions: {
+            orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
+            include: { author: { select: { id: true, username: true } } },
+          },
+        },
+      });
+
+      if (!page) {
+        return Response.json({
+          page: null,
+        });
+      }
+      return Response.json({
+        page: {
+          id: page.id,
+          title: page.title,
+          revisions: page.revisions.map((rev) => ({
+            author: { id: rev.author.id, username: rev.author.username },
+            id: rev.id,
+            version: rev.version,
+            content: rev.content,
+            createdAt: rev.createdAt,
+            summary: rev.summary || "No summary provided.",
+          })),
+          slug: page.slug,
+          isRedirect: page.isRedirect,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return Response.json({ error: "Failed to fetch page" }, { status: 500 });
+    }
+  }
+
+  // Fetch latest page
   try {
     const page = await prisma.page.findUnique({
       where: { slug: encodeURIComponent(normalizeSlug(slug)) },
       include: {
-        author: true,
-        tags: { include: { tag: true } },
         revisions: {
           orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
           take: 1,
-          include: { author: true },
+          include: { author: { select: { id: true, username: true } } },
         },
       },
     });
@@ -44,22 +134,20 @@ export async function GET(
         title: page.title,
         content:
           page.revisions.length > 0 ? page.revisions[0].content : page.content,
-        slug: page.slug,
+        slug: [page.slug],
         author:
           page.revisions.length > 0
             ? {
                 id: page.revisions[0].author.id,
                 username: page.revisions[0].author.username,
               }
-            : { id: page.author.id, username: page.author.username },
+            : null,
         createdAt: page.createdAt,
         updatedAt:
           page.revisions.length > 0
             ? page.revisions[0].createdAt
             : page.updatedAt,
-        tags: page.tags.map((t) => {
-          return { id: t.tag.id, name: t.tag.name };
-        }),
+        tags: [], // Tags can be fetched via a separate endpoint if needed
         isRedirect: page.isRedirect,
         redirectTargetSlug:
           page.revisions.length > 0
