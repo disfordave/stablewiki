@@ -2,6 +2,7 @@ import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
 import type { Page } from "@/types/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
+import { redirect } from "next/navigation";
 
 export default async function StableSearch({
   query,
@@ -12,7 +13,7 @@ export default async function StableSearch({
     return str.replace(/\s+$/, "");
   };
 
-  let results = null;
+  let results = null as Page[] | null;
 
   try {
     const fetchResults = await fetch(
@@ -29,6 +30,7 @@ export default async function StableSearch({
       );
     }
     const data = await fetchResults.json();
+
     results = data || [];
   } catch {
     return (
@@ -38,10 +40,14 @@ export default async function StableSearch({
     );
   }
 
+  if (results && results[0]?.title.toLowerCase() === query?.toString().toLowerCase()) {
+    redirect(`/wiki/${results[0]?.title}`);
+  }
+
   return (
     <div>
       {/* Placeholder for search results */}
-      {results.length === 0 ? (
+      {results && results.length === 0 ? (
         <>
           <p>No results found.</p>
           <TransitionLinkButton

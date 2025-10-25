@@ -15,8 +15,8 @@ export default function SystemPages({
     case "Search":
       return (
         <div>
-          <h1 className="text-2xl font-bold">Search Results for {q}</h1>
           <Suspense fallback={<LoadingSkeleton />}>
+            <h1 className="text-2xl font-bold">Search Results for {q}</h1>
             <StableSearch query={q} />
           </Suspense>
         </div>
