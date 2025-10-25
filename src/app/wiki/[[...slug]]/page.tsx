@@ -7,6 +7,7 @@ import {
 } from "@/components/ui";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -103,6 +104,15 @@ export default async function WikiPage({
       {showHistoryList && (
         <div>
           <RevisionList revisions={pageRevisions} slug={joinedSlug} />
+          {pageRevisions && (
+            <TransitionLinkButton
+              href={`/wiki/${slug.join("/")}`}
+              className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <ArrowUturnLeftIcon className="inline size-5" />
+              Back to Page
+            </TransitionLinkButton>
+          )}
         </div>
       )}
       {showHistoryVersion &&
