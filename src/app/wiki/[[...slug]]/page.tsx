@@ -5,9 +5,26 @@ import {
   StableMarkdown,
   TransitionLinkButton,
 } from "@/components/ui";
-import { WIKI_HOMEPAGE_LINK } from "@/config";
+import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+// Shared function to fetch page data
+async function getPageData(joinedSlug: string, queryParams: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${joinedSlug}${queryParams}`,
+    {
+      cache: "no-store",
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch page: ${res.status} ${res.statusText}`);
+  }
+
+  return res.json();
+}
 
 export default async function WikiPage({
   params,
@@ -45,20 +62,14 @@ export default async function WikiPage({
     author: { id: string; username: string };
     summary: string;
   }[] = [];
-  let errorMsg: string | null = null;
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${joinedSlug}${showHistoryVersion ? `?action=history&ver=${ver}` : showHistoryList ? `?action=history` : ""}`,
-      {
-        cache: "no-store",
-      },
-    );
-    if (!res.ok) {
-      errorMsg = res.statusText;
-      throw new Error(`Failed to fetch page: ${res.status} ${res.statusText}`);
-    }
+    const queryParams = showHistoryVersion
+      ? `?action=history&ver=${ver}`
+      : showHistoryList
+        ? `?action=history`
+        : "";
 
-    const data = await res.json();
+    const data = await getPageData(joinedSlug, queryParams);
 
     if (showHistoryList) {
       pageRevisions = data.page.revisions || [];
@@ -67,7 +78,7 @@ export default async function WikiPage({
     }
   } catch (err) {
     console.error(err);
-    return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
+    return <p className="text-red-500">Failed to load page 😢</p>;
   }
 
   if (page && page.isRedirect && !preventRedirect && !showEdit) {
@@ -128,4 +139,91 @@ export default async function WikiPage({
         ))}
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { action, ver, q } = await searchParams;
+  const joinedSlug = slug ? slug.join("/") : "";
+
+  if (!slug) {
+    return {
+      title: WIKI_NAME,
+      description: `Welcome to ${WIKI_NAME}, the collaborative wiki platform.`,
+    };
+  }
+
+  const showEdit = action === "edit";
+  const historyList = action === "history";
+  const showHistoryList = historyList && !ver;
+  const showHistoryVersion = historyList && ver;
+
+  try {
+    const queryParams = showHistoryVersion
+      ? `?action=history&ver=${ver}`
+      : showHistoryList
+        ? `?action=history`
+        : "";
+
+    const data = await getPageData(joinedSlug, queryParams);
+    const page = showHistoryList ? null : data.page;
+
+    if (slug[0].startsWith("System_")) {
+      if (slug[0] === "System_Search") {
+        return {
+          title: `Search Results for "${q}" | ${WIKI_NAME}`,
+          description: `Search results for "${q}" on ${WIKI_NAME}.`,
+        };
+      }
+      return {
+        title: `System Page: ${slug[0]} | ${WIKI_NAME}`,
+        description: `System page titled "${slug[0]}".`,
+      };
+    }
+
+    if (showEdit) {
+      return {
+        title: `Edit Page: ${decodeURIComponent(joinedSlug)} | ${WIKI_NAME}`,
+        description: `Editing the wiki page titled "${decodeURIComponent(joinedSlug)}".`,
+      };
+    }
+
+    if (!page) {
+      return {
+        title: `New Page: ${decodeURIComponent(joinedSlug)} | ${WIKI_NAME}`,
+        description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(joinedSlug)}".`,
+      };
+    }
+
+    if (showHistoryVersion) {
+      return {
+        title: `History of ${page.title} (ver. ${ver}) | ${WIKI_NAME}`,
+        description: `Viewing version ${ver} of the wiki page titled "${page.title}".`,
+      };
+    }
+
+    if (showHistoryList) {
+      return {
+        title: `History of ${page.title} | ${WIKI_NAME}`,
+        description: `Viewing the revision history of the wiki page titled "${page.title}".`,
+      };
+    }
+
+    return {
+      title: `${page.title} | ${WIKI_NAME}`,
+      description: `Wiki page titled "${page.title}".`,
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      title: `Error | ${WIKI_NAME}`,
+      description: `Failed to load page.`,
+    };
+  }
 }
