@@ -42,7 +42,7 @@ export default async function StableSearch({
 
   if (
     results &&
-    results[0]?.title.toLowerCase() === query?.toString().toLowerCase()
+    results[0]?.title.toLowerCase() === removeTrailingSpace(query as string).toLowerCase()
   ) {
     redirect(`/wiki/${results[0]?.title}`);
   }
@@ -52,7 +52,7 @@ export default async function StableSearch({
       {/* Placeholder for search results */}
       {results && results.length === 0 ? (
         <>
-          <p>No results found.</p>
+          <p>No results found 😢</p>
           <TransitionLinkButton
             href={`/wiki/${query}?action=edit`}
             className="mt-2 bg-green-500 text-white hover:bg-green-600"
