@@ -1,4 +1,4 @@
-import { RevisionList, StableEditor } from "@/components";
+import { RevisionList, StableEditor, SystemPages } from "@/components";
 import {
   RedirectedFrom,
   StableDate,
@@ -17,7 +17,8 @@ export default async function WikiPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-  const { action, ver, redirectedFrom, preventRedirect } = await searchParams;
+  const { action, ver, redirectedFrom, preventRedirect, q } =
+    await searchParams;
   const joinedSlug = slug ? slug.join("/") : "";
 
   const showEdit = action === "edit";
@@ -29,6 +30,12 @@ export default async function WikiPage({
     return redirect(WIKI_HOMEPAGE_LINK);
   }
 
+  // Handle special System_ pages
+  if (slug[0].startsWith("System_")) {
+    return <SystemPages slug={slug} q={q} />;
+  }
+
+  // Fetch the page data from the API
   let page: Page | null = null;
   let pageRevisions: {
     id: string;

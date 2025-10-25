@@ -15,7 +15,7 @@ export default async function Header() {
     "use server";
     const query = formData.get("search")?.toString() || "";
     // Go to search page
-    redirect(`/search?q=${encodeURIComponent(query)}`);
+    redirect(`/wiki/System_Search?q=${encodeURIComponent(query)}`);
   }
 
   return (
