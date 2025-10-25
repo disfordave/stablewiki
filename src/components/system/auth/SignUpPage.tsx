@@ -47,8 +47,8 @@ export default async function SignupPage() {
       );
     }
   }
-//   const params = await searchParams;
-//   const error = params.error as string | undefined;
+  //   const params = await searchParams;
+  //   const error = params.error as string | undefined;
   return (
     <div>
       <h1 className="mb-4 text-center text-4xl font-bold">Sign Up</h1>

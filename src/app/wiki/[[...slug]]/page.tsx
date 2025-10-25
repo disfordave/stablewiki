@@ -175,18 +175,34 @@ export async function generateMetadata({
     const page = showHistoryList ? null : data.page;
 
     if (slug[0].startsWith("System_")) {
-      if (slug[0] === "System_Search") {
-        return {
-          title: `Search Results for "${q}" | ${WIKI_NAME}`,
-          description: `Search results for "${q}" on ${WIKI_NAME}.`,
-        };
+      switch (slug[0]) {
+        case "System_Search":
+          return {
+            title: `Search Results for "${q}" | ${WIKI_NAME}`,
+            description: `Search results for "${q}" on ${WIKI_NAME}.`,
+          };
+        case "System_Dashboard":
+          return {
+            title: `Dashboard | ${WIKI_NAME}`,
+            description: `User dashboard for ${WIKI_NAME}.`,
+          };
+        case "System_SignIn":
+          return {
+            title: `Sign In | ${WIKI_NAME}`,
+            description: `Sign in to your account on ${WIKI_NAME}.`,
+          };
+        case "System_SignUp":
+          return {
+            title: `Sign Up | ${WIKI_NAME}`,
+            description: `Create a new account on ${WIKI_NAME}.`,
+          };
+        default:
+          return {
+            title: `System Page: ${slug[0]} | ${WIKI_NAME}`,
+            description: `System page titled "${slug[0]}".`,
+          };
       }
-      return {
-        title: `System Page: ${slug[0]} | ${WIKI_NAME}`,
-        description: `System page titled "${slug[0]}".`,
-      };
     }
-
     if (showEdit) {
       return {
         title: `Edit Page: ${decodeURIComponent(joinedSlug)} | ${WIKI_NAME}`,

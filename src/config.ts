@@ -5,7 +5,7 @@ const WIKI_DESCRIPTION =
 const WIKI_COPYRIGHT_HOLDER = "@disfordave";
 const WIKI_COPYRIGHT_HOLDER_URL = "https://disfordave.com";
 const WIKI_DISABLE_MEDIA = true;
-const WIKI_DISABLE_SIGNUP = false;
+const WIKI_DISABLE_SIGNUP = true;
 
 export {
   WIKI_NAME,

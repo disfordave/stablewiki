@@ -40,7 +40,10 @@ export default async function StableSearch({
     );
   }
 
-  if (results && results[0]?.title.toLowerCase() === query?.toString().toLowerCase()) {
+  if (
+    results &&
+    results[0]?.title.toLowerCase() === query?.toString().toLowerCase()
+  ) {
     redirect(`/wiki/${results[0]?.title}`);
   }
 

@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-
 export default async function SignIn() {
   const user = await getUser();
   if (user.username) {
