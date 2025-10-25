@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import StableSearch from "./StableSearch";
 import { WIKI_DISABLE_MEDIA } from "@/config";
+import { LoadingSkeleton } from "../ui";
 
 export default function SystemPages({
   slug,
@@ -15,7 +16,7 @@ export default function SystemPages({
       return (
         <div>
           <h1 className="text-2xl font-bold">Search Results for {q}</h1>
-          <Suspense fallback={<p>Loading results...</p>}>
+          <Suspense fallback={<LoadingSkeleton />}>
             <StableSearch query={q} />
           </Suspense>
         </div>

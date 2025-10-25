@@ -1,3 +1,7 @@
+import { LoadingSkeleton } from "@/components/ui";
+
 export default function Loading() {
-  return <p>Loading page...</p>;
+  return (
+    <LoadingSkeleton />
+  );
 }
