@@ -26,7 +26,7 @@ export default async function WikiList({
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  By {page.author.username} on{" "}
+                  By {page.author ? page.author.username : "Unknown"} on{" "}
                   {new Date(page.createdAt).toLocaleDateString()}
                 </p>
               </div>
