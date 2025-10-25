@@ -84,7 +84,7 @@ export default async function WikiPage({
     return <p className="text-red-500">Failed to load page 😢 ({errorMsg})</p>;
   }
 
-  if (page && page.isRedirect && !preventRedirect) {
+  if (page && page.isRedirect && !preventRedirect && !showEdit) {
     redirect(
       `/wiki/${page.redirectTargetSlug || ""}?redirectedFrom=${page.slug}`,
     );
