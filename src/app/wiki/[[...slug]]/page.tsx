@@ -1,3 +1,5 @@
+import StableEditor from "@/components/StableEditor";
+import { TransitionLinkButton } from "@/components/ui";
 import StableMarkdown from "@/components/ui/StableMarkdown";
 import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { Page } from "@/lib/types";
@@ -96,7 +98,11 @@ export default async function WikiPage({
         {slug.map((s) => decodeURIComponent(s)).join("/")}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
       </h1>
-      {showEdit && <p>Editing page.</p>}
+      {showEdit && (
+        <div className="mt-2">
+          <StableEditor page={page ? page : undefined} slug={slug} />
+        </div>
+      )}
       {showHistoryList && (
         <div>
           <ul className="mt-4 flex flex-col gap-4">
@@ -169,7 +175,15 @@ export default async function WikiPage({
             <StableMarkdown slug={joinedSlug} content={page.content} />
           </div>
         ) : (
-          <p>Page not found.</p>
+          <div>
+            <p>Page not found.</p>
+            <TransitionLinkButton
+              href={`/wiki/${slug.join("/")}?action=edit`}
+              className="mt-3 bg-blue-500 text-white hover:bg-blue-600"
+            >
+              Go to Edit Page
+            </TransitionLinkButton>
+          </div>
         ))}
     </div>
   );
