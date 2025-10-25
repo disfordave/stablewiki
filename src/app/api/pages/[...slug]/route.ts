@@ -89,6 +89,7 @@ export async function GET(
       }
       return Response.json({
         page: {
+          isHistoryList: true,
           id: page.id,
           title: page.title,
           revisions: page.revisions.map((rev) => ({
