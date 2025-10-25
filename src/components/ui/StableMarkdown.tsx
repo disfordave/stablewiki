@@ -39,7 +39,7 @@ export function WikiMarkdown({ content }: { content: string }) {
   return <Markdown remarkPlugins={[remarkGfm]}>{processed}</Markdown>;
 }
 
-export default function StableMarkdown({
+function StableMarkdown({
   content,
   oldVersion = false,
   slug = "",
@@ -86,3 +86,5 @@ export default function StableMarkdown({
     </>
   );
 }
+
+export { StableMarkdown };

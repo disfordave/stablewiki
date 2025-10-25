@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Page } from "@/lib/types";
+import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { type NextRequest } from "next/server";

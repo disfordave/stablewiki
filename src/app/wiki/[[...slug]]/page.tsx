@@ -1,34 +1,13 @@
-import StableEditor from "@/components/StableEditor";
-import { TransitionLinkButton } from "@/components/ui";
-import StableMarkdown from "@/components/ui/StableMarkdown";
+import { RevisionList, StableEditor } from "@/components";
+import {
+  RedirectedFrom,
+  StableDate,
+  StableMarkdown,
+  TransitionLinkButton,
+} from "@/components/ui";
 import { WIKI_HOMEPAGE_LINK } from "@/config";
-import { Page } from "@/lib/types";
-import Link from "next/link";
+import { Page } from "@/types/types";
 import { redirect } from "next/navigation";
-
-function StableDate({ page, isOld }: { page: Page; isOld: boolean }) {
-  return (
-    <p className="text-sm text-gray-500">
-      {isOld ? "Edited by " : "Last edited by "}{" "}
-      <span className="font-semibold">
-        {page.author ? page.author.username : "Unknown"}
-      </span>{" "}
-      on{" "}
-      <span className="font-semibold">
-        {new Date(page.updatedAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          timeZoneName: "short",
-          timeZone: "UTC",
-        })}
-      </span>
-    </p>
-  );
-}
 
 export default async function WikiPage({
   params,
@@ -105,35 +84,7 @@ export default async function WikiPage({
       )}
       {showHistoryList && (
         <div>
-          <ul className="mt-4 flex flex-col gap-4">
-            {pageRevisions.map(
-              (rev: {
-                id: string;
-                version: number;
-                content: string;
-                createdAt: string;
-                author: { id: string; username: string };
-                summary: string;
-              }) => (
-                <li key={rev.id} className="rounded hover:underline">
-                  <Link
-                    href={`/wiki/${slug}?action=history&ver=${rev.version}`}
-                  >
-                    <h2 className="text-lg font-semibold">
-                      Revision ID: {rev.version}
-                    </h2>
-                    <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700">
-                      {rev.summary || "No summary provided."}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Edited by {rev.author.username} on{" "}
-                      {new Date(rev.createdAt).toLocaleString()}
-                    </p>
-                  </Link>
-                </li>
-              ),
-            )}
-          </ul>
+          <RevisionList revisions={pageRevisions} slug={joinedSlug} />
         </div>
       )}
       {showHistoryVersion &&
@@ -154,24 +105,7 @@ export default async function WikiPage({
         (page ? (
           <div>
             <StableDate page={page} isOld={false} />
-            {redirectedFrom && (
-              <div className="mt-1 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
-                <p className="">
-                  You were redirected here from{" "}
-                  <Link
-                    href={`/wiki/${redirectedFrom}?preventRedirect=true`}
-                    className="underline"
-                  >
-                    {Array.isArray(redirectedFrom)
-                      ? redirectedFrom
-                          .map((s) => decodeURIComponent(s))
-                          .join("/")
-                      : decodeURIComponent(redirectedFrom)}
-                  </Link>
-                  .
-                </p>
-              </div>
-            )}
+            {redirectedFrom && <RedirectedFrom from={redirectedFrom} />}
             <StableMarkdown slug={joinedSlug} content={page.content} />
           </div>
         ) : (

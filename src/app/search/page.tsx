@@ -1,7 +1,7 @@
 import { TransitionLinkButton } from "@/components/ui";
 import WikiList from "@/components/WikiList";
 import { WIKI_NAME } from "@/config";
-import type { Page } from "@/lib/types";
+import type { Page } from "@/types/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 
@@ -41,7 +41,7 @@ export default async function SearchPage({
         <>
           <p>No results found.</p>
           <TransitionLinkButton
-            href={`/wiki/${query}/edit`}
+            href={`/wiki/${query}?action=edit`}
             className="mt-2 bg-green-500 text-white hover:bg-green-600"
           >
             <PencilSquareIcon className="inline size-5" />

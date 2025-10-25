@@ -1,4 +1,4 @@
-import { Page } from "@/lib/types";
+import { Page } from "@/types/types";
 
 export default async function WikiList({
   pages,
