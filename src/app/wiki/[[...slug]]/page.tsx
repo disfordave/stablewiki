@@ -123,7 +123,7 @@ export default async function WikiPage({
       </h1>
       {showEdit && (
         <div className="mt-2">
-          <StableEditor page={page ? page : undefined} slug={slug} />
+          <StableEditor page={page ? page : undefined} slug={joinedSlug} />
         </div>
       )}
       {showHistoryList && (

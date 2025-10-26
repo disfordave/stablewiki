@@ -50,7 +50,46 @@ export function WikiMarkdown({ content }: { content: string }) {
     },
   );
 
-  return <Markdown remarkPlugins={[remarkGfm]}>{processed}</Markdown>;
+  return (
+    <Markdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        a(props) {
+          const { children, className, ...rest } = props;
+          const externalLink = /^https?:\/\//.test(props.href || "");
+          if (externalLink) {
+            return (
+              <a
+                {...rest}
+                className={
+                  className +
+                  " not-prose text-green-600 after:ml-0.5 after:content-['↗'] hover:underline dark:text-green-500"
+                }
+                target={externalLink ? "_blank" : undefined}
+                rel={externalLink ? "noopener noreferrer" : undefined}
+              >
+                {children}
+              </a>
+            );
+          } else {
+            return (
+              <a
+                {...rest}
+                className={
+                  className +
+                  " not-prose text-blue-600 hover:underline dark:text-blue-500"
+                }
+              >
+                {children}
+              </a>
+            );
+          }
+        },
+      }}
+    >
+      {processed}
+    </Markdown>
+  );
 }
 
 export default function StableMarkdownComp({ content }: { content: string }) {

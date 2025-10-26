@@ -29,7 +29,7 @@ export default async function StableEditor({
   slug,
 }: {
   page?: Page;
-  slug: string[];
+  slug: string;
 }) {
   const user = await getUser();
 
@@ -49,7 +49,7 @@ export default async function StableEditor({
         Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({
-        title: slug.map((part) => decodeURIComponent(part)).join("/"),
+        title: decodeURIComponent(slug),
         content,
         author: user,
         summary,
@@ -84,7 +84,7 @@ export default async function StableEditor({
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          title: slug.map((part) => decodeURIComponent(part)).join("/"),
+          title: decodeURIComponent(slug),
           content,
           author: user,
           summary,
