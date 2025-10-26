@@ -23,7 +23,7 @@ import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { handleHPage } from "@/utils/api/pagination";
-import slugify from "slugify";
+// import slugify from "slugify";
 
 // export function normalizeSlug(raw: string[]): string {
 //   raw = raw.map((s) => {
@@ -195,7 +195,8 @@ export async function GET(
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
   const { title, content, author, summary } = await request.json();
 
   if (!(await validAuthorizationWithJwt(request))) {
@@ -210,13 +211,13 @@ export async function POST(request: Request) {
 
   try {
     const revisionsCount = await prisma.revision.count({
-      where: { page: { slug: slugify(title, { replacement: "_" }) } },
+      where: { page: { slug: slug.join("/") } },
     });
 
     const page = await prisma.revision.create({
       data: {
         content,
-        page: { connect: { slug: slugify(title, { replacement: "_" }) } },
+        page: { connect: { slug: slug.join("/") } },
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
         summary,
@@ -226,7 +227,7 @@ export async function POST(request: Request) {
     });
 
     const updatedPage = await prisma.page.update({
-      where: { slug: slugify(title, { replacement: "_" }) },
+      where: { slug: slug.join("/") },
       data: {
         isRedirect: redirection.isRedirect,
       },

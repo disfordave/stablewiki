@@ -76,7 +76,7 @@ export default async function StableEditor({
     }
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page?.slug || slug}`,
       {
         method: "POST",
         headers: {
@@ -84,7 +84,7 @@ export default async function StableEditor({
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          title: decodeURIComponent(slug),
+          title: page?.title || slug,
           content,
           author: user,
           summary,
