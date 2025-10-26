@@ -35,6 +35,7 @@ export default async function StableEditor({
 
   async function createPage(formData: FormData) {
     "use server";
+    const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const summary = formData.get("summary") as string;
 
@@ -49,7 +50,7 @@ export default async function StableEditor({
         Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({
-        title: decodeURIComponent(slug),
+        title,
         content,
         author: user,
         summary,
@@ -75,7 +76,7 @@ export default async function StableEditor({
       throw new Error("User not found");
     }
 
-    if (!page?.id) {
+    if (!page || !page.id || !page.slug) {
       throw new Error("Page not found");
     }
 
@@ -113,8 +114,13 @@ export default async function StableEditor({
     if (!user) {
       throw new Error("User not found");
     }
+
+    if (!page || !page.id || !page.slug) {
+      throw new Error("Page not found");
+    }
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page.slug}`,
       {
         method: "DELETE",
         headers: {
@@ -139,6 +145,14 @@ export default async function StableEditor({
   if (!page?.id) {
     return (
       <form action={createPage}>
+        <input
+          type="text"
+          name="title"
+          defaultValue={decodeURIComponent(slug)}
+          placeholder="Edit title"
+          className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+          required
+        />
         <WikiEditor />
         <TransitionFormButton
           useButtonWithoutForm={true}
