@@ -55,15 +55,19 @@ export function WikiMarkdown({ content }: { content: string }) {
       remarkPlugins={[remarkGfm]}
       components={{
         a(props) {
-          const { children, className, ...rest } = props;
-          const externalLink = /^https?:\/\//.test(props.href || "");
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { children, className, node, href, ...rest } = props;
+          // Https or http links
+          const externalLink = /^https?:\/\//.test(href || "");
+          // Embedded YouTube links like [youtube](/yt:VIDEO_ID)
+          const embeddedYouTube = /^\/yt:(.+)/.test(href || "");
           if (externalLink) {
             return (
               <a
                 {...rest}
                 className={
                   className +
-                  " not-prose text-green-600 after:ml-0.5 after:content-['↗'] hover:underline dark:text-green-500"
+                  " not-prose cursor-pointer text-green-600 after:ml-0.5 after:content-['↗'] hover:underline dark:text-green-500"
                 }
                 target={externalLink ? "_blank" : undefined}
                 rel={externalLink ? "noopener noreferrer" : undefined}
@@ -71,13 +75,25 @@ export function WikiMarkdown({ content }: { content: string }) {
                 {children}
               </a>
             );
+          } else if (embeddedYouTube) {
+            const videoId = href?.substring(4).trim();
+            return (
+              <iframe
+                className="my-4 h-80 w-full overflow-auto rounded-xl"
+                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            );
           } else {
             return (
               <a
                 {...rest}
                 className={
                   className +
-                  " not-prose text-blue-600 hover:underline dark:text-blue-500"
+                  " not-prose cursor-pointer text-blue-600 hover:underline dark:text-blue-500"
                 }
               >
                 {children}
