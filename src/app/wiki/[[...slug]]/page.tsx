@@ -116,9 +116,7 @@ export default async function WikiPage({
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
         {slug.map((s) => decodeURIComponent(s)).join("/")}
-        {showHistoryList && handledHPage
-          ? ` (Page ${handledHPage})`
-          : " (Page 1)"}
+        {showHistoryList && handledHPage && ` (Page ${handledHPage})`}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
         {showRevert && <>{` to (ver. ${ver})`}</>}
         {showDiff && <>{` from (ver. ${ver})`}</>}
