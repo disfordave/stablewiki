@@ -75,8 +75,12 @@ export default async function StableEditor({
       throw new Error("User not found");
     }
 
+    if (!page?.id) {
+      throw new Error("Page not found");
+    }
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page?.slug || slug}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page.slug}`,
       {
         method: "POST",
         headers: {
@@ -84,7 +88,7 @@ export default async function StableEditor({
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          title: page?.title || slug,
+          title: page.title,
           content,
           author: user,
           summary,
