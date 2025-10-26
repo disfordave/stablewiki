@@ -72,7 +72,9 @@ export default async function StableRevert({
       />
       <form className="flex flex-col gap-4" action={editPage}>
         <input type="hidden" name="content" value={newTargetContent} />
-        <div className="font-bold mt-4 animate-pulse">You&apos;re about to revert to version {targetVersion}.</div>
+        <div className="mt-4 animate-pulse font-bold">
+          You&apos;re about to revert to version {targetVersion}.
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <TransitionLinkButton
             href={`/wiki/${slug}?action=history`}

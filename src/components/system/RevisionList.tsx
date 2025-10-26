@@ -38,7 +38,7 @@ export default function RevisionList({
                 {rev.summary.length > 0 ? (
                   <span className="font-medium">{rev.summary}</span>
                 ) : (
-                  <span className="italic text-gray-500">
+                  <span className="text-gray-500 italic">
                     No summary provided.
                   </span>
                 )}
