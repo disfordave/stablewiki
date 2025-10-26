@@ -1,4 +1,10 @@
-import { RevisionList, StableEditor, SystemPages } from "@/components";
+import {
+  RevisionList,
+  StableDiffViewer,
+  StableEditor,
+  SystemPages,
+} from "@/components";
+import StableRevert from "@/components/system/StableRevert";
 import {
   RedirectedFrom,
   StableDate,
@@ -7,25 +13,13 @@ import {
 } from "@/components/ui";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
+import { getPageData, getLatestPageRevision } from "@/utils/api/getPages";
+import {
+  ArrowUturnLeftIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-
-// Shared function to fetch page data
-async function getPageData(joinedSlug: string, queryParams: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${joinedSlug}${queryParams}`,
-    {
-      cache: "no-store",
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch page: ${res.status} ${res.statusText}`);
-  }
-
-  return res.json();
-}
 
 export default async function WikiPage({
   params,
@@ -40,9 +34,15 @@ export default async function WikiPage({
   const joinedSlug = slug ? slug.join("/") : "";
 
   const showEdit = action === "edit";
+  const revertAction = action === "revert";
+  const diffAction = action === "diff";
   const historyList = action === "history";
   const showHistoryList = historyList && !ver;
   const showHistoryVersion = historyList && ver;
+  const showRevert = revertAction && ver;
+  const showDiff = diffAction && ver;
+
+  // Redirect to homepage if no slug is provided
 
   if (!slug) {
     return redirect(WIKI_HOMEPAGE_LINK);
@@ -64,11 +64,12 @@ export default async function WikiPage({
     summary: string;
   }[] = [];
   try {
-    const queryParams = showHistoryVersion
-      ? `?action=history&ver=${ver}`
-      : showHistoryList
-        ? `?action=history`
-        : "";
+    const queryParams =
+      showHistoryVersion || showRevert || showDiff
+        ? `?action=history&ver=${ver}`
+        : showHistoryList
+          ? `?action=history`
+          : "";
 
     const data = await getPageData(joinedSlug, queryParams);
 
@@ -93,8 +94,12 @@ export default async function WikiPage({
       <h1 className="text-3xl font-bold">
         {showEdit ? "Editing " : ""}
         {showHistoryList ? "History of " : ""}
+        {showRevert ? "Reverting " : ""}
+        {showDiff ? "Differences of " : ""}
         {slug.map((s) => decodeURIComponent(s)).join("/")}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
+        {showRevert && <>{` to (ver. ${ver})`}</>}
+        {showDiff && <>{` from (ver. ${ver})`}</>}
       </h1>
       {showEdit && (
         <div className="mt-2">
@@ -128,8 +133,39 @@ export default async function WikiPage({
         ) : (
           <p>Page not found.</p>
         ))}
+      {showDiff && page && (
+        <div>
+          <StableDate page={page} isOld={false} />
+          <StableDiffViewer
+            oldContent={page.content}
+            newContent={(await getLatestPageRevision(joinedSlug)).page.content}
+          />
+          <TransitionLinkButton
+            href={`/wiki/${slug}?action=history`}
+            className="mt-4 bg-blue-500 text-white hover:bg-blue-600"
+          >
+            <DocumentTextIcon className="inline size-5" />
+            History
+          </TransitionLinkButton>
+        </div>
+      )}
+      {showRevert && page && (
+        <div>
+          <StableDate page={page} isOld={false} />
+          <StableRevert
+            currentContent={
+              (await getLatestPageRevision(joinedSlug)).page.content
+            }
+            newTargetContent={page.content}
+            slug={slug.join("/")}
+            targetVersion={ver as string}
+          />
+        </div>
+      )}
       {!showEdit &&
         !historyList &&
+        !showDiff &&
+        !showRevert &&
         (page ? (
           <div>
             <StableDate page={page} isOld={false} />
