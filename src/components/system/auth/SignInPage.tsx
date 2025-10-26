@@ -29,14 +29,14 @@ import { redirect } from "next/navigation";
 export default async function SignIn() {
   const user = await getUser();
   if (user.username) {
-    redirect(`/wiki/System_Dashboard`);
+    redirect(`/wiki/System:Dashboard`);
   }
 
   async function signIn(formData: FormData) {
     "use server";
 
     if (user.username) {
-      redirect(`/wiki/System_Dashboard`);
+      redirect(`/wiki/System:Dashboard`);
     }
 
     //Extracting form data
@@ -68,11 +68,11 @@ export default async function SignIn() {
         sameSite: "lax",
       });
 
-      redirect(`/wiki/System_Dashboard`);
+      redirect(`/wiki/System:Dashboard`);
     } else {
       const data = await res.json();
       redirect(
-        `/wiki/System_SignIn?error=${encodeURIComponent(
+        `/wiki/System:SignIn?error=${encodeURIComponent(
           data.error || "An unexpected error occurred",
         )}`,
       );
@@ -125,7 +125,7 @@ export default async function SignIn() {
             contact the wiki administrator.
           </p>
         ) : (
-          <Link href="/wiki/System_SignUp" className="mt-4 inline-block">
+          <Link href="/wiki/System:SignUp" className="mt-4 inline-block">
             Don&apos;t have an account?{" "}
             <span className="underline">Sign Up</span>
           </Link>

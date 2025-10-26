@@ -35,7 +35,7 @@ export default async function Header() {
     "use server";
     const query = formData.get("search")?.toString() || "";
     // Go to search page
-    redirect(`/wiki/System_Search?q=${encodeURIComponent(query)}`);
+    redirect(`/wiki/System:Search?q=${encodeURIComponent(query)}`);
   }
 
   return (
@@ -57,7 +57,7 @@ export default async function Header() {
         {user.username ? (
           <div className="flex items-center gap-2">
             <TransitionLinkButton
-              href="/wiki/System_Dashboard"
+              href="/wiki/System:Dashboard"
               className="bg-violet-500 text-white hover:bg-violet-600"
             >
               <UserCircleIcon className="inline size-5" />
@@ -66,7 +66,7 @@ export default async function Header() {
           </div>
         ) : (
           <TransitionLinkButton
-            href="/wiki/System_SignIn"
+            href="/wiki/System:SignIn"
             className="bg-violet-500 text-white hover:bg-violet-600"
           >
             <ArrowLeftEndOnRectangleIcon className="inline size-5" />

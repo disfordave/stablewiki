@@ -20,6 +20,7 @@
 
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import slugify from "slugify";
 
 export function WikiMarkdown({ content }: { content: string }) {
   let processed = content;
@@ -37,15 +38,9 @@ export function WikiMarkdown({ content }: { content: string }) {
     (_, page, label) => {
       const pageName = page.trim();
       const linkLabel = label ? label.trim() : pageName;
-      const slug = encodeURIComponent(pageName);
-
-      // Normalize: always display as [[Page||Label]]
-      // const normalized =
-      //   label && label.trim() !== pageName
-      //     ? `[[${pageName}||${linkLabel}]]`
-      //     : `[[${pageName}]]`;
-
-      // You can store `normalized` if you want to rewrite the file consistently
+      const slug = pageName.split('/').map((part: string) =>
+        slugify(part, { lower: false, replacement: "_" })
+      ).join('/');
       return `[${linkLabel}](/wiki/${slug})`;
     },
   );

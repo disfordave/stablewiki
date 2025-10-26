@@ -36,7 +36,7 @@ export default async function SignupPage() {
 
     if (!consent) {
       redirect(
-        `/wiki/System_SignUp?error=${encodeURIComponent(
+        `/wiki/System:SignUp?error=${encodeURIComponent(
           "You must agree to the terms and conditions",
         )}`,
       );
@@ -56,12 +56,12 @@ export default async function SignupPage() {
     if (res.ok) {
       // Redirect to signin page with success message
       redirect(
-        `/wiki/System_SignIn?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
+        `/wiki/System:SignIn?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
       );
     } else {
       const data = await res.json();
       redirect(
-        `/wiki/System_SignUp?error=${encodeURIComponent(
+        `/wiki/System:SignUp?error=${encodeURIComponent(
           data.error || "An unexpected error occurred",
         )}`,
       );
@@ -121,7 +121,7 @@ export default async function SignupPage() {
         </TransitionFormButton>
       </form>
       <div className="text-center">
-        <Link href="/wiki/System_SignIn" className="mt-4 inline-block">
+        <Link href="/wiki/System:SignIn" className="mt-4 inline-block">
           Already have an account? <span className="underline">Sign In</span>
         </Link>
         {/* <p className="text-red-500">{error && <span>{error}</span>}</p> */}

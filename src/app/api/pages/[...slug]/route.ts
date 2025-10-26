@@ -23,18 +23,19 @@ import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { handleHPage } from "@/utils/api/pagination";
+import slugify from "slugify";
 
-export function normalizeSlug(raw: string[]): string {
-  raw = raw.map((s) => {
-    const decoded = decodeURIComponent(s);
-    const trimmed = decoded.trim().replace(/\s+/g, " ");
-    if (!trimmed) return trimmed;
+// export function normalizeSlug(raw: string[]): string {
+//   raw = raw.map((s) => {
+//     const decoded = decodeURIComponent(s);
+//     const trimmed = decoded.trim().replace(/\s+/g, " ");
+//     if (!trimmed) return trimmed;
 
-    // Capitalize the first letter only, preserve the rest as-is
-    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-  });
-  return raw.join("/");
-}
+//     // Capitalize the first letter only, preserve the rest as-is
+//     return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+//   });
+//   return raw.join("/");
+// }
 
 export async function GET(
   request: Request,
@@ -49,7 +50,7 @@ export async function GET(
   if (action === "history" && ver) {
     try {
       const page = await prisma.page.findUnique({
-        where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+        where: { slug: slug.join("/") },
         include: {
           revisions: {
             where: { version: Number(ver) },
@@ -97,7 +98,7 @@ export async function GET(
       const itemsPerPage = 5;
       const handledHPage = handleHPage(hPage) - 1;
       const page = await prisma.page.findUnique({
-        where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+        where: { slug: slug.join("/") },
         include: {
           revisions: {
             orderBy: [
@@ -125,6 +126,7 @@ export async function GET(
           revisions: page.revisions.map((rev) => ({
             author: { id: rev.author.id, username: rev.author.username },
             id: rev.id,
+            title: page.title,
             version: rev.version,
             content: rev.content,
             createdAt: rev.createdAt,
@@ -144,7 +146,7 @@ export async function GET(
   // Fetch latest page
   try {
     const page = await prisma.page.findUnique({
-      where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+      where: { slug: slug.join("/") },
       include: {
         revisions: {
           orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
@@ -208,13 +210,13 @@ export async function POST(request: Request) {
 
   try {
     const revisionsCount = await prisma.revision.count({
-      where: { page: { slug: encodeURIComponent(title) } },
+      where: { page: { slug: slugify(title, { replacement: "_" }) } },
     });
 
     const page = await prisma.revision.create({
       data: {
         content,
-        page: { connect: { slug: encodeURIComponent(title) } },
+        page: { connect: { slug: slugify(title, { replacement: "_" }) } },
         author: { connect: { id: author.id } },
         version: revisionsCount + 1,
         summary,
@@ -224,7 +226,7 @@ export async function POST(request: Request) {
     });
 
     const updatedPage = await prisma.page.update({
-      where: { slug: encodeURIComponent(title) },
+      where: { slug: slugify(title, { replacement: "_" }) },
       data: {
         isRedirect: redirection.isRedirect,
       },
@@ -247,7 +249,7 @@ export async function DELETE(
 
   try {
     const page = await prisma.page.delete({
-      where: { slug: encodeURIComponent(normalizeSlug(slug)) },
+      where: { slug: slug.join("/") },
     });
     return Response.json(page, { status: 200 });
   } catch (error) {

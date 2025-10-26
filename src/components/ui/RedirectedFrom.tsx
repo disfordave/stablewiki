@@ -19,6 +19,7 @@
 */
 
 import Link from "next/link";
+import slugify from "slugify";
 
 function RedirectedFrom({ from }: { from: string | string[] }) {
   return (
@@ -26,7 +27,9 @@ function RedirectedFrom({ from }: { from: string | string[] }) {
       <p className="">
         You were redirected here from{" "}
         <Link
-          href={`/wiki/${Array.isArray(from) ? from.join("/") : from}?preventRedirect=true`}
+          href={`/wiki/${Array.isArray(from) ? slugify(from.join("/"), { replacement: "_" }) : slugify(from, {
+            replacement: "_",
+          })}?preventRedirect=true`}
           className="underline"
         >
           {Array.isArray(from)

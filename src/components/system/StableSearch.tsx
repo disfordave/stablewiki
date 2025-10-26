@@ -65,7 +65,7 @@ export default async function StableSearch({
     results[0]?.title.toLowerCase() ===
       removeTrailingSpace(query as string).toLowerCase()
   ) {
-    redirect(`/wiki/${results[0]?.title}`);
+    redirect(`/wiki/${results[0]?.slug}`);
   }
 
   return (

@@ -33,7 +33,7 @@ export default function SystemPages({
   slug: string[];
   q: string | string[] | undefined;
 }) {
-  const systemPage = slug[0].replace("System_", "");
+  const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
   switch (systemPage) {
     case "Search":
       return (

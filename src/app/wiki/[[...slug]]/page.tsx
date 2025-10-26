@@ -38,6 +38,7 @@ import { handleHPage } from "@/utils/api/pagination";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import slugify from "slugify";
 
 export default async function WikiPage({
   params,
@@ -67,8 +68,8 @@ export default async function WikiPage({
     return redirect(WIKI_HOMEPAGE_LINK);
   }
 
-  // Handle special System_ pages
-  if (slug[0].startsWith("System_")) {
+  // Handle special System: pages
+  if (slug[0].startsWith(encodeURIComponent("System:"))) {
     return <SystemPages slug={slug} q={q} />;
   }
 
@@ -77,6 +78,7 @@ export default async function WikiPage({
   let pageRevisions: {
     id: string;
     version: number;
+    title: string;
     content: string;
     createdAt: string;
     author: { id: string; username: string };
@@ -104,7 +106,7 @@ export default async function WikiPage({
 
   if (page && page.isRedirect && !preventRedirect && !showEdit) {
     redirect(
-      `/wiki/${page.redirectTargetSlug || ""}?redirectedFrom=${page.slug}`,
+      `/wiki/${slugify(page.redirectTargetSlug || "", { replacement: "_" })}?redirectedFrom=${page.title}`,
     );
   }
 
@@ -115,7 +117,11 @@ export default async function WikiPage({
         {showHistoryList ? "History of " : ""}
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
-        {slug.map((s) => decodeURIComponent(s)).join("/")}
+        {page
+          ? page.title
+          : pageRevisions.length > 0
+            ? pageRevisions[0].title
+            : decodeURIComponent(joinedSlug)}
         {showHistoryList && handledHPage && ` (Page ${handledHPage})`}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
         {showRevert && <>{` to (ver. ${ver})`}</>}
@@ -235,24 +241,24 @@ export async function generateMetadata({
     const data = await getPageData(joinedSlug, queryParams);
     const page = showHistoryList ? null : data.page;
 
-    if (slug[0].startsWith("System_")) {
+    if (slug[0].startsWith("System:")) {
       switch (slug[0]) {
-        case "System_Search":
+        case "System:Search":
           return {
             title: `Search Results for "${q}" | ${WIKI_NAME}`,
             description: `Search results for "${q}" on ${WIKI_NAME}.`,
           };
-        case "System_Dashboard":
+        case "System:Dashboard":
           return {
             title: `Dashboard | ${WIKI_NAME}`,
             description: `User dashboard for ${WIKI_NAME}.`,
           };
-        case "System_SignIn":
+        case "System:SignIn":
           return {
             title: `Sign In | ${WIKI_NAME}`,
             description: `Sign in to your account on ${WIKI_NAME}.`,
           };
-        case "System_SignUp":
+        case "System:SignUp":
           return {
             title: `Sign Up | ${WIKI_NAME}`,
             description: `Create a new account on ${WIKI_NAME}.`,
@@ -265,16 +271,22 @@ export async function generateMetadata({
       }
     }
     if (showEdit) {
+      if (page && page.title) {
+        return {
+          title: `Edit Page: ${page.title} | ${WIKI_NAME}`,
+          description: `Editing the wiki page titled "${page.title}".`,
+        };
+      }
       return {
-        title: `Edit Page: ${decodeURIComponent(joinedSlug)} | ${WIKI_NAME}`,
-        description: `Editing the wiki page titled "${decodeURIComponent(joinedSlug)}".`,
+        title: `New Page | ${WIKI_NAME}`,
+        description: `This page does not exist yet. Create the wiki page!`,
       };
     }
 
     if (!page) {
       return {
-        title: `New Page: ${decodeURIComponent(joinedSlug)} | ${WIKI_NAME}`,
-        description: `This page does not exist yet. Create the wiki page titled "${decodeURIComponent(joinedSlug)}".`,
+        title: `New Page | ${WIKI_NAME}`,
+        description: `This page does not exist yet. Create the wiki page!`,
       };
     }
 

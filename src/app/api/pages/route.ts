@@ -23,6 +23,7 @@ import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { type NextRequest } from "next/server";
+import slugify from "slugify";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -116,7 +117,10 @@ export async function POST(request: Request) {
       data: {
         title,
         content: "",
-        slug: encodeURIComponent(title),
+        slug: slugify(title, {
+          lower: false,
+          replacement: "_",
+        }),
         author: { connect: { id: author.id } },
         revisions: {
           create: {

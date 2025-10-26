@@ -62,12 +62,12 @@ export default async function DashboardPage() {
   //     const cookieStore = await cookies();
   //     cookieStore.delete("jwt");
   //     redirect(
-  //       `/wiki/System_SignIn?success=${encodeURIComponent("Account deleted successfully")}`,
+  //       `/wiki/System:SignIn?success=${encodeURIComponent("Account deleted successfully")}`,
   //     );
   //   } else {
   //     const data = await res.json();
   //     redirect(
-  //       `/wiki/System_Dashboard?error=${encodeURIComponent(
+  //       `/wiki/System:Dashboard?error=${encodeURIComponent(
   //         data.error || "An unexpected error occurred",
   //       )}`,
   //     );
@@ -115,7 +115,7 @@ export default async function DashboardPage() {
           </TransitionLinkButton>
           {WIKI_DISABLE_MEDIA ? null : (
             <TransitionLinkButton
-              href="/wiki/System_Upload"
+              href="/wiki/System:Upload"
               className="bg-green-500 text-white hover:bg-green-600"
             >
               <PhotoIcon className="inline size-5" />
