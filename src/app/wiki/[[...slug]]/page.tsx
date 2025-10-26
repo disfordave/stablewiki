@@ -34,10 +34,8 @@ import {
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
 import { getPageData, getLatestPageRevision } from "@/utils/api/getPages";
-import {
-  ArrowUturnLeftIcon,
-  DocumentTextIcon,
-} from "@heroicons/react/24/solid";
+import { handleHPage } from "@/utils/api/pagination";
+import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -49,9 +47,11 @@ export default async function WikiPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-  const { action, ver, redirectedFrom, preventRedirect, q } =
+  const { action, ver, redirectedFrom, preventRedirect, q, hPage } =
     await searchParams;
   const joinedSlug = slug ? slug.join("/") : "";
+
+  const handledHPage = handleHPage(hPage);
 
   const showEdit = action === "edit";
   const revertAction = action === "revert";
@@ -63,7 +63,6 @@ export default async function WikiPage({
   const showDiff = diffAction && ver;
 
   // Redirect to homepage if no slug is provided
-
   if (!slug) {
     return redirect(WIKI_HOMEPAGE_LINK);
   }
@@ -88,7 +87,7 @@ export default async function WikiPage({
       showHistoryVersion || showRevert || showDiff
         ? `?action=history&ver=${ver}`
         : showHistoryList
-          ? `?action=history`
+          ? `?action=history&hPage=${handledHPage}`
           : "";
 
     const data = await getPageData(joinedSlug, queryParams);
@@ -117,6 +116,9 @@ export default async function WikiPage({
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
         {slug.map((s) => decodeURIComponent(s)).join("/")}
+        {showHistoryList && handledHPage
+          ? ` (Page ${handledHPage})`
+          : " (Page 1)"}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
         {showRevert && <>{` to (ver. ${ver})`}</>}
         {showDiff && <>{` from (ver. ${ver})`}</>}
@@ -128,16 +130,11 @@ export default async function WikiPage({
       )}
       {showHistoryList && (
         <div>
-          <RevisionList revisions={pageRevisions} slug={joinedSlug} />
-          {pageRevisions && (
-            <TransitionLinkButton
-              href={`/wiki/${slug.join("/")}`}
-              className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
-            >
-              <ArrowUturnLeftIcon className="inline size-5" />
-              Back to Page
-            </TransitionLinkButton>
-          )}
+          <RevisionList
+            revisions={pageRevisions}
+            slug={joinedSlug}
+            historyPage={Number(hPage ?? "1")}
+          />
         </div>
       )}
       {showHistoryVersion &&

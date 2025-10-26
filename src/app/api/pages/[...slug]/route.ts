@@ -22,6 +22,7 @@ import { prisma } from "@/lib/prisma";
 import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
+import { handleHPage } from "@/utils/api/pagination";
 
 export function normalizeSlug(raw: string[]): string {
   raw = raw.map((s) => {
@@ -43,6 +44,7 @@ export async function GET(
   const { searchParams } = new URL(request.url);
   const action = searchParams.get("action");
   const ver = searchParams.get("ver");
+  const hPage = searchParams.get("hPage");
 
   if (action === "history" && ver) {
     try {
@@ -90,13 +92,21 @@ export async function GET(
       console.error(error);
       return Response.json({ error: "Failed to fetch page" }, { status: 500 });
     }
-  } else if (action === "history") {
+  } else if (action === "history" && !ver && hPage) {
     try {
+      const itemsPerPage = 5;
+      const handledHPage = handleHPage(hPage) - 1;
       const page = await prisma.page.findUnique({
         where: { slug: encodeURIComponent(normalizeSlug(slug)) },
         include: {
           revisions: {
-            orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
+            orderBy: [
+              { version: "desc" },
+              { createdAt: "desc" },
+              { id: "desc" },
+            ],
+            skip: handledHPage * itemsPerPage,
+            take: itemsPerPage,
             include: { author: { select: { id: true, username: true } } },
           },
         },
@@ -122,6 +132,7 @@ export async function GET(
           })),
           slug: page.slug,
           isRedirect: page.isRedirect,
+          itemsPerPage,
         },
       });
     } catch (error) {
