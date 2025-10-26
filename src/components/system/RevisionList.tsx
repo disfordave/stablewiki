@@ -33,9 +33,15 @@ export default function RevisionList({
               className="hover:underline"
               href={`/wiki/${slug}?action=history&ver=${rev.version}`}
             >
-              <h2 className="font-semibold">Revision ver. {rev.version}</h2>
+              <h2 className="font-bold">Revision ver. {rev.version}</h2>
               <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700">
-                {rev.summary || "No summary provided."}
+                {rev.summary.length > 0 ? (
+                  <span className="font-medium">{rev.summary}</span>
+                ) : (
+                  <span className="italic text-gray-500">
+                    No summary provided.
+                  </span>
+                )}
               </p>
               <p className="text-sm text-gray-500">
                 Edited by {rev.author.username} on{" "}

@@ -98,7 +98,7 @@ export async function GET(
             version: rev.version,
             content: rev.content,
             createdAt: rev.createdAt,
-            summary: rev.summary || "No summary provided.",
+            summary: rev.summary || "",
           })),
           slug: page.slug,
           isRedirect: page.isRedirect,
