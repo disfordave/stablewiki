@@ -49,6 +49,6 @@ export async function signOutUser() {
   const cookieStore = await cookies();
   cookieStore.delete("jwt");
   redirect(
-    `/wiki/System_SignIn?success=${encodeURIComponent("Successfully signed out!")}`,
+    `/wiki/System:SignIn?success=${encodeURIComponent("Successfully signed out!")}`,
   );
 }
