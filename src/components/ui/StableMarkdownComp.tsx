@@ -65,6 +65,7 @@ export function WikiMarkdown({ content }: { content: string }) {
             return (
               <a
                 {...rest}
+                href={href}
                 className={
                   className +
                   " not-prose cursor-pointer text-green-600 after:ml-0.5 after:content-['↗'] hover:underline dark:text-green-500"
@@ -91,6 +92,7 @@ export function WikiMarkdown({ content }: { content: string }) {
             return (
               <a
                 {...rest}
+                href={href}
                 className={
                   className +
                   " not-prose cursor-pointer text-blue-600 hover:underline dark:text-blue-500"
