@@ -18,9 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Suspense } from "react";
 import StableSearch from "./SystemSearch";
-import { LoadingSkeleton } from "../ui";
 import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
@@ -38,10 +36,8 @@ export default function SystemPages({
     case "Search":
       return (
         <div>
-          <Suspense fallback={<LoadingSkeleton />}>
-            <h1 className="text-2xl font-bold">Search Results for {q}</h1>
-            <StableSearch query={q} />
-          </Suspense>
+          <h1 className="text-2xl font-bold">Search Results for {q}</h1>
+          <StableSearch query={q} />
         </div>
       );
     case "SignIn":
