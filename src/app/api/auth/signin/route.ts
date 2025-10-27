@@ -19,12 +19,9 @@
 */
 
 import { prisma } from "@/lib/prisma";
-// import jwt from "jsonwebtoken";
 import * as jose from "jose";
-import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-const JWT_EXPIRES_SECONDS = 60 * 60 * 24;
 const DUMMY_HASH =
   "$2a$10$KIX/8sW3x3lP1n7i6E1w8u3hQKq5N7e2v1a8BqQH6G1nE7Hq1m0y."; // any valid bcrypt hash
 
@@ -105,16 +102,6 @@ export async function POST(request: Request) {
         role: user.role,
         token,
       },
-    });
-
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: "jwt",
-      value: token,
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: JWT_EXPIRES_SECONDS,
     });
 
     return response;

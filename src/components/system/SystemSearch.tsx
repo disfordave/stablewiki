@@ -65,7 +65,7 @@ export default async function SystemSearch({
     results[0]?.title.toLowerCase() ===
       removeTrailingSpace(query as string).toLowerCase()
   ) {
-    redirect(`/wiki/${results[0]?.slug}`);
+    redirect(`/wiki/${encodeURIComponent(results[0]?.slug[0])}`);
   }
 
   return (
