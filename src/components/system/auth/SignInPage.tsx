@@ -127,7 +127,7 @@ export default async function SignIn() {
         ) : (
           <Link href="/wiki/System:SignUp" className="mt-4 inline-block">
             Don&apos;t have an account?{" "}
-            <span className="underline">Sign Up</span>
+            <span className="underline hover:no-underline">Sign Up</span>
           </Link>
         )}
         {/* <p className="text-green-500">{success && <span>{success}</span>}</p>

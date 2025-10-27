@@ -32,6 +32,14 @@ export default async function SignupPage() {
     "use server";
     const username = formData.get("username")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
+    const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
+    if (password !== passwordConfirm) {
+      redirect(
+        `/wiki/System:SignUp?error=${encodeURIComponent(
+          "Passwords do not match",
+        )}`,
+      );
+    }
     const consent = formData.get("consent") === "on";
 
     if (!consent) {
@@ -49,7 +57,7 @@ export default async function SignupPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, passwordConfirm, consent }),
       },
     );
 
@@ -87,6 +95,10 @@ export default async function SignupPage() {
             required
             className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
+          <p className="mt-1 text-sm text-gray-500">
+            Username must be 3-20 characters long and can only contain letters,
+            numbers, and underscores
+          </p>
         </div>
         <div>
           <label htmlFor="password" className="block">
@@ -96,6 +108,21 @@ export default async function SignupPage() {
             type="password"
             id="password"
             name="password"
+            required
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            Password must be at least 8 characters long
+          </p>
+        </div>
+        <div>
+          <label htmlFor="passwordConfirm" className="block">
+            Confirm Password:
+          </label>
+          <input
+            type="password"
+            id="passwordConfirm"
+            name="passwordConfirm"
             required
             className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
@@ -109,7 +136,16 @@ export default async function SignupPage() {
             className="h-4 w-4 accent-violet-500"
           />
           <label htmlFor="consent" className="select-none">
-            I agree to the terms and conditions.
+            I agree to the{" "}
+            <Link
+              href="/wiki/System:Terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:no-underline"
+            >
+              terms and conditions
+            </Link>
+            .
           </label>
         </div>
         <TransitionFormButton
@@ -122,7 +158,8 @@ export default async function SignupPage() {
       </form>
       <div className="text-center">
         <Link href="/wiki/System:SignIn" className="mt-4 inline-block">
-          Already have an account? <span className="underline">Sign In</span>
+          Already have an account?{" "}
+          <span className="underline hover:no-underline">Sign In</span>
         </Link>
         {/* <p className="text-red-500">{error && <span>{error}</span>}</p> */}
       </div>

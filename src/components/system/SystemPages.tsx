@@ -66,7 +66,7 @@ export default function SystemPages({
     default:
       return (
         <div>
-          <h1 className="text-3xl font-bold">System Page: {systemPage}</h1>
+          <h1 className="text-3xl font-bold">System:{systemPage}</h1>
           <p>{`This is a placeholder for the System Page "${systemPage}".`}</p>
         </div>
       );

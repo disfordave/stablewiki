@@ -25,7 +25,7 @@ import { WIKI_DISABLE_SIGNUP } from "@/config";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { username, password } = body;
+  const { username, password, passwordConfirm, consent } = body;
 
   if (WIKI_DISABLE_SIGNUP) {
     return Response.json(
@@ -34,9 +34,37 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!username || !password) {
+  if (!username || !password || !passwordConfirm || !consent) {
     return Response.json(
-      { error: "Username and password are required" },
+      { error: "Username, password, and consent are required" },
+      { status: 400 },
+    );
+  }
+
+  if (password !== passwordConfirm) {
+    return Response.json({ error: "Passwords do not match" }, { status: 400 });
+  }
+
+  if (!username.match(/^[a-zA-Z0-9_]{3,20}$/)) {
+    return Response.json(
+      {
+        error:
+          "Username must be 3-20 characters long and can only contain letters, numbers, and underscores",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (password.length < 8) {
+    return Response.json(
+      { error: "Password must be at least 8 characters long" },
+      { status: 400 },
+    );
+  }
+
+  if (!consent) {
+    return Response.json(
+      { error: "You must agree to the terms and conditions" },
       { status: 400 },
     );
   }
