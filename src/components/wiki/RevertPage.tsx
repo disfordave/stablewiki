@@ -23,6 +23,7 @@ import {
   ArrowUturnLeftIcon,
 } from "@heroicons/react/24/solid";
 import {
+  DisabledMessage,
   MustSignInMessage,
   TransitionFormButton,
   TransitionLinkButton,
@@ -83,6 +84,19 @@ export default async function StableRevert({
     console.log("Edit response data:", data);
     redirect(`/wiki/${slug}`);
   }
+
+  if (
+    (decodeURIComponent(slug).startsWith("User:") ||
+      decodeURIComponent(slug).startsWith("user:")) &&
+    user.username !== decodeURIComponent(slug).slice(5)
+  ) {
+    return (
+      <>
+        <DisabledMessage message="You cannot edit this page" />
+      </>
+    );
+  }
+
   return (
     <>
       <StableDiffViewer
