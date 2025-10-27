@@ -110,7 +110,7 @@ export default async function WikiPage({
 
   if (page && page.isRedirect && !preventRedirect && !showEdit) {
     redirect(
-      `/wiki/${slugify(page.redirectTargetSlug || "")}?redirectedFrom=${page.title}`,
+      `/wiki/${slugify(page.redirectTargetSlug || "")}?redirectedFrom=${encodeURIComponent(page.title)}`,
     );
   }
 
