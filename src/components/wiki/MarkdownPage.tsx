@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import StableMarkdownComp from "../ui/MarkdownComp";
+import { MarkdownComp } from "../ui/MarkdownComp";
 import { TransitionLinkButton } from "../ui/TransitionButton";
 import {
   ArrowPathIcon,
@@ -26,7 +26,7 @@ import {
   DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 
-function StableMarkdown({
+export default function StableMarkdown({
   content,
   oldVersion = false,
   slug = "",
@@ -39,7 +39,7 @@ function StableMarkdown({
 }) {
   return (
     <>
-      <StableMarkdownComp content={content} />
+      <MarkdownComp content={content} />
       <div className="flex flex-wrap items-center gap-2">
         {oldVersion ? (
           <TransitionLinkButton
@@ -71,5 +71,3 @@ function StableMarkdown({
     </>
   );
 }
-
-export { StableMarkdown };

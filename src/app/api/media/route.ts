@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: `Media:${fullTitle}`,
         content: "",
-        slug: `${("Media:" + slugify(fullTitle))}`,
+        slug: `${"Media:" + slugify(fullTitle)}`,
         author: { connect: { id: user.id } },
         revisions: {
           create: {

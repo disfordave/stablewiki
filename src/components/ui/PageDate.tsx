@@ -20,7 +20,7 @@
 
 import { Page } from "@/types/types";
 
-function StableDate({ page, isOld }: { page: Page; isOld: boolean }) {
+function PageDate({ page, isOld }: { page: Page; isOld: boolean }) {
   return (
     <p className="text-sm text-gray-500">
       {isOld ? "Edited by " : "Last edited by "}{" "}
@@ -44,4 +44,4 @@ function StableDate({ page, isOld }: { page: Page; isOld: boolean }) {
   );
 }
 
-export { StableDate };
+export { PageDate };

@@ -21,8 +21,3 @@
 export { default as Footer } from "./Footer";
 export { default as Header } from "./Header";
 export { default as WikiList } from "./WikiList";
-export { default as StableEditor } from "./wiki/StableEditor";
-export { default as RevisionList } from "./wiki/RevisionList";
-export { default as StableSearch } from "./system/SystemSearch";
-export { default as SystemPages } from "./system/SystemPages";
-export { default as StableDiffViewer } from "./wiki/DiffViewer";

@@ -106,10 +106,12 @@ export function WikiMarkdown({ content }: { content: string }) {
   );
 }
 
-export default function StableMarkdownComp({ content }: { content: string }) {
+function MarkdownComp({ content }: { content: string }) {
   return (
     <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 max-w-none">
       <WikiMarkdown content={content} />
     </div>
   );
 }
+
+export { MarkdownComp };

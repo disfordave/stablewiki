@@ -28,7 +28,7 @@ import {
   TransitionLinkButton,
 } from "../ui";
 import StableDiffViewer from "./DiffViewer";
-import { getUser } from "@/lib/auth/functions";
+import { getUser } from "@/lib";
 import { redirect } from "next/navigation";
 
 export default async function StableRevert({

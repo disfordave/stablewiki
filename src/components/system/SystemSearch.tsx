@@ -19,12 +19,12 @@
 */
 
 import { TransitionLinkButton } from "@/components/ui";
-import WikiList from "@/components/WikiList";
+import { WikiList } from "@/components";
 import type { Page } from "@/types/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
 import { redirect } from "next/navigation";
 
-export default async function StableSearch({
+export default async function SystemSearch({
   query,
 }: {
   query: string | string[] | undefined;

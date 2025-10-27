@@ -18,19 +18,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { SystemPages } from "@/components/system";
 import {
-  RevisionList,
-  StableDiffViewer,
-  StableEditor,
-  SystemPages,
-} from "@/components";
-import StableRevert from "@/components/wiki/RevertPage";
-import {
-  RedirectedFrom,
-  StableDate,
-  StableMarkdown,
+  PageDate,
+  RedirectedFromMessage,
   TransitionLinkButton,
 } from "@/components/ui";
+import {
+  DiffViewer,
+  MarkdownPage,
+  RevertPage,
+  RevisionList,
+  StableEditor,
+} from "@/components/wiki";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
 import {
@@ -148,20 +148,16 @@ export default async function WikiPage({
       {showHistoryVersion &&
         (page ? (
           <div>
-            <StableDate page={page} isOld={true} />
-            <StableMarkdown
-              oldVersion
-              slug={joinedSlug}
-              content={page.content}
-            />
+            <PageDate page={page} isOld={true} />
+            <MarkdownPage oldVersion slug={joinedSlug} content={page.content} />
           </div>
         ) : (
           <p>Page not found.</p>
         ))}
       {showDiff && page && (
         <div>
-          <StableDate page={page} isOld={false} />
-          <StableDiffViewer
+          <PageDate page={page} isOld={false} />
+          <DiffViewer
             oldContent={page.content}
             newContent={(await getLatestPageRevision(joinedSlug)).page.content}
           />
@@ -176,8 +172,8 @@ export default async function WikiPage({
       )}
       {showRevert && page && (
         <div>
-          <StableDate page={page} isOld={false} />
-          <StableRevert
+          <PageDate page={page} isOld={false} />
+          <RevertPage
             currentContent={
               (await getLatestPageRevision(joinedSlug)).page.content
             }
@@ -193,7 +189,7 @@ export default async function WikiPage({
         !showRevert &&
         (page ? (
           <div>
-            <StableDate page={page} isOld={false} />
+            <PageDate page={page} isOld={false} />
             <p className="text-sm">
               {slug.map((_, index) => (
                 <span key={index}>
@@ -211,8 +207,8 @@ export default async function WikiPage({
                 </span>
               ))}
             </p>
-            {redirectedFrom && <RedirectedFrom from={redirectedFrom} />}
-            <StableMarkdown slug={joinedSlug} content={page.content} />
+            {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
+            <MarkdownPage slug={joinedSlug} content={page.content} />
           </div>
         ) : (
           <div>

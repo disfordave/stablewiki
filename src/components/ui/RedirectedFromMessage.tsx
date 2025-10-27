@@ -21,7 +21,7 @@
 import Link from "next/link";
 import { slugify } from "@/utils";
 
-function RedirectedFrom({ from }: { from: string | string[] }) {
+function RedirectedFromMessage({ from }: { from: string | string[] }) {
   return (
     <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <p className="">
@@ -40,4 +40,4 @@ function RedirectedFrom({ from }: { from: string | string[] }) {
   );
 }
 
-export { RedirectedFrom };
+export { RedirectedFromMessage };

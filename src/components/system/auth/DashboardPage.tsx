@@ -24,7 +24,7 @@ import {
   TransitionLinkButton,
 } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
-import { getUser, signOutUser } from "@/lib/auth/functions";
+import { getUser, signOutUser } from "@/lib";
 import {
   HomeIcon,
   PhotoIcon,

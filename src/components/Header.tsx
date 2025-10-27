@@ -18,15 +18,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getUser } from "@/lib/auth/functions";
+import { getUser } from "@/lib";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { UserCircleIcon } from "@heroicons/react/24/solid";
+import {
+  UserCircleIcon,
+  MagnifyingGlassIcon,
+  ArrowLeftEndOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 import { TransitionLinkButton, TransitionFormButton } from "@/components/ui";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 
 export default async function Header() {
   const user = await getUser();

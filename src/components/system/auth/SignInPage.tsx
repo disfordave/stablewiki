@@ -20,7 +20,7 @@
 
 import { TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
-import { getUser } from "@/lib/auth/functions";
+import { getUser } from "@/lib";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";

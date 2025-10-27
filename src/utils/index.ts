@@ -18,8 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export { default as slugify } from "./slugify";
-export { handleHPage } from "./api/pagination";
-export { getLatestPageRevision, getPageData } from "./api/getPages";
-export { checkRedirect } from "./api/checkRedirect";
-export { validAuthorizationWithJwt } from "./api/authorization";
+export * from "./api/authorization";
+export * from "./api/checkRedirect";
+export * from "./api/getPages";
+export * from "./api/pagination";
+export * from "./slugify";

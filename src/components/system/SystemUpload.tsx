@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getUser } from "@/lib/auth/functions";
+import { getUser } from "@/lib";
 import { WIKI_DISABLE_MEDIA, WIKI_NAME } from "@/config";
 import { redirect } from "next/navigation";
 import {

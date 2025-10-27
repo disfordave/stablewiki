@@ -26,4 +26,4 @@ function slugify(text: string): string {
   // .replace(/_+$/, ""); // Trim _ from end of text
 }
 
-export default slugify;
+export { slugify };
