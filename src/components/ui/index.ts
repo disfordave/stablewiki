@@ -18,7 +18,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export { TransitionLinkButton, TransitionFormButton } from "./buttons/TransitionButton";
+export {
+  TransitionLinkButton,
+  TransitionFormButton,
+} from "./buttons/TransitionButton";
 export { BackToTopButton } from "./buttons/BackToTopButton";
 export { DisabledMessage } from "./messages/DisabledMessage";
 export { WikiEditor } from "./WikiEditor";

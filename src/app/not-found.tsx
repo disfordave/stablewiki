@@ -32,10 +32,8 @@ export { metadata };
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center bg-white text-center dark:bg-gray-900">
-      <h1 className="text-6xl font-bold text-gray-800 dark:text-gray-200">
-        404
-      </h1>
-      <p className="mt-2 mb-4 text-xl text-gray-600 dark:text-gray-400">
+      <h1 className="text-6xl font-bold">404</h1>
+      <p className="mt-2 mb-4 text-xl">
         Oops! The page you are looking for does not exist.
       </p>
       <TransitionLinkButton
