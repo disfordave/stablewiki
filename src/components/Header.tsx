@@ -23,7 +23,7 @@ import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
-  UserCircleIcon,
+  UserIcon,
   MagnifyingGlassIcon,
   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/solid";
@@ -62,7 +62,7 @@ export default async function Header() {
               href="/wiki/System:Dashboard"
               className="bg-violet-500 text-white hover:bg-violet-600"
             >
-              <UserCircleIcon className="inline size-5" />
+              <UserIcon className="inline size-5" />
               <span className="font-bold">{user.username}</span>
             </TransitionLinkButton>
           </div>

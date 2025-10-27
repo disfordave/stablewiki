@@ -20,7 +20,12 @@
 
 import { getUser } from "@/lib";
 import { redirect } from "next/navigation";
-import { MustSignInMessage, TransitionFormButton, WikiEditor } from "../ui";
+import {
+  DisabledMessage,
+  MustSignInMessage,
+  TransitionFormButton,
+  WikiEditor,
+} from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 
@@ -140,6 +145,30 @@ export default async function StableEditor({
 
   if (!user.username) {
     return <MustSignInMessage />;
+  }
+
+  if (
+    (decodeURIComponent(slug).startsWith("User:") ||
+      decodeURIComponent(slug).startsWith("user:")) &&
+    user.username !== decodeURIComponent(slug).slice(5)
+  ) {
+    return (
+      <>
+        <DisabledMessage message="You cannot edit this page" />
+      </>
+    );
+  }
+
+  if (
+    page &&
+    (page.title.startsWith("User:") || page.title.startsWith("user:")) &&
+    user.username !== page.title.slice(5)
+  ) {
+    return (
+      <>
+        <DisabledMessage message="You cannot edit this page" />
+      </>
+    );
   }
 
   if (!page?.id) {

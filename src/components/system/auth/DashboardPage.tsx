@@ -29,6 +29,7 @@ import {
   HomeIcon,
   PhotoIcon,
   ArrowLeftStartOnRectangleIcon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
 
@@ -71,6 +72,13 @@ export default async function DashboardPage() {
           >
             <HomeIcon className="inline size-5" />
             Go to Home
+          </TransitionLinkButton>
+          <TransitionLinkButton
+            href={`/wiki/User:${user.username}`}
+            className="bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <UserIcon className="inline size-5" />
+            User Page
           </TransitionLinkButton>
           {WIKI_DISABLE_MEDIA ? null : (
             <TransitionLinkButton

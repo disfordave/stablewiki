@@ -53,3 +53,33 @@ export async function validAuthorizationWithJwt(
     return false;
   }
 }
+
+export async function getDecodedToken(
+  request: NextRequest | Request,
+): Promise<jose.JWTPayload | null> {
+  try {
+    const authHeader = request.headers.get("Authorization");
+
+    if (!authHeader) {
+      return null;
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return null;
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return null;
+    }
+
+    const decodedToken = await jose
+      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+      .then((result) => result.payload);
+
+    return decodedToken;
+  } catch (error) {
+    console.error("Error decoding JWT:", error);
+    return null;
+  }
+}

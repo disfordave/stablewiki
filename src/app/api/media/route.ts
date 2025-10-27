@@ -20,8 +20,7 @@
 
 import { WIKI_DISABLE_MEDIA } from "@/config";
 import { prisma } from "@/lib/prisma";
-import { slugify } from "@/utils";
-import { validAuthorizationWithJwt } from "@/utils/api/authorization";
+import { getDecodedToken, slugify } from "@/utils";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
 
@@ -33,21 +32,27 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!(await validAuthorizationWithJwt(request))) {
+  const decodedToken = await getDecodedToken(request);
+
+  if (!decodedToken || !decodedToken.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!decodedToken?.username) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const body = await request.formData();
   const title = body.get("title") as string;
   const media = body.get("media") as File;
-  const user: {
-    id: string;
-    username: string;
-    avatarUrl?: string;
-    role: string;
-  } = JSON.parse(body.get("user") as string);
+  // const user: {
+  //   id: string;
+  //   username: string;
+  //   avatarUrl?: string;
+  //   role: string;
+  // } = JSON.parse(body.get("user") as string);
 
-  if (!title || !media || !user) {
+  if (!title || !media) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
@@ -80,11 +85,11 @@ export async function POST(request: NextRequest) {
         title: `Media:${fullTitle}`,
         content: "",
         slug: `${"Media:" + slugify(fullTitle)}`,
-        author: { connect: { id: user.id } },
+        author: { connect: { id: decodedToken.id as string } },
         revisions: {
           create: {
             content: `![[${fullTitle}]]`,
-            author: { connect: { id: user.id } },
+            author: { connect: { id: decodedToken.id as string } },
           },
         },
         isMedia: true,

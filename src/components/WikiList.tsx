@@ -41,7 +41,9 @@ export default async function WikiList({
           <li key={page.id}>
             <a href={`/wiki/${page.slug}`} className="hover:underline">
               <div className="rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
-                <h2 className="text-xl font-bold">
+                <h2
+                  className={`text-xl font-bold ${page.isRedirect ? "text-gray-500" : ""}`}
+                >
                   {page.title}{" "}
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>

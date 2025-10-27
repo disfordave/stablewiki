@@ -19,14 +19,22 @@
 */
 
 import { Page } from "@/types";
+import Link from "next/link";
 
 function PageDate({ page, isOld }: { page: Page; isOld: boolean }) {
   return (
     <p className="text-sm text-gray-500">
       {isOld ? "Edited by " : "Last edited by "}{" "}
-      <span className="font-semibold">
-        {page.author ? page.author.username : "Unknown"}
-      </span>{" "}
+      {page.author ? (
+        <Link
+          className="font-semibold hover:underline"
+          href={`/wiki/User:${page.author.username}`}
+        >
+          {page.author.username}
+        </Link>
+      ) : (
+        <span className="font-semibold">Unknown</span>
+      )}{" "}
       on{" "}
       <span className="font-semibold">
         {new Date(page.updatedAt).toLocaleDateString("en-GB", {

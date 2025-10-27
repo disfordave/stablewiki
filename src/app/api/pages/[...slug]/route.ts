@@ -20,10 +20,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
-import { validAuthorizationWithJwt } from "@/utils/api/authorization";
-import { checkRedirect } from "@/utils/api/checkRedirect";
-import { handleHPage } from "@/utils/api/pagination";
-// import slugify from "slugify";
+import { checkRedirect, handleHPage, getDecodedToken } from "@/utils";
 
 // export function normalizeSlug(raw: string[]): string {
 //   raw = raw.map((s) => {
@@ -200,17 +197,32 @@ export async function POST(
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const { slug } = await params;
-  const { title, content, author, summary } = await request.json();
+  const { title, content, summary } = await request.json();
 
-  if (!(await validAuthorizationWithJwt(request))) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (!title || !content || !author) {
+  if (!title || !content) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  const decodedToken = await getDecodedToken(request);
+
+  if (!decodedToken || !decodedToken.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!decodedToken?.username) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const redirection = checkRedirect(content, title);
+
+  if (title.startsWith("User:") || title.startsWith("user:")) {
+    if (decodedToken?.username !== title.slice(5)) {
+      return Response.json(
+        { error: "You can only create a User page for your own username" },
+        { status: 403 },
+      );
+    }
+  }
 
   try {
     const revisionsCount = await prisma.revision.count({
@@ -221,7 +233,7 @@ export async function POST(
       data: {
         content,
         page: { connect: { slug: slug.join("/") } },
-        author: { connect: { id: author.id } },
+        author: { connect: { id: decodedToken.id as string } },
         version: revisionsCount + 1,
         summary,
         isRedirect: redirection.isRedirect,
@@ -250,6 +262,16 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const { slug } = await params;
+
+  const decodedToken = await getDecodedToken(request);
+
+  if (!decodedToken || !decodedToken.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!decodedToken?.username) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const page = await prisma.page.delete({

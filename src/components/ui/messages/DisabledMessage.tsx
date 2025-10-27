@@ -19,15 +19,20 @@
 */
 
 import { WIKI_HOMEPAGE_LINK } from "@/config";
-import Link from "next/link";
+import { HomeIcon } from "@heroicons/react/24/solid";
+import { TransitionLinkButton } from "../buttons/TransitionButton";
 
 export function DisabledMessage({ message }: { message: string }) {
   return (
     <>
-      <div>{message}</div>
-      <Link href={WIKI_HOMEPAGE_LINK} className="mt-4 inline-block underline">
-        Go to Homepage
-      </Link>
+      <div className="mb-2">{message}</div>
+      <TransitionLinkButton
+        href={WIKI_HOMEPAGE_LINK}
+        className="bg-blue-500 text-white hover:bg-blue-600"
+      >
+        <HomeIcon className="inline size-5" />
+        Back to Home
+      </TransitionLinkButton>
     </>
   );
 }

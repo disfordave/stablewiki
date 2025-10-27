@@ -20,8 +20,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
-import { validAuthorizationWithJwt } from "@/utils/api/authorization";
-import { checkRedirect } from "@/utils/api/checkRedirect";
+import { getDecodedToken, checkRedirect } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
 
@@ -102,13 +101,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const { title, content, author, summary } = await request.json();
+  const { title, content, summary } = await request.json();
 
-  if (!(await validAuthorizationWithJwt(request))) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (!title || !content || !author) {
+  if (!title || !content) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
@@ -119,11 +114,30 @@ export async function POST(request: Request) {
     );
   }
 
-  if (title.startsWith("System:")) {
+  if (title.startsWith("System:") || title.startsWith("system:")) {
     return Response.json(
       { error: 'Titles cannot start with "System:" prefix' },
       { status: 400 },
     );
+  }
+
+  const decodedToken = await getDecodedToken(request);
+
+  if (!decodedToken || !decodedToken.id) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!decodedToken?.username) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (title.startsWith("User:") || title.startsWith("user:")) {
+    if (decodedToken.username !== title.slice(5)) {
+      return Response.json(
+        { error: "You can only create a User page for your own username" },
+        { status: 403 },
+      );
+    }
   }
 
   try {
@@ -132,11 +146,11 @@ export async function POST(request: Request) {
         title,
         content: "",
         slug: slugify(title),
-        author: { connect: { id: author.id } },
+        author: { connect: { id: decodedToken.id as string } },
         revisions: {
           create: {
             content,
-            author: { connect: { id: author.id } },
+            author: { connect: { id: decodedToken.id as string } },
             summary,
             isRedirect: checkRedirect(content, title).isRedirect,
             redirectTargetSlug: checkRedirect(content, title).targetSlug,
