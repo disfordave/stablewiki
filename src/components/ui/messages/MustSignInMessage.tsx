@@ -19,7 +19,7 @@
 */
 
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
-import { TransitionLinkButton } from "./TransitionButton";
+import { TransitionLinkButton } from "../buttons/TransitionButton";
 
 export function MustSignInMessage({
   customMessage,

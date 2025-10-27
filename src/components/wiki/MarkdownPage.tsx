@@ -19,7 +19,7 @@
 */
 
 import { MarkdownComp } from "../ui/MarkdownComp";
-import { TransitionLinkButton } from "../ui/TransitionButton";
+import { TransitionLinkButton } from "../ui/buttons/TransitionButton";
 import {
   ArrowPathIcon,
   PencilSquareIcon,

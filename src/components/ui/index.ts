@@ -18,12 +18,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export { TransitionLinkButton, TransitionFormButton } from "./TransitionButton";
-export { BackToTopButton } from "./BackToTopButton";
-export { DisabledMessage } from "./DisabledMessage";
+export { TransitionLinkButton, TransitionFormButton } from "./buttons/TransitionButton";
+export { BackToTopButton } from "./buttons/BackToTopButton";
+export { DisabledMessage } from "./messages/DisabledMessage";
 export { WikiEditor } from "./WikiEditor";
-export { MustSignInMessage } from "./MustSignInMessage";
-export { RedirectedFromMessage } from "./RedirectedFromMessage";
+export { MustSignInMessage } from "./messages/MustSignInMessage";
+export { RedirectedFromMessage } from "./messages/RedirectedFromMessage";
 export { PageDate } from "./PageDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";
 export { MarkdownComp } from "./MarkdownComp";
