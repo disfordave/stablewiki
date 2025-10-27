@@ -20,10 +20,15 @@ To install StableWiki, follow these steps:
    ```
 4. Change .env.example to .env and configure your environment variables.
 
-5. Run the development server:
+5. Set up the database:
+   ```bash
+   npx prisma db push
+   ```
+6. Run the development server:
    ```bash
    npm run dev
    ```
+7. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
 ## Configuration
 
