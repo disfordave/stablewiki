@@ -44,55 +44,10 @@ export default async function DashboardPage() {
     );
   }
 
-  // async function deleteAccount() {
-  //   "use server";
-  //   const res = await fetch(
-  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/danger/user`,
-  //     {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ username: user.username }),
-  //     },
-  //   );
-
-  //   if (res.ok) {
-  //     // Redirect to signin page with success message
-  //     const cookieStore = await cookies();
-  //     cookieStore.delete("jwt");
-  //     redirect(
-  //       `/wiki/System:SignIn?success=${encodeURIComponent("Account deleted successfully")}`,
-  //     );
-  //   } else {
-  //     const data = await res.json();
-  //     redirect(
-  //       `/wiki/System:Dashboard?error=${encodeURIComponent(
-  //         data.error || "An unexpected error occurred",
-  //       )}`,
-  //     );
-  //   }
-  // }
-
   return (
     <>
       <h1 className="text-2xl font-bold">{user.username}&apos;s Dashboard</h1>
-
-      {user.avatarUrl && (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            width={100}
-            height={100}
-            src={user.avatarUrl}
-            alt={`${user.username}'s Avatar`}
-            className="rounded-2xl"
-          />
-        </>
-      )}
-      <p>Welcome to your dashboard!</p>
-      <p>Here you can manage your account and view your activity.</p>
-      <p>This is a placeholder page. More features will be added soon!</p>
+      <p>Hi, {user.username}!</p>
       <p>Your Role: {user.role as Role | null}</p>
       {user.role === Role.ADMIN && (
         <p className="font-bold text-red-500">
@@ -100,10 +55,14 @@ export default async function DashboardPage() {
         </p>
       )}
 
-      <h2 className="mt-4 mb-2 text-xl font-bold">User Details (Debug Info)</h2>
-      <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
-        {JSON.stringify(user, null, 2)}
-      </pre>
+      <details>
+        <summary className="mt-4 mb-2 font-bold select-none">
+          Debug Info
+        </summary>
+        <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
+          {JSON.stringify(user, null, 2)}
+        </pre>
+      </details>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <TransitionLinkButton
@@ -131,17 +90,6 @@ export default async function DashboardPage() {
           Sign Out
         </TransitionFormButton>
       </div>
-
-      {/* <>
-        <form action={deleteAccount}>
-          <button
-            type="submit"
-            className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Delete Account
-          </button>
-        </form>
-      </> */}
     </>
   );
 }
