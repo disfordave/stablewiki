@@ -20,6 +20,7 @@
 
 import { WIKI_DISABLE_MEDIA } from "@/config";
 import { prisma } from "@/lib/prisma";
+import { slugify } from "@/utils";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: `Media:${fullTitle}`,
         content: "",
-        slug: `${encodeURIComponent("Media:" + fullTitle)}`,
+        slug: `${("Media:" + slugify(fullTitle))}`,
         author: { connect: { id: user.id } },
         revisions: {
           create: {

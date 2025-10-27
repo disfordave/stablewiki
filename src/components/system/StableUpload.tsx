@@ -33,11 +33,7 @@ export const metadata = {
   description: "Upload media files to " + WIKI_NAME + ".",
 };
 
-export default async function UploadPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function StableUpload() {
   if (WIKI_DISABLE_MEDIA) {
     return <DisabledMessage message="Media uploads are disabled." />;
   }
@@ -76,7 +72,7 @@ export default async function UploadPage({
       const errorData = await response.json();
       console.log("Response not ok:", errorData);
       const errorMsg = errorData.error || "Failed to upload media";
-      redirect(`/app/upload?error=${encodeURIComponent(errorMsg)}`);
+      redirect(`/wiki/System:Upload?error=${encodeURIComponent(errorMsg)}`);
     }
 
     const data = await response.json();
@@ -88,7 +84,7 @@ export default async function UploadPage({
   if (!user.username) {
     return <MustSignInMessage />;
   }
-  const error = searchParams.error as string | undefined;
+  //   const error = searchParams.error as string | undefined;
   return (
     <div>
       <h1 className="text-3xl font-bold">Upload Media</h1>
@@ -122,11 +118,11 @@ export default async function UploadPage({
           Upload Media
         </TransitionFormButton>
       </form>
-      {error && (
+      {/* {error && (
         <p className="mt-4 text-red-500">
           Error: Failed to upload media ({error})
         </p>
-      )}
+      )} */}
     </div>
   );
 }

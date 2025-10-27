@@ -24,7 +24,7 @@ import {
   StableEditor,
   SystemPages,
 } from "@/components";
-import StableRevert from "@/components/system/StableRevert";
+import StableRevert from "@/components/wiki/StableRevert";
 import {
   RedirectedFrom,
   StableDate,

@@ -24,6 +24,6 @@ export { DisabledMessage } from "./DisabledMessage";
 export { WikiEditor } from "./WikiEditor";
 export { MustSignInMessage } from "./MustSignInMessage";
 export { RedirectedFrom } from "./RedirectedFrom";
-export { StableMarkdown } from "../system/StableMarkdown";
+export { StableMarkdown } from "../wiki/StableMarkdown";
 export { StableDate } from "./StableDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";

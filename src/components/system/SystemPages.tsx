@@ -20,11 +20,11 @@
 
 import { Suspense } from "react";
 import StableSearch from "./StableSearch";
-import { WIKI_DISABLE_MEDIA } from "@/config";
 import { LoadingSkeleton } from "../ui";
 import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
+import StableUpload from "./StableUpload";
 
 export default function SystemPages({
   slug,
@@ -51,18 +51,7 @@ export default function SystemPages({
     case "SignUp":
       return <SignupPage />;
     case "Upload":
-      return (
-        <div>
-          <h1 className="text-3xl font-bold">Upload Media</h1>
-          {WIKI_DISABLE_MEDIA ? (
-            <p>Media uploads are disabled.</p>
-          ) : (
-            <p>
-              <p>{`This is a placeholder for the Upload Media page, Stay tuned for updates! (until then use '/app/upload')`}</p>
-            </p>
-          )}
-        </div>
-      );
+      return <StableUpload />;
     default:
       return (
         <div>
