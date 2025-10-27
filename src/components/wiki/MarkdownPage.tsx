@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import StableMarkdownComp from "../ui/StableMarkdownComp";
+import StableMarkdownComp from "../ui/MarkdownComp";
 import { TransitionLinkButton } from "../ui/TransitionButton";
 import {
   ArrowPathIcon,
