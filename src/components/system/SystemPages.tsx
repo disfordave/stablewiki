@@ -19,12 +19,12 @@
 */
 
 import { Suspense } from "react";
-import StableSearch from "./StableSearch";
+import StableSearch from "./SystemSearch";
 import { LoadingSkeleton } from "../ui";
 import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
-import StableUpload from "./StableUpload";
+import StableUpload from "./SystemUpload";
 
 export default function SystemPages({
   slug,

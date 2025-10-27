@@ -27,7 +27,7 @@ import {
   TransitionFormButton,
   TransitionLinkButton,
 } from "../ui";
-import StableDiffViewer from "./StableDiffViewer";
+import StableDiffViewer from "./DiffViewer";
 import { getUser } from "@/lib/auth/functions";
 import { redirect } from "next/navigation";
 
