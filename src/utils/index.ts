@@ -18,26 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import Link from "next/link";
-import { slugify } from "@/utils";
-
-function RedirectedFrom({ from }: { from: string | string[] }) {
-  return (
-    <div className="mt-1 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
-      <p className="">
-        You were redirected here from{" "}
-        <Link
-          href={`/wiki/${Array.isArray(from) ? slugify(from.join("/")) : slugify(from)}?preventRedirect=true`}
-          className="underline"
-        >
-          {Array.isArray(from)
-            ? from.map((s) => decodeURIComponent(s)).join("/")
-            : decodeURIComponent(from)}
-        </Link>
-        .
-      </p>
-    </div>
-  );
-}
-
-export { RedirectedFrom };
+export { default as slugify } from "./slugify";
+export { handleHPage } from "./api/pagination";
+export { getLatestPageRevision, getPageData } from "./api/getPages";
+export { checkRedirect } from "./api/checkRedirect";
+export { validAuthorizationWithJwt } from "./api/authorization";

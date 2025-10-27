@@ -33,12 +33,15 @@ import {
 } from "@/components/ui";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
 import { Page } from "@/types/types";
-import { getPageData, getLatestPageRevision } from "@/utils/api/getPages";
-import { handleHPage } from "@/utils/api/pagination";
+import {
+  handleHPage,
+  slugify,
+  getPageData,
+  getLatestPageRevision,
+} from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import slugify from "slugify";
 
 export default async function WikiPage({
   params,
@@ -106,7 +109,7 @@ export default async function WikiPage({
 
   if (page && page.isRedirect && !preventRedirect && !showEdit) {
     redirect(
-      `/wiki/${slugify(page.redirectTargetSlug || "", { replacement: "_" })}?redirectedFrom=${page.title}`,
+      `/wiki/${slugify(page.redirectTargetSlug || "")}?redirectedFrom=${page.title}`,
     );
   }
 

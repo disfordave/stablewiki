@@ -195,7 +195,10 @@ export async function GET(
   }
 }
 
-export async function POST(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ slug: string[] }> },
+) {
   const { slug } = await params;
   const { title, content, author, summary } = await request.json();
 

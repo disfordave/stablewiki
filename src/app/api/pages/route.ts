@@ -23,7 +23,7 @@ import { Page } from "@/types/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { type NextRequest } from "next/server";
-import slugify from "slugify";
+import { slugify } from "@/utils/";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -112,15 +112,26 @@ export async function POST(request: Request) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (title.length > 255) {
+    return Response.json(
+      { error: "Title exceeds maximum length of 255 characters" },
+      { status: 400 },
+    );
+  }
+
+  if (title.startsWith("System:")) {
+    return Response.json(
+      { error: 'Titles cannot start with "System:" prefix' },
+      { status: 400 },
+    );
+  }
+
   try {
     const page = await prisma.page.create({
       data: {
         title,
         content: "",
-        slug: slugify(title, {
-          lower: false,
-          replacement: "_",
-        }),
+        slug: slugify(title),
         author: { connect: { id: author.id } },
         revisions: {
           create: {

@@ -18,26 +18,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import Link from "next/link";
-import { slugify } from "@/utils";
-
-function RedirectedFrom({ from }: { from: string | string[] }) {
-  return (
-    <div className="mt-1 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
-      <p className="">
-        You were redirected here from{" "}
-        <Link
-          href={`/wiki/${Array.isArray(from) ? slugify(from.join("/")) : slugify(from)}?preventRedirect=true`}
-          className="underline"
-        >
-          {Array.isArray(from)
-            ? from.map((s) => decodeURIComponent(s)).join("/")
-            : decodeURIComponent(from)}
-        </Link>
-        .
-      </p>
-    </div>
-  );
+function slugify(text: string): string {
+  return text.toString().trim().replace(/\s+/g, "_"); // Replace spaces with _
+  // .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+  // .replace(/\_\_+/g, "_") // Replace multiple _ with single _
+  // .replace(/^_+/, "") // Trim _ from start of text
+  // .replace(/_+$/, ""); // Trim _ from end of text
 }
 
-export { RedirectedFrom };
+export default slugify;
