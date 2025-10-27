@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Page } from "@/types/types";
+import { Page } from "@/types";
 
 function PageDate({ page, isOld }: { page: Page; isOld: boolean }) {
   return (

@@ -32,7 +32,7 @@ import {
   StableEditor,
 } from "@/components/wiki";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
-import { Page } from "@/types/types";
+import { Page } from "@/types";
 import {
   handleHPage,
   slugify,

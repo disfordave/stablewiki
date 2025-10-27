@@ -21,7 +21,7 @@
 import { getUser } from "@/lib";
 import { redirect } from "next/navigation";
 import { MustSignInMessage, TransitionFormButton, WikiEditor } from "../ui";
-import { Page } from "@/types/types";
+import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 
 export default async function StableEditor({

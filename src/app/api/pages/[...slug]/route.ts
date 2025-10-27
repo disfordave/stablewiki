@@ -19,7 +19,7 @@
 */
 
 import { prisma } from "@/lib/prisma";
-import { Page } from "@/types/types";
+import { Page } from "@/types";
 import { validAuthorizationWithJwt } from "@/utils/api/authorization";
 import { checkRedirect } from "@/utils/api/checkRedirect";
 import { handleHPage } from "@/utils/api/pagination";
