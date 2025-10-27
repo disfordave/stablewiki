@@ -96,6 +96,17 @@ export async function POST(request: Request) {
   }
 
   if (
+    recoveryQuestionFirst.trim().length < 9 ||
+    recoveryQuestionSecond.trim().length < 9 ||
+    recoveryQuestionThird.trim().length < 9
+  ) {
+    return Response.json(
+      { error: "Recovery questions must be at least 9 characters long" },
+      { status: 400 },
+    );
+  }
+
+  if (
     recoveryAnswerFirst.trim().length < 3 ||
     recoveryAnswerSecond.trim().length < 3 ||
     recoveryAnswerThird.trim().length < 3

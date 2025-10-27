@@ -41,6 +41,7 @@ import {
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function WikiPage({
@@ -193,6 +194,23 @@ export default async function WikiPage({
         (page ? (
           <div>
             <StableDate page={page} isOld={false} />
+            <p className="text-sm">
+              {slug.map((_, index) => (
+                <span key={index}>
+                  <Link
+                    href={`/wiki/${slug.slice(0, index + 1).join("/")}`}
+                    className={`${
+                      index === slug.length - 1
+                        ? "font-semibold"
+                        : "font-medium"
+                    } ${slug.length - 1 === index ? "text-gray-500" : "text-blue-600 hover:underline dark:text-blue-500"}`}
+                  >
+                    {page.title.split("/")[index]}
+                  </Link>
+                  {index < slug.length - 1 && " / "}
+                </span>
+              ))}
+            </p>
             {redirectedFrom && <RedirectedFrom from={redirectedFrom} />}
             <StableMarkdown slug={joinedSlug} content={page.content} />
           </div>
