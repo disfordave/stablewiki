@@ -18,12 +18,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const WIKI_NAME = "StableWiki";
-const WIKI_HOMEPAGE_LINK = "/wiki/WelcomePage";
+// Use environment variables to configure the wiki, do not hardcode values here since they may change per deployment
+
+const WIKI_NAME = process.env.WIKI_NAME || "StableWiki";
+const WIKI_HOMEPAGE_LINK =
+  process.env.WIKI_HOMEPAGE_LINK || "/wiki/WelcomePage";
 const WIKI_DESCRIPTION =
+  process.env.WIKI_DESCRIPTION ||
   "StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
-const WIKI_COPYRIGHT_HOLDER = "@disfordave";
-const WIKI_COPYRIGHT_HOLDER_URL = "https://disfordave.com";
+const WIKI_COPYRIGHT_HOLDER =
+  process.env.WIKI_COPYRIGHT_HOLDER || "@disfordave";
+const WIKI_COPYRIGHT_HOLDER_URL =
+  process.env.WIKI_COPYRIGHT_HOLDER_URL || "https://disfordave.com";
 const WIKI_DISABLE_MEDIA = process.env.WIKI_DISABLE_MEDIA === "true";
 const WIKI_DISABLE_SIGNUP = process.env.WIKI_DISABLE_SIGNUP === "true";
 

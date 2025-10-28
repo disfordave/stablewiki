@@ -32,15 +32,15 @@ To install StableWiki, follow these steps:
 
 ## Configuration
 
-`src/config.ts` contains various configuration options for StableWiki. such as...
+`.env` contains various configuration options for StableWiki. such as...
 
-- `WIKI_NAME`: The name of your wiki.
-- `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki.
-- `WIKI_DESCRIPTION`: A brief description of your wiki.
-- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki.
-- `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder.
-- `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads.
-- `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup.
+- `WIKI_NAME`: The name of your wiki. (Default: StableWiki)
+- `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki. (Default: /wiki/WelcomePage)
+- `WIKI_DESCRIPTION`: A brief description of your wiki. (Default: StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.)
+- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki. (Default: @disfordave)
+- `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder. (Default: https://disfordave.com)
+- `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads. (Default: false)
+- `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup. (Default: false)
 
 ## Important Notes
 
