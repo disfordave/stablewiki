@@ -56,6 +56,18 @@ export default async function SignupPage() {
     const username = formData.get("username")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
     const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
+    const recoveryQuestionFirst =
+      formData.get("recoveryQuestionFirst")?.toString() || "";
+    const recoveryAnswerFirst =
+      formData.get("recoveryAnswerFirst")?.toString() || "";
+    const recoveryQuestionSecond =
+      formData.get("recoveryQuestionSecond")?.toString() || "";
+    const recoveryAnswerSecond =
+      formData.get("recoveryAnswerSecond")?.toString() || "";
+    const recoveryQuestionThird =
+      formData.get("recoveryQuestionThird")?.toString() || "";
+    const recoveryAnswerThird =
+      formData.get("recoveryAnswerThird")?.toString() || "";
     if (password !== passwordConfirm) {
       redirect(
         `/wiki/System:SignUp?error=${encodeURIComponent(
@@ -80,7 +92,13 @@ export default async function SignupPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, passwordConfirm, consent }),
+        body: JSON.stringify({ username, password, passwordConfirm, consent,
+          recoveryQuestionFirst,
+          recoveryAnswerFirst,
+          recoveryQuestionSecond,
+          recoveryAnswerSecond,
+          recoveryQuestionThird,
+          recoveryAnswerThird, }),
       },
     );
 

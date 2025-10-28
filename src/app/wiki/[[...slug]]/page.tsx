@@ -280,6 +280,11 @@ export async function generateMetadata({
             title: `Sign Up | ${WIKI_NAME}`,
             description: `Create a new account on ${WIKI_NAME}.`,
           };
+        case "Upload":
+          return {
+            title: `Upload Media | ${WIKI_NAME}`,
+            description: `Upload media files to ${WIKI_NAME}.`,
+          };
         default:
           return {
             title: `System Page: ${slug[0]} | ${WIKI_NAME}`,
