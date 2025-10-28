@@ -35,10 +35,10 @@ To install StableWiki, follow these steps:
 `.env` contains various configuration options for StableWiki. such as...
 
 - `WIKI_NAME`: The name of your wiki. (Default: StableWiki)
-- `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki. (Default: /wiki/WelcomePage)
+- `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki. (Default: WelcomePage)
 - `WIKI_DESCRIPTION`: A brief description of your wiki. (Default: StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.)
-- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki. (Default: @disfordave)
-- `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder. (Default: https://disfordave.com)
+- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki. (Default: StableWiki Contributors)
+- `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder. (Default: https://github.com/disfordave/stablewiki)
 - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads. (Default: false)
 - `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup. (Default: false)
 
