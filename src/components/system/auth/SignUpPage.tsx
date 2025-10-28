@@ -92,13 +92,18 @@ export default async function SignupPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, passwordConfirm, consent,
+        body: JSON.stringify({
+          username,
+          password,
+          passwordConfirm,
+          consent,
           recoveryQuestionFirst,
           recoveryAnswerFirst,
           recoveryQuestionSecond,
           recoveryAnswerSecond,
           recoveryQuestionThird,
-          recoveryAnswerThird, }),
+          recoveryAnswerThird,
+        }),
       },
     );
 

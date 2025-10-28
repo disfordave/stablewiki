@@ -18,6 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { diffChars } from "diff";
+
 export default function StableDiffViewer({
   oldContent,
   newContent,
@@ -26,32 +28,63 @@ export default function StableDiffViewer({
 }: {
   oldContent?: string;
   newContent?: string;
-  oldVer?: number;
-  newVer?: number;
+  oldVer?: number | "latest";
+  newVer?: number | "latest";
 }) {
   // Placeholder for the actual diff viewer implementation
+  const diffs = diffChars(oldContent || "", newContent || "");
+
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <h3 className="mb-2 font-semibold">
-            Old Content{" "}
-            {oldVer && <span className="text-gray-500">(ver. {oldVer})</span>}
-          </h3>
-          <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
-            {oldContent ? oldContent : "No previous content available."}
-          </pre>
-        </div>
-        <div>
-          <h3 className="mb-2 font-semibold">
-            New Content{" "}
-            {newVer && <span className="text-gray-500">(ver. {newVer})</span>}
-          </h3>
-          <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
-            {newContent ? newContent : "No new content available."}
-          </pre>
-        </div>
+      <div>
+        <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+          {diffs.map((part, index) => {
+            const color = part.added
+              ? "bg-green-200 dark:bg-green-800"
+              : part.removed
+                ? "bg-red-200 dark:bg-red-800"
+                : "";
+            return (
+              <span key={index} className={color}>
+                {part.value}
+              </span>
+            );
+          })}
+        </pre>
       </div>
+      <details>
+        <summary className="mt-4 mb-2 font-bold select-none">
+          View Raw Versions
+        </summary>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <h3 className="mb-2 font-semibold">
+              Old Content{" "}
+              {oldVer && (
+                <span className="text-gray-500">
+                  ({oldVer === "latest" ? "latest" : `ver. ${oldVer}`})
+                </span>
+              )}
+            </h3>
+            <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+              {oldContent ? oldContent : "No previous content available."}
+            </pre>
+          </div>
+          <div>
+            <h3 className="mb-2 font-semibold">
+              New Content{" "}
+              {newVer && (
+                <span className="text-gray-500">
+                  ({newVer === "latest" ? "latest" : `ver. ${newVer}`})
+                </span>
+              )}
+            </h3>
+            <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+              {newContent ? newContent : "No new content available."}
+            </pre>
+          </div>
+        </div>
+      </details>
     </div>
   );
 }

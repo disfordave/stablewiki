@@ -160,6 +160,8 @@ export default async function WikiPage({
           <DiffViewer
             oldContent={page.content}
             newContent={(await getLatestPageRevision(joinedSlug)).page.content}
+            oldVer={Number(ver)}
+            newVer={"latest"}
           />
           <TransitionLinkButton
             href={`/wiki/${slug}?action=history`}

@@ -102,6 +102,7 @@ export default async function StableRevert({
       <StableDiffViewer
         oldContent={currentContent}
         newContent={newTargetContent}
+        oldVer={"latest"}
         newVer={Number(targetVersion)}
       />
       <form className="flex flex-col gap-4" action={editPage}>
