@@ -18,17 +18,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { TransitionLinkButton } from "./TransitionButton";
+import {
+  ArrowUpCircleIcon,
+  ArrowDownCircleIcon,
+} from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 export function BackToTopButton() {
   return (
-    <TransitionLinkButton
-      href="#top"
-      className="fixed end-6 bottom-6 aspect-square size-12 bg-gray-300/50 hover:bg-gray-400/50 dark:bg-gray-700/50 dark:hover:bg-gray-600/50"
-      title="Back to Top"
-    >
-      <ArrowUpIcon className="inline size-5" />
-    </TransitionLinkButton>
+    <div className="fixed end-6 bottom-6 flex flex-col gap-1 rounded-full bg-gray-300/50 p-1 dark:bg-gray-700/50">
+      <Link
+        className={`flex w-fit cursor-pointer rounded-full font-medium text-nowrap opacity-50 transition-opacity duration-300 hover:opacity-75`}
+        href="#up"
+        title="Back to Top"
+        aria-label="Back to Top"
+      >
+        <ArrowUpCircleIcon className="-m-1 inline size-12" />
+      </Link>
+      <Link
+        className={`flex w-fit cursor-pointer rounded-full font-medium text-nowrap opacity-50 transition-opacity duration-300 hover:opacity-75`}
+        href="#down"
+        aria-label="Back to Bottom"
+        title="Back to Bottom"
+      >
+        <ArrowDownCircleIcon className="-m-1 inline size-12" />
+      </Link>
+    </div>
   );
 }

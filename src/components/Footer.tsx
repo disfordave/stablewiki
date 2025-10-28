@@ -35,7 +35,9 @@ export default function Footer() {
         </a>
         . All rights reserved.
       </p>
-      <p className="text-xs text-gray-500">StableWiki Engine v0.0.1</p>
+      <p className="text-xs text-gray-500" id="down">
+        StableWiki Engine v0.0.1
+      </p>
     </footer>
   );
 }

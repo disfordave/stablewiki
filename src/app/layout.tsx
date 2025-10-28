@@ -63,7 +63,7 @@ export default function RootLayout({
       </Head>
       <body
         className={`${ibmPlexSansKR.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
-        id="top"
+        id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
           <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4">
