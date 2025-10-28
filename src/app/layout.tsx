@@ -19,7 +19,7 @@
 */
 
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans_KR } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
@@ -27,10 +27,9 @@ import { Header, Footer } from "@/components";
 import Head from "next/head";
 import { BackToTopButton } from "@/components/ui";
 
-const ibmPlexSansKR = IBM_Plex_Sans_KR({
-  variable: "--font-ibm-plex-sans-kr",
-  subsets: ["latin", "latin-ext"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext", "greek", "vietnamese"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -62,7 +61,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
       </Head>
       <body
-        className={`${ibmPlexSansKR.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        className={`${ibmPlexSans.className} ${ibmPlexMono.style} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
