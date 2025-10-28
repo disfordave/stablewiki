@@ -257,25 +257,25 @@ export async function generateMetadata({
 
     const data = await getPageData(joinedSlug, queryParams);
     const page = showHistoryList ? null : data.page;
-
-    if (slug[0].startsWith("System:")) {
-      switch (slug[0]) {
-        case "System:Search":
+    const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
+    if (slug[0].startsWith(encodeURIComponent("System:"))) {
+      switch (systemPage) {
+        case "Search":
           return {
             title: `Search Results for "${q}" | ${WIKI_NAME}`,
             description: `Search results for "${q}" on ${WIKI_NAME}.`,
           };
-        case "System:Dashboard":
+        case "Dashboard":
           return {
             title: `Dashboard | ${WIKI_NAME}`,
             description: `User dashboard for ${WIKI_NAME}.`,
           };
-        case "System:SignIn":
+        case "SignIn":
           return {
             title: `Sign In | ${WIKI_NAME}`,
             description: `Sign in to your account on ${WIKI_NAME}.`,
           };
-        case "System:SignUp":
+        case "SignUp":
           return {
             title: `Sign Up | ${WIKI_NAME}`,
             description: `Create a new account on ${WIKI_NAME}.`,

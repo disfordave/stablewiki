@@ -24,8 +24,8 @@ const WIKI_DESCRIPTION =
   "StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
 const WIKI_COPYRIGHT_HOLDER = "@disfordave";
 const WIKI_COPYRIGHT_HOLDER_URL = "https://disfordave.com";
-const WIKI_DISABLE_MEDIA = true;
-const WIKI_DISABLE_SIGNUP = true;
+const WIKI_DISABLE_MEDIA = process.env.WIKI_DISABLE_MEDIA === "true";
+const WIKI_DISABLE_SIGNUP = process.env.WIKI_DISABLE_SIGNUP === "true";
 
 export {
   WIKI_NAME,
