@@ -45,12 +45,6 @@ export async function POST(request: NextRequest) {
   const body = await request.formData();
   const title = body.get("title") as string;
   const media = body.get("media") as File;
-  // const user: {
-  //   id: string;
-  //   username: string;
-  //   avatarUrl?: string;
-  //   role: string;
-  // } = JSON.parse(body.get("user") as string);
 
   if (!title || !media) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
@@ -69,8 +63,6 @@ export async function POST(request: NextRequest) {
 
   const extension = media.name.split(".").pop();
   const buffer = Buffer.from(await media.arrayBuffer());
-  const filename = media.name.replaceAll(" ", "_");
-  console.log(filename);
 
   const fullTitle = extension ? `${title}.${extension}` : title;
   console.log({ fullTitle });

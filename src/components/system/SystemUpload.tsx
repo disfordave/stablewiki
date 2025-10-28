@@ -78,7 +78,7 @@ export default async function StableUpload() {
     const data = await response.json();
     console.log("Upload successful:", data);
 
-    redirect(`/wiki/${encodeURIComponent(data.title)}`);
+    redirect(`/wiki/${encodeURIComponent(data.slug)}`);
   }
 
   if (!user.username) {
