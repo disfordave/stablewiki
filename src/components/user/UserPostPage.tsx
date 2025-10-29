@@ -1,10 +1,14 @@
 import { redirect } from "next/navigation";
-import { Breadcrumbs, TransitionFormButton } from "../ui";
+import { Breadcrumbs, TransitionFormButton, TransitionLinkButton } from "../ui";
 import { Page } from "@/types";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, UserIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
+import { getUser } from "@/lib";
 
 export default async function UserPostPage({ username }: { username: string }) {
+  const user = await getUser();
+  const postOwner = username === user.username;
+
   async function handleSubmit(formData: FormData) {
     "use server";
     const title = formData.get("title") as string;
@@ -45,22 +49,32 @@ export default async function UserPostPage({ username }: { username: string }) {
         slug={[`User:${username}`, "post"]}
         titles={[`User:${username}`, "post"]}
       />
-      <form action={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          name="title"
-          placeholder="Create a title for your new post (You can edit it later)"
-          className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-        />
-        <TransitionFormButton
-          useButtonWithoutForm
-          className="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          <PencilSquareIcon className="inline size-5" />
-          Create New Post
-        </TransitionFormButton>
-      </form>
+      {postOwner && (
+        <form action={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="text"
+            name="title"
+            placeholder="Create a title for your new post (You can edit it later)"
+            className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+          />
+          <TransitionFormButton
+            useButtonWithoutForm
+            className="bg-blue-500 text-white hover:bg-blue-600"
+          >
+            <PencilSquareIcon className="inline size-5" />
+            Create New Post
+          </TransitionFormButton>
+        </form>
+      )}
+
       {results && <WikiList isPostList pages={results} />}
+      <TransitionLinkButton
+        href={`/wiki/User:${username}`}
+        className="bg-violet-500 text-white hover:bg-violet-600 mt-4"
+      >
+        <UserIcon className="inline size-5" />
+        Back to User Page
+      </TransitionLinkButton>
     </>
   );
 }

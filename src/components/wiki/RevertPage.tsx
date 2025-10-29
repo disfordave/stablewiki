@@ -112,7 +112,7 @@ export default async function StableRevert({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <TransitionLinkButton
-            href={`/wiki/${slug}?action=history`}
+            href={`/wiki/${decodeURIComponent(slug)}?action=history`}
             className="bg-blue-500 text-white hover:bg-blue-600"
           >
             <DocumentTextIcon className="inline size-5" />

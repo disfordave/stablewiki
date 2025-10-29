@@ -81,6 +81,11 @@ export default async function WikiPage({
   const isUserPage =
     slug && slug.length > 0 && slug[0].startsWith(encodeURIComponent("User:"));
 
+  const pageOwner =
+    isUserPage && decodeURIComponent(slug[0]).split(":").length > 1
+      ? decodeURIComponent(slug[0]).split(":")[1]
+      : null;
+
   // Fetch the page data from the API
   let page: Page | null = null;
   let pageRevisions: {
@@ -186,7 +191,7 @@ export default async function WikiPage({
             newVer={"latest"}
           />
           <TransitionLinkButton
-            href={`/wiki/${slug}?action=history`}
+            href={`/wiki/${decodeURIComponent(joinedSlug)}?action=history`}
             className="mt-4 bg-blue-500 text-white hover:bg-blue-600"
           >
             <DocumentTextIcon className="inline size-5" />
@@ -215,18 +220,18 @@ export default async function WikiPage({
           <div>
             <PageDate page={page} isOld={false} />
             <Breadcrumbs slug={slug} titles={page.title.split("/")} />
-            {isUserPage && slug.length < 2 && (
-              <div>
-                <TransitionLinkButton
-                  href={`/wiki/${decodeURIComponent(slug[0])}/post`}
-                  className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
-                >
-                  <DocumentTextIcon className="inline size-5" />
-                  Go to User Posts
-                </TransitionLinkButton>
-              </div>
-            )}
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
+            {isUserPage && pageOwner && (
+              <TransitionLinkButton
+                href={`/wiki/User:${pageOwner}/post`}
+                className="mt-3 bg-violet-500 text-white hover:bg-violet-600"
+              >
+                <DocumentTextIcon className="inline size-5" />
+                
+                  Posts by User:{pageOwner}
+
+              </TransitionLinkButton>
+            )}
             <MarkdownPage
               slug={decodeURIComponent(slug.join("/"))}
               content={page.content}

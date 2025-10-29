@@ -42,6 +42,7 @@ export default function RevisionList({
   slug: string;
   historyPage: number;
 }) {
+  const decodedSlug = decodeURIComponent(slug);
   return (
     <>
       <ul className="mt-4 flex flex-col gap-4">
@@ -61,7 +62,7 @@ export default function RevisionList({
               >
                 <Link
                   className="hover:underline"
-                  href={`/wiki/${slug}?action=history&ver=${rev.version}`}
+                  href={`/wiki/${decodedSlug}?action=history&ver=${rev.version}`}
                 >
                   <h2 className="font-bold">Revision ver. {rev.version}</h2>
                   <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700">
@@ -80,13 +81,13 @@ export default function RevisionList({
                 </Link>
                 <div className="flex flex-col">
                   <Link
-                    href={`/wiki/${slug}?action=diff&ver=${rev.version}`}
+                    href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
                     className="inline-block text-sm text-blue-500 hover:underline"
                   >
                     Differences
                   </Link>
                   <Link
-                    href={`/wiki/${slug}?action=revert&ver=${rev.version}`}
+                    href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
                     className="inline-block text-sm text-red-500 hover:underline"
                   >
                     Revert to ver. {rev.version}
@@ -103,7 +104,7 @@ export default function RevisionList({
       </ul>
       <div>
         <TransitionLinkButton
-          href={`/wiki/${slug}`}
+          href={`/wiki/${decodedSlug}`}
           className="mt-4 w-fit bg-blue-500 text-white hover:bg-blue-600"
         >
           <ArrowUturnLeftIcon className="inline size-5" />
@@ -111,7 +112,7 @@ export default function RevisionList({
         </TransitionLinkButton>
         <div className="mt-4 flex items-center justify-center gap-2">
           <TransitionLinkButton
-            href={`/wiki/${slug}?action=history&hPage=${historyPage - 1}`}
+            href={`/wiki/${decodedSlug}?action=history&hPage=${historyPage - 1}`}
             className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${historyPage <= 1 && "invisible"}`}
             title="Previous Page"
           >
@@ -119,7 +120,7 @@ export default function RevisionList({
           </TransitionLinkButton>
           <p className="tabular-nums">{historyPage}</p>
           <TransitionLinkButton
-            href={`/wiki/${slug}?action=history&hPage=${historyPage + 1}`}
+            href={`/wiki/${decodedSlug}?action=history&hPage=${historyPage + 1}`}
             className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${revisions.find((v) => v.version === 1) && "invisible"}`}
             title="Next Page"
           >
