@@ -21,6 +21,9 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { slugify } from "@/utils";
+import rehypeSlug from "rehype-slug";
+// import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import toc from "rehype-toc";
 
 export function WikiMarkdown({ content }: { content: string }) {
   let processed = content;
@@ -49,7 +52,30 @@ export function WikiMarkdown({ content }: { content: string }) {
   return (
     <Markdown
       remarkPlugins={[remarkGfm]}
+      // rehypePlugins={[rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], toc]}
+      rehypePlugins={[rehypeSlug, toc]}
       components={{
+        nav(props) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { children, className, node, ...rest } = props;
+          if (className === "toc") {
+            return (
+              <details className="rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+                <summary className="-m-4 p-4 font-bold select-none">
+                  Contents
+                </summary>
+                <nav className={className + ""} {...rest}>
+                  {children}
+                </nav>
+              </details>
+            );
+          }
+          return (
+            <nav className={className} {...rest}>
+              {children}
+            </nav>
+          );
+        },
         a(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children, className, node, href, ...rest } = props;

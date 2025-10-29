@@ -78,7 +78,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="StableWiki" />
       </Head>
       <body
-        className={`${ibmPlexSans.variable} ${ibmPlexSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900 selection:bg-violet-500/35`}
+        className={`${ibmPlexSans.variable} ${ibmPlexSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased selection:bg-violet-500/35 sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
