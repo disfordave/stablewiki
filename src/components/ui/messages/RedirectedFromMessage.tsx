@@ -23,7 +23,7 @@ import { slugify } from "@/utils";
 
 function RedirectedFromMessage({ from }: { from: string | string[] }) {
   return (
-    <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+    <div className="mt-4 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <p className="">
         You were redirected here from{" "}
         <Link

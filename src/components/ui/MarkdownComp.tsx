@@ -60,7 +60,7 @@ export function WikiMarkdown({ content }: { content: string }) {
           const { children, className, node, ...rest } = props;
           if (className === "toc") {
             return (
-              <details className="rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+              <details className="-mb-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
                 <summary className="-m-4 p-4 font-bold select-none">
                   Contents
                 </summary>
@@ -134,7 +134,7 @@ export function WikiMarkdown({ content }: { content: string }) {
 
 function MarkdownComp({ content }: { content: string }) {
   return (
-    <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 max-w-none">
+    <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 mt-4 max-w-none">
       <WikiMarkdown content={content} />
     </div>
   );
