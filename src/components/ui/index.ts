@@ -30,3 +30,4 @@ export { RedirectedFromMessage } from "./messages/RedirectedFromMessage";
 export { PageDate } from "./PageDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";
 export { MarkdownComp } from "./MarkdownComp";
+export { Breadcrumbs } from "./Breadcrumbs";

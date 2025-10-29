@@ -57,7 +57,6 @@ export default async function StableEditor({
       body: JSON.stringify({
         title,
         content,
-        author: user,
         summary,
       }),
     });
@@ -150,7 +149,7 @@ export default async function StableEditor({
   if (
     (decodeURIComponent(slug).startsWith("User:") ||
       decodeURIComponent(slug).startsWith("user:")) &&
-    user.username !== decodeURIComponent(slug).slice(5)
+    user.username !== decodeURIComponent(slug).split("/")[0].slice(5)
   ) {
     return (
       <>
@@ -162,7 +161,7 @@ export default async function StableEditor({
   if (
     page &&
     (page.title.startsWith("User:") || page.title.startsWith("user:")) &&
-    user.username !== page.title.slice(5)
+    user.username !== page.title.split("/")[0].slice(5)
   ) {
     return (
       <>

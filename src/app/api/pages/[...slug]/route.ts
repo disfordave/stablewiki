@@ -216,7 +216,7 @@ export async function POST(
   const redirection = checkRedirect(content, title);
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
-    if (decodedToken?.username !== title.slice(5)) {
+    if ((title as string).split("/")[0].slice(5) !== decodedToken?.username) {
       return Response.json(
         { error: "You can only create a User page for your own username" },
         { status: 403 },

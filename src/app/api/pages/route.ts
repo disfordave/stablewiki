@@ -27,13 +27,16 @@ import { slugify } from "@/utils/";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
+  const userPostByUsername = searchParams.get("userPostByUsername");
 
   try {
     const pages = await prisma.page.findMany({
       where: {
         title: {
-          contains: query,
-          mode: "insensitive",
+          contains: userPostByUsername
+            ? `User:${userPostByUsername}/post/`
+            : query,
+          mode: userPostByUsername ? "default" : "insensitive",
         },
       },
       include: {
@@ -132,7 +135,7 @@ export async function POST(request: Request) {
   }
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
-    if (decodedToken.username !== title.slice(5)) {
+    if ((title as string).split("/")[0].slice(5) !== decodedToken.username) {
       return Response.json(
         { error: "You can only create a User page for your own username" },
         { status: 403 },

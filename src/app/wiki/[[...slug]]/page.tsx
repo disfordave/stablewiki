@@ -20,10 +20,12 @@
 
 import { SystemPages } from "@/components/system";
 import {
+  Breadcrumbs,
   PageDate,
   RedirectedFromMessage,
   TransitionLinkButton,
 } from "@/components/ui";
+import { UserPostPage } from "@/components/user";
 import {
   DiffViewer,
   MarkdownPage,
@@ -41,7 +43,6 @@ import {
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function WikiPage({
@@ -76,6 +77,9 @@ export default async function WikiPage({
   if (slug[0].startsWith(encodeURIComponent("System:"))) {
     return <SystemPages slug={slug} q={q} />;
   }
+
+  const isUserPage =
+    slug && slug.length > 0 && slug[0].startsWith(encodeURIComponent("User:"));
 
   // Fetch the page data from the API
   let page: Page | null = null;
@@ -114,6 +118,15 @@ export default async function WikiPage({
     );
   }
 
+  if (isUserPage && slug[1] === "post" && slug.length === 2) {
+    return (
+      <UserPostPage username={decodeURIComponent(slug[0]).split(":")[1]} />
+    );
+  }
+
+  const isUserPagePostPage =
+    isUserPage && slug[1] === "post" && slug.length > 2;
+
   return (
     <div>
       <h1 className="text-3xl font-bold">
@@ -121,11 +134,20 @@ export default async function WikiPage({
         {showHistoryList ? "History of " : ""}
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
-        {page
-          ? page.title
-          : pageRevisions.length > 0
-            ? pageRevisions[0].title
-            : decodeURIComponent(joinedSlug)}
+        {page ? (
+          isUserPagePostPage ? (
+            <>
+              {`${page.title.split("/")[2]} `}
+              <span className="text-gray-500">(Post)</span>
+            </>
+          ) : (
+            page.title
+          )
+        ) : pageRevisions.length > 0 ? (
+          pageRevisions[0].title
+        ) : (
+          decodeURIComponent(joinedSlug)
+        )}
         {showHistoryList && handledHPage && ` (Page ${handledHPage})`}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
         {showRevert && <>{` to (ver. ${ver})`}</>}
@@ -192,31 +214,29 @@ export default async function WikiPage({
         (page ? (
           <div>
             <PageDate page={page} isOld={false} />
-            <p className="text-sm">
-              {slug.map((_, index) => (
-                <span key={index}>
-                  <Link
-                    href={`/wiki/${slug.slice(0, index + 1).join("/")}`}
-                    className={`${
-                      index === slug.length - 1
-                        ? "font-semibold"
-                        : "font-medium"
-                    } ${slug.length - 1 === index ? "text-gray-500" : "text-blue-600 hover:underline dark:text-blue-500"}`}
-                  >
-                    {page.title.split("/")[index]}
-                  </Link>
-                  {index < slug.length - 1 && " / "}
-                </span>
-              ))}
-            </p>
+            <Breadcrumbs slug={slug} titles={page.title.split("/")} />
+            {isUserPage && slug.length < 2 && (
+              <div>
+                <TransitionLinkButton
+                  href={`/wiki/${decodeURIComponent(slug[0])}/post`}
+                  className="mt-2 bg-blue-500 text-white hover:bg-blue-600"
+                >
+                  <DocumentTextIcon className="inline size-5" />
+                  Go to User Posts
+                </TransitionLinkButton>
+              </div>
+            )}
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
-            <MarkdownPage slug={joinedSlug} content={page.content} />
+            <MarkdownPage
+              slug={decodeURIComponent(slug.join("/"))}
+              content={page.content}
+            />
           </div>
         ) : (
           <div>
             <p>Page not found.</p>
             <TransitionLinkButton
-              href={`/wiki/${slug.join("/")}?action=edit`}
+              href={`/wiki/${decodeURIComponent(slug.join("/"))}?action=edit`}
               className="mt-3 bg-blue-500 text-white hover:bg-blue-600"
             >
               Go to Edit Page

@@ -22,8 +22,10 @@ import { Page } from "@/types";
 
 export default async function WikiList({
   pages,
+  isPostList = false,
 }: {
   pages: Page[] | undefined;
+  isPostList?: boolean;
 }) {
   let pagesList: Page[] = [];
   if (pages) {
@@ -44,7 +46,7 @@ export default async function WikiList({
                 <h2
                   className={`text-xl font-bold ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
-                  {page.title}{" "}
+                  {isPostList ? `${page.title.split("/")[2]} ` : page.title}{" "}
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>
                 <p className="text-sm text-gray-500">
