@@ -52,6 +52,7 @@ export default async function UserPostPage({ username }: { username: string }) {
       {postOwner && (
         <form action={handleSubmit} className="flex flex-col gap-4">
           <input
+            required
             type="text"
             name="title"
             placeholder="Create a title for your new post (You can edit it later)"
