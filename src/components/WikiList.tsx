@@ -36,6 +36,12 @@ export default async function WikiList({
     return <p className="mt-4">No pages found.</p>;
   }
 
+  const isUserPostPage = (page: Page) => {
+    return (
+      page.title.startsWith("User:") && page.title.split("/")[1] === "post"
+    );
+  };
+
   return (
     <>
       <ul className="mt-4 flex flex-col gap-4">
@@ -46,7 +52,18 @@ export default async function WikiList({
                 <h2
                   className={`text-xl font-bold ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
-                  {isPostList ? `${page.title.split("/")[2]} ` : page.title}{" "}
+                  {isPostList ? (
+                    `${page.title.split("/")[2]} `
+                  ) : isUserPostPage(page) ? (
+                    <>
+                      <span className="text-gray-500">
+                        ({page.title.split("/")[0]})
+                      </span>
+                      {` ${page.title.split("/")[2]}`}
+                    </>
+                  ) : (
+                    page.title
+                  )}{" "}
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>
                 <p className="text-sm text-gray-500">

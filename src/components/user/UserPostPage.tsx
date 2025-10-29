@@ -71,7 +71,7 @@ export default async function UserPostPage({ username }: { username: string }) {
       {results && <WikiList isPostList pages={results} />}
       <TransitionLinkButton
         href={`/wiki/User:${username}`}
-        className="bg-violet-500 text-white hover:bg-violet-600 mt-4"
+        className="mt-4 bg-violet-500 text-white hover:bg-violet-600"
       >
         <UserIcon className="inline size-5" />
         Back to User Page

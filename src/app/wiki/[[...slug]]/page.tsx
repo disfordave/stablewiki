@@ -227,9 +227,7 @@ export default async function WikiPage({
                 className="mt-3 bg-violet-500 text-white hover:bg-violet-600"
               >
                 <DocumentTextIcon className="inline size-5" />
-                
-                  Posts by User:{pageOwner}
-
+                Posts by User:{pageOwner}
               </TransitionLinkButton>
             )}
             <MarkdownPage
@@ -319,8 +317,20 @@ export async function generateMetadata({
           };
       }
     }
+    const isUserPage =
+      slug &&
+      slug.length > 0 &&
+      slug[0].startsWith(encodeURIComponent("User:"));
+    const isUserPagePostPage =
+      isUserPage && slug[1] === "post" && slug.length > 2;
     if (showEdit) {
       if (page && page.title) {
+        if (isUserPagePostPage) {
+          return {
+            title: `Edit Post: ${page.title.split("/")[2]} | ${WIKI_NAME}`,
+            description: `Editing the user post titled "${page.title.split("/")[2]}".`,
+          };
+        }
         return {
           title: `Edit Page: ${page.title} | ${WIKI_NAME}`,
           description: `Editing the wiki page titled "${page.title}".`,
@@ -350,6 +360,13 @@ export async function generateMetadata({
       return {
         title: `History of ${page.title} | ${WIKI_NAME}`,
         description: `Viewing the revision history of the wiki page titled "${page.title}".`,
+      };
+    }
+
+    if (isUserPagePostPage) {
+      return {
+        title: `${page.title.split("/")[2]} | ${WIKI_NAME}`,
+        description: `User post titled "${page.title.split("/")[2]}".`,
       };
     }
 
