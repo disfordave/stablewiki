@@ -118,7 +118,10 @@ export default async function WikiPage({
 
   if (isUserPage && slug[1] === "post" && slug.length === 2) {
     return (
-      <UserPostPage username={decodeURIComponent(slug[0]).split(":")[1]} hPage={hPage} />
+      <UserPostPage
+        username={decodeURIComponent(slug[0]).split(":")[1]}
+        hPage={hPage}
+      />
     );
   }
 
