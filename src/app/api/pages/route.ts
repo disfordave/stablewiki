@@ -20,7 +20,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
-import { getDecodedToken, checkRedirect } from "@/utils";
+import { getDecodedToken, checkRedirect, handleHPage } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
 
@@ -28,8 +28,23 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const userPostByUsername = searchParams.get("userPostByUsername");
+  const itemsPerPage = 10;
+  const hPage = searchParams.get("hPage") || "1";
 
   try {
+    const handledHPage = handleHPage(hPage) - 1;
+
+    const pagesCount = await prisma.page.count({
+      where: {
+        title: {
+          contains: userPostByUsername
+            ? `User:${userPostByUsername}/post/`
+            : query,
+          mode: userPostByUsername ? "default" : "insensitive",
+        },
+      },
+    });
+
     const pages = await prisma.page.findMany({
       where: {
         title: {
@@ -47,28 +62,31 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { createdAt: "desc" },
+      skip: handledHPage * itemsPerPage,
+      take: itemsPerPage,
     });
 
-    return Response.json(
-      pages
-        .sort((a, b) => {
-          const aTitle = a.title.toLowerCase();
-          const bTitle = b.title.toLowerCase();
-          const searchQuery = query.toLowerCase();
+    return Response.json({
+      totalPaginationPages: Math.ceil(pagesCount / itemsPerPage),
+      pages: pages
+        // .sort((a, b) => {
+        //   const aTitle = a.title.toLowerCase();
+        //   const bTitle = b.title.toLowerCase();
+        //   const searchQuery = query.toLowerCase();
 
-          // Exact match comes first
-          if (aTitle === searchQuery) return -1;
-          if (bTitle === searchQuery) return 1;
+        //   // Exact match comes first
+        //   if (aTitle === searchQuery) return -1;
+        //   if (bTitle === searchQuery) return 1;
 
-          // Starts with query comes next
-          const aStarts = aTitle.startsWith(searchQuery);
-          const bStarts = bTitle.startsWith(searchQuery);
-          if (aStarts && !bStarts) return -1;
-          if (!aStarts && bStarts) return 1;
+        //   // Starts with query comes next
+        //   const aStarts = aTitle.startsWith(searchQuery);
+        //   const bStarts = bTitle.startsWith(searchQuery);
+        //   if (aStarts && !bStarts) return -1;
+        //   if (!aStarts && bStarts) return 1;
 
-          // Otherwise sort alphabetically
-          return aTitle.localeCompare(bTitle);
-        })
+        //   // Otherwise sort alphabetically
+        //   return aTitle.localeCompare(bTitle);
+        // })
         .map((page) => ({
           id: page.id,
           title: page.title,
@@ -96,7 +114,7 @@ export async function GET(request: NextRequest) {
               ? page.revisions[0].redirectTargetSlug
               : undefined,
         })) as Page[],
-    );
+    });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to fetch pages" }, { status: 500 });

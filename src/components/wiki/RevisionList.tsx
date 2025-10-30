@@ -18,27 +18,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {
-  ArrowUturnLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/solid";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { TransitionLinkButton } from "../ui";
+import Pagination from "../ui/Pagination";
+import { PageRevisionData } from "@/types";
 
 export default function RevisionList({
-  revisions,
+  data,
   slug,
   historyPage,
 }: {
-  revisions: {
-    id: string;
-    version: number;
-    content: string;
-    createdAt: string;
-    author: { id: string; username: string };
-    summary: string;
-  }[];
+  data: PageRevisionData;
   slug: string;
   historyPage: number;
 }) {
@@ -46,8 +37,8 @@ export default function RevisionList({
   return (
     <>
       <ul className="mt-4 flex flex-col gap-4">
-        {revisions.length > 0 ? (
-          revisions.map(
+        {data.revisions.length > 0 ? (
+          data.revisions.map(
             (rev: {
               id: string;
               version: number;
@@ -110,23 +101,11 @@ export default function RevisionList({
           <ArrowUturnLeftIcon className="inline size-5" />
           Back to Page
         </TransitionLinkButton>
-        <div className="mt-4 flex items-center justify-center gap-2">
-          <TransitionLinkButton
-            href={`/wiki/${decodedSlug}?action=history&hPage=${historyPage - 1}`}
-            className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${historyPage <= 1 && "invisible"}`}
-            title="Previous Page"
-          >
-            <ChevronLeftIcon className="inline size-5" />
-          </TransitionLinkButton>
-          <p className="tabular-nums">{historyPage}</p>
-          <TransitionLinkButton
-            href={`/wiki/${decodedSlug}?action=history&hPage=${historyPage + 1}`}
-            className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${revisions.find((v) => v.version === 1) && "invisible"}`}
-            title="Next Page"
-          >
-            <ChevronRightIcon className="inline size-5" />
-          </TransitionLinkButton>
-        </div>
+        <Pagination
+          currentPage={historyPage}
+          totalPages={data.totalPages}
+          slug={decodedSlug + "?action=history&hPage="}
+        />
       </div>
     </>
   );

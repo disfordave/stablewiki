@@ -27,9 +27,11 @@ import StableUpload from "./SystemUpload";
 export default function SystemPages({
   slug,
   q,
+  hPage,
 }: {
   slug: string[];
   q: string | string[] | undefined;
+  hPage?: string | string[] | undefined;
 }) {
   const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
   switch (systemPage) {
@@ -37,7 +39,7 @@ export default function SystemPages({
       return (
         <div>
           <h1 className="text-2xl font-bold">Search Results for {q}</h1>
-          <StableSearch query={q} />
+          <StableSearch query={q} hPage={hPage} />
         </div>
       );
     case "SignIn":

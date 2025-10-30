@@ -94,6 +94,11 @@ export async function GET(
     try {
       const itemsPerPage = 5;
       const handledHPage = handleHPage(hPage) - 1;
+
+      const revisionsCount = await prisma.revision.count({
+        where: { page: { slug: slug.join("/") } },
+      });
+
       const page = await prisma.page.findUnique({
         where: { slug: slug.join("/") },
         include: {
@@ -132,6 +137,7 @@ export async function GET(
           slug: page.slug,
           isRedirect: page.isRedirect,
           itemsPerPage,
+          totalPages: Math.ceil(revisionsCount / itemsPerPage),
         },
       });
     } catch (error) {

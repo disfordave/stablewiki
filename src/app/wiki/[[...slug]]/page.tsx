@@ -34,7 +34,7 @@ import {
   StableEditor,
 } from "@/components/wiki";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
-import { Page } from "@/types";
+import { Page, PageRevisionData } from "@/types";
 import {
   handleHPage,
   slugify,
@@ -75,7 +75,7 @@ export default async function WikiPage({
 
   // Handle special System: pages
   if (slug[0].startsWith(encodeURIComponent("System:"))) {
-    return <SystemPages slug={slug} q={q} />;
+    return <SystemPages slug={slug} q={q} hPage={hPage} />;
   }
 
   const isUserPage =
@@ -88,15 +88,7 @@ export default async function WikiPage({
 
   // Fetch the page data from the API
   let page: Page | null = null;
-  let pageRevisions: {
-    id: string;
-    version: number;
-    title: string;
-    content: string;
-    createdAt: string;
-    author: { id: string; username: string };
-    summary: string;
-  }[] = [];
+  const pageRevisions: PageRevisionData = { totalPages: 0, revisions: [] };
   try {
     const queryParams =
       showHistoryVersion || showRevert || showDiff
@@ -108,7 +100,8 @@ export default async function WikiPage({
     const data = await getPageData(joinedSlug, queryParams);
 
     if (showHistoryList) {
-      pageRevisions = data.page.revisions || [];
+      pageRevisions.revisions = data.page.revisions || [];
+      pageRevisions.totalPages = data.page.totalPages || 0;
     } else {
       page = data.page;
     }
@@ -125,7 +118,7 @@ export default async function WikiPage({
 
   if (isUserPage && slug[1] === "post" && slug.length === 2) {
     return (
-      <UserPostPage username={decodeURIComponent(slug[0]).split(":")[1]} />
+      <UserPostPage username={decodeURIComponent(slug[0]).split(":")[1]} hPage={hPage} />
     );
   }
 
@@ -148,8 +141,8 @@ export default async function WikiPage({
           ) : (
             page.title
           )
-        ) : pageRevisions.length > 0 ? (
-          pageRevisions[0].title
+        ) : pageRevisions.revisions.length > 0 ? (
+          pageRevisions.revisions[0].title
         ) : (
           decodeURIComponent(joinedSlug)
         )}
@@ -166,7 +159,7 @@ export default async function WikiPage({
       {showHistoryList && (
         <div>
           <RevisionList
-            revisions={pageRevisions}
+            data={pageRevisions}
             slug={joinedSlug}
             historyPage={Number(hPage ?? "1")}
           />

@@ -23,23 +23,26 @@ import { WikiList } from "@/components";
 import type { Page } from "@/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
 import { redirect } from "next/navigation";
+import Pagination from "../ui/Pagination";
 
 export default async function SystemSearch({
   query,
+  hPage,
 }: {
   query: string | string[] | undefined;
+  hPage?: string | string[] | undefined;
 }) {
   const removeTrailingSpace = (str: string) => {
     return str.replace(/\s+$/, "");
   };
 
   let results = null as Page[] | null;
-
+  let totalPaginationPages = 0;
   try {
     const fetchResults = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(
         removeTrailingSpace(query as string),
-      )}`,
+      )}&hPage=${hPage ? encodeURIComponent(hPage as string) : "1"}`,
     );
 
     if (!fetchResults.ok) {
@@ -51,7 +54,8 @@ export default async function SystemSearch({
     }
     const data = await fetchResults.json();
 
-    results = data || [];
+    results = data.pages || [];
+    totalPaginationPages = data.totalPaginationPages || 0;
   } catch {
     return (
       <div>
@@ -94,6 +98,11 @@ export default async function SystemSearch({
           <WikiList pages={results as Page[]} />
         </>
       )}
+      <Pagination
+        currentPage={hPage ? parseInt(hPage as string, 10) : 1}
+        totalPages={totalPaginationPages}
+        slug={`System:Search?q=${query}&hPage=`}
+      />
     </div>
   );
 }

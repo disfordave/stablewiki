@@ -36,3 +36,18 @@ export interface Page {
   isRedirect?: boolean;
   redirectTargetSlug?: string;
 }
+
+export interface PageRevisionData {
+  totalPages: number;
+  revisions: Revision[];
+}
+
+export interface Revision {
+  id: string;
+  version: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  author: { id: string; username: string };
+  summary: string;
+}

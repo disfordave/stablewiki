@@ -4,8 +4,9 @@ import { Page } from "@/types";
 import { PencilSquareIcon, UserIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
 import { getUser } from "@/lib";
+import Pagination from "../ui/Pagination";
 
-export default async function UserPostPage({ username }: { username: string }) {
+export default async function UserPostPage({ username, hPage }: { username: string; hPage: string | string[] | undefined }) {
   const user = await getUser();
   const postOwner = username === user.username;
 
@@ -19,9 +20,10 @@ export default async function UserPostPage({ username }: { username: string }) {
   }
 
   let results = null as Page[] | null;
+    let totalPaginationPages = 0;
   try {
     const fetchResults = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?userPostByUsername=${encodeURIComponent(username)}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?userPostByUsername=${encodeURIComponent(username)}&hPage=${hPage ? encodeURIComponent(hPage as string) : "1"}`,
     );
 
     if (!fetchResults.ok) {
@@ -33,7 +35,8 @@ export default async function UserPostPage({ username }: { username: string }) {
     }
     const data = await fetchResults.json();
 
-    results = data || [];
+    results = data.pages || [];
+    totalPaginationPages = data.totalPaginationPages || 0;
   } catch {
     return (
       <div>
@@ -69,6 +72,11 @@ export default async function UserPostPage({ username }: { username: string }) {
       )}
 
       {results && <WikiList isPostList pages={results} />}
+      <Pagination
+        currentPage={hPage ? parseInt(hPage as string, 10) : 1}
+        totalPages={totalPaginationPages}
+        slug={`User:${username}/post?hPage=`}
+      />
       <TransitionLinkButton
         href={`/wiki/User:${username}`}
         className="mt-4 bg-violet-500 text-white hover:bg-violet-600"
