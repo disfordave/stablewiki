@@ -20,14 +20,14 @@
 
 // Use environment variables to configure the wiki, do not hardcode values here since they may change per deployment
 
-const WIKI_NAME = process.env.WIKI_NAME || "StableWiki";
+const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";
 const WIKI_HOMEPAGE_LINK =
   "/wiki/" + process.env.WIKI_HOMEPAGE_LINK || "WelcomePage";
 const WIKI_DESCRIPTION =
   process.env.WIKI_DESCRIPTION ||
-  "StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
+  "StableWiki Engine is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
 const WIKI_COPYRIGHT_HOLDER =
-  process.env.WIKI_COPYRIGHT_HOLDER || "StableWiki Contributors";
+  process.env.WIKI_COPYRIGHT_HOLDER || "StableWiki Engine Project";
 const WIKI_COPYRIGHT_HOLDER_URL =
   process.env.WIKI_COPYRIGHT_HOLDER_URL ||
   "https://github.com/disfordave/stablewiki";

@@ -1,10 +1,10 @@
-# StableWiki
+# StableWiki Engine
 
-StableWiki is an open-source Next.js application designed to provide a user-friendly platform for collaborative knowledge sharing.
+StableWiki Engine is an open-source Next.js application designed to provide a user-friendly platform for collaborative knowledge sharing, used by [SidWiki](https://sidwiki.com).
 
 ## Installation
 
-To install StableWiki, follow these steps:
+To install StableWiki Engine, follow these steps:
 
 1. Clone the repository:
    ```bash
@@ -34,10 +34,10 @@ To install StableWiki, follow these steps:
 
 `.env` contains various configuration options for StableWiki. such as...
 
-- `WIKI_NAME`: The name of your wiki. (Default: StableWiki)
+- `WIKI_NAME`: The name of your wiki. (Default: StableWiki Engine)
 - `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki. (Default: WelcomePage)
-- `WIKI_DESCRIPTION`: A brief description of your wiki. (Default: StableWiki is a modern, user-friendly wiki platform built with Next.js and TypeScript.)
-- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki. (Default: StableWiki Contributors)
+- `WIKI_DESCRIPTION`: A brief description of your wiki. (Default: StableWiki Engine is a modern, user-friendly wiki platform built with Next.js and TypeScript.)
+- `WIKI_COPYRIGHT_HOLDER`: The copyright holder for your wiki. (Default: StableWiki Engine Project)
 - `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder. (Default: https://github.com/disfordave/stablewiki)
 - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads. (Default: false)
 - `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup. (Default: false)

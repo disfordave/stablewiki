@@ -69,24 +69,17 @@ export async function GET(request: NextRequest) {
     return Response.json({
       totalPaginationPages: Math.ceil(pagesCount / itemsPerPage),
       pages: pages
-        // .sort((a, b) => {
-        //   const aTitle = a.title.toLowerCase();
-        //   const bTitle = b.title.toLowerCase();
-        //   const searchQuery = query.toLowerCase();
+        .sort((a, b) => {
+          const aTitle = a.title.toLowerCase();
+          const bTitle = b.title.toLowerCase();
+          const searchQuery = query.toLowerCase();
 
-        //   // Exact match comes first
-        //   if (aTitle === searchQuery) return -1;
-        //   if (bTitle === searchQuery) return 1;
+          // Exact match comes first
+          if (aTitle === searchQuery) return -1;
+          if (bTitle === searchQuery) return 1;
 
-        //   // Starts with query comes next
-        //   const aStarts = aTitle.startsWith(searchQuery);
-        //   const bStarts = bTitle.startsWith(searchQuery);
-        //   if (aStarts && !bStarts) return -1;
-        //   if (!aStarts && bStarts) return 1;
-
-        //   // Otherwise sort alphabetically
-        //   return aTitle.localeCompare(bTitle);
-        // })
+          return 0;
+        })
         .map((page) => ({
           id: page.id,
           title: page.title,
