@@ -23,6 +23,7 @@ import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
+import { SearchBox } from "../ui";
 
 export default function SystemPages({
   slug,
@@ -38,7 +39,18 @@ export default function SystemPages({
     case "Search":
       return (
         <div>
-          <h1 className="text-2xl font-bold">Search Results for {q}</h1>
+          {!q ||
+          (Array.isArray(q) && q.length === 0) ||
+          (typeof q === "string" && q.trim() === "") ? (
+            <h1 className="text-2xl font-bold">Let&apos;s Search...</h1>
+          ) : (
+            <h1 className="text-2xl font-bold">
+              Search Results for &quot;{q}&quot;
+            </h1>
+          )}
+          <div className="mb-4">
+            <SearchBox />
+          </div>
           <StableSearch query={q} hPage={hPage} />
         </div>
       );

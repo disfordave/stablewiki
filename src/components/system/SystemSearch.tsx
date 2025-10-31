@@ -43,7 +43,7 @@ export default async function SystemSearch({
   ) {
     return (
       <div>
-        <p>No search query provided.</p>
+        <p>No search query provided, Search Now!</p>
       </div>
     );
   }

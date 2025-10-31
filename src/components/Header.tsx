@@ -24,6 +24,7 @@ import Link from "next/link";
 import {
   UserIcon,
   ArrowLeftEndOnRectangleIcon,
+  MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/solid";
 import { TransitionLinkButton } from "@/components/ui";
 import Image from "next/image";
@@ -47,25 +48,30 @@ export default async function Header() {
             </span>
           </Link>
         </p>
-        {user.username ? (
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {user.username ? (
+            <div className="flex items-center gap-2">
+              <TransitionLinkButton
+                href="/wiki/System:Dashboard"
+                className="bg-violet-500 text-white hover:bg-violet-600"
+              >
+                <UserIcon className="inline size-5" />
+                <span className="font-bold">{user.username}</span>
+              </TransitionLinkButton>
+            </div>
+          ) : (
             <TransitionLinkButton
-              href="/wiki/System:Dashboard"
+              href="/wiki/System:SignIn"
               className="bg-violet-500 text-white hover:bg-violet-600"
             >
-              <UserIcon className="inline size-5" />
-              <span className="font-bold">{user.username}</span>
+              <ArrowLeftEndOnRectangleIcon className="inline size-5" />
+              Sign In
             </TransitionLinkButton>
-          </div>
-        ) : (
-          <TransitionLinkButton
-            href="/wiki/System:SignIn"
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <ArrowLeftEndOnRectangleIcon className="inline size-5" />
-            Sign In
-          </TransitionLinkButton>
-        )}
+          )}
+          <Link href="/wiki/System:Search">
+            <MagnifyingGlassCircleIcon className="-m-1 inline-block size-10 cursor-pointer text-violet-500 transition-colors duration-300 hover:text-violet-600" />
+          </Link>
+        </div>
       </div>
     </header>
   );
