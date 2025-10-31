@@ -24,10 +24,9 @@ import Link from "next/link";
 import {
   UserIcon,
   ArrowLeftEndOnRectangleIcon,
-  MagnifyingGlassCircleIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
-import { TransitionLinkButton } from "@/components/ui";
-import Image from "next/image";
+import { DefaultWikiLogo, TransitionLinkButton } from "@/components/ui";
 
 export default async function Header() {
   const user = await getUser();
@@ -37,11 +36,12 @@ export default async function Header() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xl font-bold">
           <Link href={WIKI_HOMEPAGE_LINK} className="flex items-center gap-1">
-            <Image
-              src="/icon.svg"
-              alt={`Logo of ${WIKI_NAME}`}
-              width={24}
-              height={24}
+            <DefaultWikiLogo
+              className="size-6"
+              colors={{
+                primary: "fill-violet-600",
+                secondary: "fill-violet-400",
+              }}
             />
             <span className="transition-colors duration-300 hover:text-violet-500">
               {WIKI_NAME}
@@ -68,9 +68,13 @@ export default async function Header() {
               Sign In
             </TransitionLinkButton>
           )}
-          <Link href="/wiki/System:Search" title="Search Wiki" aria-label="Search Wiki">
-            <MagnifyingGlassCircleIcon className="-m-1 inline-block size-10 cursor-pointer text-violet-500 transition-colors duration-300 hover:text-violet-600" />
-          </Link>
+          <TransitionLinkButton
+            title="Search"
+            href="/wiki/System:Search"
+            className="aspect-square h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"
+          >
+            <MagnifyingGlassIcon className="inline size-4" />
+          </TransitionLinkButton>
         </div>
       </div>
     </header>

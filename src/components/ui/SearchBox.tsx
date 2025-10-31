@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { TransitionFormButton } from "./buttons/TransitionButton";
 
 export async function SearchBox() {
   async function search(formData: FormData) {
@@ -18,9 +19,13 @@ export async function SearchBox() {
         placeholder="Search..."
         required
       />
-      <button type="submit" className="absolute end-0">
-        <MagnifyingGlassCircleIcon className="-m-1 inline-block size-10 cursor-pointer text-violet-500 transition-colors duration-300 hover:text-violet-600" />
-      </button>
+           <TransitionFormButton
+        title="Search"
+        useButtonWithoutForm={true}
+        className="absolute end-0 h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"
+      >
+        <MagnifyingGlassIcon className="inline size-4" />
+      </TransitionFormButton>
     </form>
   );
 }
