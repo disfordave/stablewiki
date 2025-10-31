@@ -36,6 +36,14 @@ export default async function SystemSearch({
     return str.replace(/\s+$/, "");
   };
 
+  if (!query || (Array.isArray(query) && query.length === 0) || (typeof query === "string" && query.trim() === "")) {
+    return (
+      <div>
+        <p>No search query provided.</p>
+      </div>
+    );
+  }
+
   let results = null as Page[] | null;
   let totalPaginationPages = 0;
   try {
