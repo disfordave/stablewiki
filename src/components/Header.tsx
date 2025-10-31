@@ -68,7 +68,7 @@ export default async function Header() {
               Sign In
             </TransitionLinkButton>
           )}
-          <Link href="/wiki/System:Search">
+          <Link href="/wiki/System:Search" title="Search Wiki" aria-label="Search Wiki">
             <MagnifyingGlassCircleIcon className="-m-1 inline-block size-10 cursor-pointer text-violet-500 transition-colors duration-300 hover:text-violet-600" />
           </Link>
         </div>
