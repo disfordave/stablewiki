@@ -31,3 +31,4 @@ export { PageDate } from "./PageDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";
 export { MarkdownComp } from "./MarkdownComp";
 export { Breadcrumbs } from "./Breadcrumbs";
+export { SearchBox } from "./SearchBox";
