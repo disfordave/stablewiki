@@ -24,29 +24,6 @@ import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const recoveryQuestions = [
-  "What was the name of your first pet?",
-  "What is your mother's maiden name?",
-  "What was the name of your elementary school?",
-  "In what city were you born?",
-  "What is your favorite book?",
-  "What was the make of your first car?",
-  "What is your favorite food?",
-  "What is the name of the street you grew up on?",
-  "What was your childhood nickname?",
-  "What is the name of your best friend from childhood?",
-  "What was the name of your first employer?",
-  "What is your favorite movie?",
-  "What is your father's middle name?",
-  "What was the name of your first crush?",
-  "What is the name of your favorite teacher?",
-  "What was the model of your first bicycle?",
-  "What is your favorite vacation spot?",
-  "What was the name of your first roommate?",
-  "What is your favorite sport?",
-  "What was the name of your first boss?",
-];
-
 export default async function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {
     return <DisabledMessage message="Signups are disabled." />;
@@ -56,18 +33,7 @@ export default async function SignupPage() {
     const username = formData.get("username")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
     const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
-    const recoveryQuestionFirst =
-      formData.get("recoveryQuestionFirst")?.toString() || "";
-    const recoveryAnswerFirst =
-      formData.get("recoveryAnswerFirst")?.toString() || "";
-    const recoveryQuestionSecond =
-      formData.get("recoveryQuestionSecond")?.toString() || "";
-    const recoveryAnswerSecond =
-      formData.get("recoveryAnswerSecond")?.toString() || "";
-    const recoveryQuestionThird =
-      formData.get("recoveryQuestionThird")?.toString() || "";
-    const recoveryAnswerThird =
-      formData.get("recoveryAnswerThird")?.toString() || "";
+
     if (password !== passwordConfirm) {
       redirect(
         `/wiki/System:SignUp?error=${encodeURIComponent(
@@ -97,12 +63,6 @@ export default async function SignupPage() {
           password,
           passwordConfirm,
           consent,
-          recoveryQuestionFirst,
-          recoveryAnswerFirst,
-          recoveryQuestionSecond,
-          recoveryAnswerSecond,
-          recoveryQuestionThird,
-          recoveryAnswerThird,
         }),
       },
     );
@@ -169,110 +129,6 @@ export default async function SignupPage() {
             type="password"
             id="passwordConfirm"
             name="passwordConfirm"
-            required
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          />
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Provide answers to your recovery questions to help secure your
-            account. Each question must be unique.
-          </p>
-          <label htmlFor="recoveryQuestionFirst" className="block">
-            Recovery Question 1:
-          </label>
-          <select
-            id="recoveryQuestionFirst"
-            name="recoveryQuestionFirst"
-            required
-            defaultValue={""}
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          >
-            <option value="" disabled>
-              Select a recovery question
-            </option>
-            {recoveryQuestions.map((question, index) => (
-              <option key={index} value={question}>
-                {question}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="recoveryAnswerFirst" className="block">
-            Recovery Answer 1:
-          </label>
-          <input
-            type="text"
-            id="recoveryAnswerFirst"
-            name="recoveryAnswerFirst"
-            required
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          />
-        </div>
-        <div>
-          <label htmlFor="recoveryQuestionSecond" className="block">
-            Recovery Question 2:
-          </label>
-          <select
-            id="recoveryQuestionSecond"
-            name="recoveryQuestionSecond"
-            required
-            defaultValue={""}
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          >
-            <option value="" disabled>
-              Select a recovery question
-            </option>
-            {recoveryQuestions.map((question, index) => (
-              <option key={index} value={question}>
-                {question}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="recoveryAnswerSecond" className="block">
-            Recovery Answer 2:
-          </label>
-          <input
-            type="text"
-            id="recoveryAnswerSecond"
-            name="recoveryAnswerSecond"
-            required
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          />
-        </div>
-        <div>
-          <label htmlFor="recoveryQuestionThird" className="block">
-            Recovery Question 3:
-          </label>
-          <select
-            id="recoveryQuestionThird"
-            name="recoveryQuestionThird"
-            required
-            defaultValue={""}
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
-          >
-            <option value="" disabled>
-              Select a recovery question
-            </option>
-            {recoveryQuestions.map((question, index) => (
-              <option key={index} value={question}>
-                {question}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="recoveryAnswerThird" className="block">
-            Recovery Answer 3:
-          </label>
-          <input
-            type="text"
-            id="recoveryAnswerThird"
-            name="recoveryAnswerThird"
             required
             className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
           />
