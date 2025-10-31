@@ -42,9 +42,9 @@ export default function SystemPages({
           {!q ||
           (Array.isArray(q) && q.length === 0) ||
           (typeof q === "string" && q.trim() === "") ? (
-            <h1 className="text-2xl font-bold">Let&apos;s Search...</h1>
+            <h1 className="text-3xl font-bold">Search</h1>
           ) : (
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-3xl font-bold">
               Search Results for &quot;{q}&quot;
             </h1>
           )}
