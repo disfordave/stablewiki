@@ -75,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <Head>
-        <meta name="apple-mobile-web-app-title" content="StableWiki" />
+        <meta name="apple-mobile-web-app-title" content="SidWiki" />
       </Head>
       <body
         className={`${ibmPlexSans.variable} ${ibmPlexSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased selection:bg-violet-500/35 sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}

@@ -1,6 +1,6 @@
 {
-  "name": "StableWiki",
-  "short_name": "StableWiki",
+  "name": "SidWiki",
+  "short_name": "SidWiki",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#26174e",
+  "theme_color": "#2e1065",
+  "background_color": "#2e1065",
   "display": "standalone"
 }
