@@ -60,6 +60,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Media file is too large" }, { status: 400 });
   }
 
+  if (media.type && !media.type.startsWith("image/")) {
+    // Currently only allowing image uploads
+    return Response.json({ error: "Currently only allowing image uploads" }, { status: 400 });
+  }
+
   // Save the media file to the public directory
 
   const extension = media.name.split(".").pop();

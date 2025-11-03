@@ -32,7 +32,7 @@ export function WikiMarkdown({ content }: { content: string }) {
   processed = processed.replace(/!\[\[([^[\]]+)\]\]/g, (_, fileName) => {
     const clean = fileName.trim();
     const encoded = encodeURIComponent(clean);
-    return `![${clean}](/media/${encoded})`;
+    return `![${clean}](/api/media/${encoded})`;
   });
 
   // ---- 2. Wiki links ----

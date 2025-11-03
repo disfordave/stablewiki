@@ -25,18 +25,7 @@ import { WIKI_DISABLE_SIGNUP } from "@/config";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const {
-    username,
-    password,
-    passwordConfirm,
-    consent,
-    recoveryQuestionFirst,
-    recoveryQuestionSecond,
-    recoveryQuestionThird,
-    recoveryAnswerFirst,
-    recoveryAnswerSecond,
-    recoveryAnswerThird,
-  } = body;
+  const { username, password, passwordConfirm, consent } = body;
 
   if (WIKI_DISABLE_SIGNUP) {
     return Response.json(
@@ -45,18 +34,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (
-    !username ||
-    !password ||
-    !passwordConfirm ||
-    !consent ||
-    !recoveryQuestionFirst ||
-    !recoveryQuestionSecond ||
-    !recoveryQuestionThird ||
-    !recoveryAnswerFirst ||
-    !recoveryAnswerSecond ||
-    !recoveryAnswerThird
-  ) {
+  if (!username || !password || !passwordConfirm || !consent) {
     return Response.json(
       { error: "Username, password, and consent are required" },
       { status: 400 },
@@ -84,39 +62,6 @@ export async function POST(request: Request) {
     );
   }
 
-  if (
-    recoveryQuestionFirst === recoveryQuestionSecond ||
-    recoveryQuestionFirst === recoveryQuestionThird ||
-    recoveryQuestionSecond === recoveryQuestionThird
-  ) {
-    return Response.json(
-      { error: "Recovery questions must be unique" },
-      { status: 400 },
-    );
-  }
-
-  if (
-    recoveryQuestionFirst.trim().length < 9 ||
-    recoveryQuestionSecond.trim().length < 9 ||
-    recoveryQuestionThird.trim().length < 9
-  ) {
-    return Response.json(
-      { error: "Recovery questions must be at least 9 characters long" },
-      { status: 400 },
-    );
-  }
-
-  if (
-    recoveryAnswerFirst.trim().length < 3 ||
-    recoveryAnswerSecond.trim().length < 3 ||
-    recoveryAnswerThird.trim().length < 3
-  ) {
-    return Response.json(
-      { error: "Recovery answers must be at least 3 characters long" },
-      { status: 400 },
-    );
-  }
-
   if (!consent) {
     return Response.json(
       { error: "You must agree to the terms and conditions" },
@@ -137,30 +82,11 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const hashedRecoveryAnswerFirst = await bcrypt.hash(
-      recoveryAnswerFirst,
-      10,
-    );
-    const hashedRecoveryAnswerSecond = await bcrypt.hash(
-      recoveryAnswerSecond,
-      10,
-    );
-    const hashedRecoveryAnswerThird = await bcrypt.hash(
-      recoveryAnswerThird,
-      10,
-    );
-
     const newUser = await prisma.user.create({
       data: {
         username: username,
         password: hashedPassword,
         role: "USER", // Default role
-        recoveryQuestionFirst,
-        recoveryQuestionSecond,
-        recoveryQuestionThird,
-        recoveryAnswerFirst: hashedRecoveryAnswerFirst,
-        recoveryAnswerSecond: hashedRecoveryAnswerSecond,
-        recoveryAnswerThird: hashedRecoveryAnswerThird,
       },
     });
 
