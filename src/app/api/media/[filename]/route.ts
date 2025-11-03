@@ -4,9 +4,10 @@ import fs from "fs/promises";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } },
+  { params }: { params: Promise<{ filename: string }> },
 ) {
-  const filePath = path.join(process.cwd(), "public", "media", params.filename);
+  const { filename } = await params;
+  const filePath = path.join(process.cwd(), "public", "media", filename);
 
   try {
     const file = await fs.readFile(filePath);
