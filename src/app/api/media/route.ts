@@ -74,6 +74,8 @@ export async function POST(request: NextRequest) {
 
   await writeFile(filePath, buffer);
 
+  console.log(`Media file saved to ${filePath}`);
+
   try {
     const page = await prisma.page.create({
       data: {
