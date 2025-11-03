@@ -23,6 +23,7 @@ import { prisma } from "@/lib/prisma";
 import { getDecodedToken, slugify } from "@/utils";
 import { writeFile, mkdir } from "fs/promises";
 import { NextRequest } from "next/server";
+import path from "path";
 
 export async function POST(request: NextRequest) {
   if (WIKI_DISABLE_MEDIA) {
@@ -66,10 +67,12 @@ export async function POST(request: NextRequest) {
 
   const fullTitle = extension ? `${title}.${extension}` : title;
   console.log({ fullTitle });
-  await mkdir("./public/media", { recursive: true });
-  const filePath = `/public/media/${fullTitle}`;
 
-  await writeFile(`.${filePath}`, buffer);
+  const uploadDir = path.join(process.cwd(), "public", "media");
+  await mkdir(uploadDir, { recursive: true });
+  const filePath = path.join(uploadDir, fullTitle);
+
+  await writeFile(filePath, buffer);
 
   try {
     const page = await prisma.page.create({
