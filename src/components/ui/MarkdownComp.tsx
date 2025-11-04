@@ -32,7 +32,7 @@ export function WikiMarkdown({ content }: { content: string }) {
   processed = processed.replace(/!\[\[([^[\]]+)\]\]/g, (_, fileName) => {
     const clean = fileName.trim();
     const encoded = encodeURIComponent(clean);
-    return `![${clean}](/api/media/${encoded})`;
+    return `[![${clean}](/api/media/${encoded})](/wiki/Media:${slugify(clean)})`;
   });
 
   // ---- 2. Wiki links ----
@@ -55,6 +55,21 @@ export function WikiMarkdown({ content }: { content: string }) {
       // rehypePlugins={[rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], toc]}
       rehypePlugins={[rehypeSlug, toc]}
       components={{
+        img(props) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { alt, className, node, ...rest } = props;
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className={
+                (className ? className + " " : "") +
+                "my-[2em] w-full rounded-xl"
+              }
+              alt={alt}
+              {...rest}
+            />
+          );
+        },
         nav(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children, className, node, ...rest } = props;
@@ -134,7 +149,7 @@ export function WikiMarkdown({ content }: { content: string }) {
 
 function MarkdownComp({ content }: { content: string }) {
   return (
-    <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-img:rounded-xl prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 mt-4 max-w-none">
+    <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 mt-4 max-w-none">
       <WikiMarkdown content={content} />
     </div>
   );
