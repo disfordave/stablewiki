@@ -21,7 +21,7 @@
 import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
-import { checkRedirect, handleHPage, getDecodedToken } from "@/utils";
+import { checkRedirect, handleHPage, getDecodedToken, slugify } from "@/utils";
 
 // export function normalizeSlug(raw: string[]): string {
 //   raw = raw.map((s) => {
@@ -66,7 +66,9 @@ export async function GET(
       return Response.json({
         page: {
           id: page.id,
-          title: page.title,
+          title: (page.revisions.length > 0 && page.revisions[0].title.length > 0)
+              ? page.revisions[0].title
+              : page.title,
           content:
             page.revisions.length > 0
               ? page.revisions[0].content
@@ -234,7 +236,7 @@ export async function POST(
   const redirection = checkRedirect(content, title);
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
-    if ((title as string).split("/")[0].slice(5) !== decodedToken?.username) {
+    if (((title as string).split("/")[0].slice(5) !== decodedToken?.username)) {
       return Response.json(
         { error: "You can only create a User page for your own username" },
         { status: 403 },
@@ -250,6 +252,7 @@ export async function POST(
     const page = await prisma.revision.create({
       data: {
         content,
+        title,
         page: { connect: { slug: slug.join("/") } },
         author: { connect: { id: decodedToken.id as string } },
         version: revisionsCount + 1,
@@ -262,6 +265,8 @@ export async function POST(
     const updatedPage = await prisma.page.update({
       where: { slug: slug.join("/") },
       data: {
+        title: title,
+        slug: slugify(title),
         isRedirect: redirection.isRedirect,
       },
     });

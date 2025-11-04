@@ -28,6 +28,7 @@ import {
 } from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
+import { slugify } from "@/utils";
 
 export default async function StableEditor({
   page,
@@ -73,6 +74,7 @@ export default async function StableEditor({
 
   async function editPage(formData: FormData) {
     "use server";
+    const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const summary = formData.get("summary") as string;
 
@@ -93,7 +95,7 @@ export default async function StableEditor({
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          title: page.title,
+          title,
           content,
           author: user,
           summary,
@@ -109,7 +111,7 @@ export default async function StableEditor({
 
     const data = await res.json();
     console.log("Edit response data:", data);
-    redirect(`/wiki/${slug}`);
+    redirect(`/wiki/${slugify(title)}`);
   }
 
   async function deletePage() {
@@ -195,6 +197,14 @@ export default async function StableEditor({
     return (
       <>
         <form action={editPage}>
+          <input
+          type="text"
+          name="title"
+          defaultValue={page.title}
+          placeholder="Edit title"
+          className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+          required
+        />
           <WikiEditor defaultValue={page.content} />
           <TransitionFormButton
             useButtonWithoutForm={true}
