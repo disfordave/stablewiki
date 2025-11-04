@@ -81,12 +81,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const userCount = await prisma.user.count();
+    const isFirstUser = userCount === 0;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
         username: username,
         password: hashedPassword,
-        role: "USER", // Default role
+        role: isFirstUser ? "ADMIN" : "USER",
       },
     });
 
