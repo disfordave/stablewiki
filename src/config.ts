@@ -33,6 +33,10 @@ const WIKI_COPYRIGHT_HOLDER_URL =
   "https://github.com/disfordave/stablewiki";
 const WIKI_DISABLE_MEDIA = process.env.WIKI_DISABLE_MEDIA === "true";
 const WIKI_DISABLE_SIGNUP = process.env.WIKI_DISABLE_SIGNUP === "true";
+const WIKI_LICENSE_NAME = process.env.WIKI_LICENSE_NAME || "CC BY-SA 4.0";
+const WIKI_LICENSE_URL =
+  process.env.WIKI_LICENSE_URL ||
+  "https://creativecommons.org/licenses/by-sa/4.0/";
 
 export {
   WIKI_NAME,
@@ -42,4 +46,6 @@ export {
   WIKI_COPYRIGHT_HOLDER_URL,
   WIKI_DISABLE_MEDIA,
   WIKI_DISABLE_SIGNUP,
+  WIKI_LICENSE_NAME,
+  WIKI_LICENSE_URL,
 };

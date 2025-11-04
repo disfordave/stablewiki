@@ -66,7 +66,8 @@ export async function GET(
       return Response.json({
         page: {
           id: page.id,
-          title: (page.revisions.length > 0 && page.revisions[0].title.length > 0)
+          title:
+            page.revisions.length > 0 && page.revisions[0].title.length > 0
               ? page.revisions[0].title
               : page.title,
           content:
@@ -223,7 +224,7 @@ export async function POST(
   }
 
   if (
-    ("/wiki/" + title) === WIKI_HOMEPAGE_LINK &&
+    "/wiki/" + title === WIKI_HOMEPAGE_LINK &&
     decodedToken.role !== "ADMIN" &&
     decodedToken.role !== "EDITOR"
   ) {
@@ -236,7 +237,7 @@ export async function POST(
   const redirection = checkRedirect(content, title);
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
-    if (((title as string).split("/")[0].slice(5) !== decodedToken?.username)) {
+    if ((title as string).split("/")[0].slice(5) !== decodedToken?.username) {
       return Response.json(
         { error: "You can only create a User page for your own username" },
         { status: 403 },
@@ -301,7 +302,7 @@ export async function DELETE(
   }
 
   if (
-    ("/wiki/" + slug.join("/")) === WIKI_HOMEPAGE_LINK &&
+    "/wiki/" + slug.join("/") === WIKI_HOMEPAGE_LINK &&
     decodedToken.role !== "ADMIN" &&
     decodedToken.role !== "EDITOR"
   ) {

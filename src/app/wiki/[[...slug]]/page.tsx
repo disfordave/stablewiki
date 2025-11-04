@@ -154,13 +154,11 @@ export default async function WikiPage({
         {showRevert && <>{` to (ver. ${ver})`}</>}
         {showDiff && <>{` from (ver. ${ver})`}</>}
       </h1>
-      {
-        showHistoryVersion && page && (
-          <p className="my-2 text-gray-600">
-            {`Page title was "${page.title}" at version ${ver}.`}
-          </p>
-        )
-      }
+      {showHistoryVersion && page && (
+        <p className="my-2 text-gray-600">
+          {`Page title was "${page.title}" at version ${ver}.`}
+        </p>
+      )}
       {showEdit && (
         <div className="mt-2">
           <StableEditor page={page ? page : undefined} slug={joinedSlug} />

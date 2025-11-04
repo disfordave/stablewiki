@@ -63,7 +63,10 @@ export async function POST(request: NextRequest) {
   // Only allow PNG, JPG/JPEG, and SVG files
   const allowedTypes = ["image/png", "image/jpeg", "image/svg+xml"];
   if (!media.type || !allowedTypes.includes(media.type)) {
-    return Response.json({ error: "Only PNG, JPG, JPEG, and SVG files are allowed" }, { status: 400 });
+    return Response.json(
+      { error: "Only PNG, JPG, JPEG, and SVG files are allowed" },
+      { status: 400 },
+    );
   }
 
   // Save the media file to the public directory

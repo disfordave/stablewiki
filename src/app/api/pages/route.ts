@@ -147,10 +147,10 @@ export async function POST(request: Request) {
   }
 
   console.log({ decodedToken });
-  console.log({ title, link: WIKI_HOMEPAGE_LINK.slice(6)});
+  console.log({ title, link: WIKI_HOMEPAGE_LINK.slice(6) });
 
   if (
-    ("/wiki/" + title) === WIKI_HOMEPAGE_LINK &&
+    "/wiki/" + title === WIKI_HOMEPAGE_LINK &&
     decodedToken.role !== "ADMIN" &&
     decodedToken.role !== "EDITOR"
   ) {
@@ -192,6 +192,9 @@ export async function POST(request: Request) {
     return Response.json(page, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Failed to create page: " + error }, { status: 500 });
+    return Response.json(
+      { error: "Failed to create page: " + error },
+      { status: 500 },
+    );
   }
 }

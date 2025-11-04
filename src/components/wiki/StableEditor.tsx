@@ -198,13 +198,13 @@ export default async function StableEditor({
       <>
         <form action={editPage}>
           <input
-          type="text"
-          name="title"
-          defaultValue={page.title}
-          placeholder="Edit title"
-          className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
-          required
-        />
+            type="text"
+            name="title"
+            defaultValue={page.title}
+            placeholder="Edit title"
+            className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+            required
+          />
           <WikiEditor defaultValue={page.content} />
           <TransitionFormButton
             useButtonWithoutForm={true}

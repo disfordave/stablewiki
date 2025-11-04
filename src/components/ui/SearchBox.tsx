@@ -19,7 +19,7 @@ export async function SearchBox() {
         placeholder="Search..."
         required
       />
-           <TransitionFormButton
+      <TransitionFormButton
         title="Search"
         useButtonWithoutForm={true}
         className="absolute end-0 h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"

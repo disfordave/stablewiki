@@ -18,18 +18,35 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { WIKI_COPYRIGHT_HOLDER, WIKI_COPYRIGHT_HOLDER_URL } from "@/config";
+import {
+  WIKI_COPYRIGHT_HOLDER,
+  WIKI_COPYRIGHT_HOLDER_URL,
+  WIKI_LICENSE_NAME,
+  WIKI_LICENSE_URL,
+} from "@/config";
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-2xl bg-white px-4 py-8 text-center sm:rounded-2xl dark:bg-gray-800">
+    <footer className="rounded-t-2xl text-start bg-white px-4 py-8  sm:rounded-2xl dark:bg-gray-800">
       <p className="text-sm text-gray-500">
+        Content is licensed under{" "}
+        <a
+          href={WIKI_LICENSE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:no-underline"
+        >
+          {WIKI_LICENSE_NAME}
+        </a>
+      </p>
+      
+      <p className="text-sm text-gray-500 mt-4">
         &copy; {new Date().getFullYear()}{" "}
         <a
           href={WIKI_COPYRIGHT_HOLDER_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:underline"
+          className="underline hover:no-underline"
         >
           {WIKI_COPYRIGHT_HOLDER}
         </a>
