@@ -104,12 +104,12 @@ export default async function StableUpload() {
           <input
             type="file"
             name="media"
-            accept="image/*"
+            accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml"
             className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
             required
           />
         </div>
-        <p>Allowed file types: images (max size: 1MB).</p>
+        <p>Allowed file types: PNG, JPG, JPEG, SVG (max size: 1MB).</p>
         <TransitionFormButton
           useButtonWithoutForm={true}
           className="bg-green-500 text-white hover:bg-green-600"
