@@ -18,6 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
 import { checkRedirect, handleHPage, getDecodedToken } from "@/utils";
@@ -219,6 +220,17 @@ export async function POST(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (
+    ("/wiki/" + title) === WIKI_HOMEPAGE_LINK &&
+    decodedToken.role !== "ADMIN" &&
+    decodedToken.role !== "EDITOR"
+  ) {
+    return Response.json(
+      { error: "Only admins and editors can create or modify the homepage" },
+      { status: 403 },
+    );
+  }
+
   const redirection = checkRedirect(content, title);
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
@@ -271,12 +283,27 @@ export async function DELETE(
 
   const decodedToken = await getDecodedToken(request);
 
+  if (!slug || slug.length === 0) {
+    return Response.json({ error: "Missing slug" }, { status: 400 });
+  }
+
   if (!decodedToken || !decodedToken.id) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!decodedToken?.username) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (
+    ("/wiki/" + slug.join("/")) === WIKI_HOMEPAGE_LINK &&
+    decodedToken.role !== "ADMIN" &&
+    decodedToken.role !== "EDITOR"
+  ) {
+    return Response.json(
+      { error: "Only admins and editors can create or modify the homepage" },
+      { status: 403 },
+    );
   }
 
   try {
