@@ -48,6 +48,7 @@ model Page {
   children    Page[]     @relation("SubPages")
   tags        PageTag[]
   revisions   Revision[]
+  accessLevel Int @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 3: Authors and Admins Only, 9: Admins Only
 }
 
 model Revision {
@@ -62,6 +63,7 @@ model Revision {
   redirectTargetSlug String?
   author             User     @relation(fields: [authorId], references: [id])
   page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  title              String   @default("")
 }
 
 model Comment {
