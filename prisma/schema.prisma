@@ -48,7 +48,7 @@ model Page {
   children    Page[]     @relation("SubPages")
   tags        PageTag[]
   revisions   Revision[]
-  accessLevel Int @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 3: Authors and Admins Only, 9: Admins Only
+  accessLevel Int @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
 }
 
 model Revision {
