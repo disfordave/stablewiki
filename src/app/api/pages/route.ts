@@ -23,6 +23,7 @@ import { Page } from "@/types";
 import { getDecodedToken, checkRedirect, handleHPage } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
+import { WIKI_HOMEPAGE_LINK } from "@/config";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -145,6 +146,20 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  console.log({ decodedToken });
+  console.log({ title, link: WIKI_HOMEPAGE_LINK.slice(6)});
+
+  if (
+    ("/wiki/" + title) === WIKI_HOMEPAGE_LINK &&
+    decodedToken.role !== "ADMIN" &&
+    decodedToken.role !== "EDITOR"
+  ) {
+    return Response.json(
+      { error: "Only admins and editors can create or modify the homepage" },
+      { status: 403 },
+    );
+  }
+
   if (title.startsWith("User:") || title.startsWith("user:")) {
     if ((title as string).split("/")[0].slice(5) !== decodedToken.username) {
       return Response.json(
@@ -177,6 +192,6 @@ export async function POST(request: Request) {
     return Response.json(page, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Failed to create page" }, { status: 500 });
+    return Response.json({ error: "Failed to create page: " + error }, { status: 500 });
   }
 }

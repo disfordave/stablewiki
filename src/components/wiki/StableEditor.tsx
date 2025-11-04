@@ -63,7 +63,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to create page")}`,
+        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to create page: " + (await res.json()).error)}`,
       );
     }
 
@@ -103,7 +103,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to edit page")}`,
+        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to edit page: " + (await res.json()).error)}`,
       );
     }
 
@@ -135,7 +135,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to delete page")}`,
+        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to delete page: " + (await res.json()).error)}`,
       );
     }
 

@@ -1,118 +1,95 @@
-/*
-    StableWiki is a modern, open-source wiki platform focused on simplicity,
-    collaboration, and ease of use.
-
-    Copyright (C) 2025 @disfordave
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-// Prisma schema for a Wiki Engine
-// Database: PostgreSQL (recommended for JSON fields and full-text search)
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String?   @unique
-  username    String   @unique
-  password    String
-  recoverKey  String?  @unique
-  recoveryQuestionFirst String?
+  id                     String     @id @default(cuid())
+  email                  String?    @unique
+  username               String     @unique
+  password               String
+  recoverKey             String?    @unique
+  recoveryQuestionFirst  String?
   recoveryQuestionSecond String?
-  recoveryQuestionThird String?
-  recoveryAnswerFirst   String?
-  recoveryAnswerSecond  String?
-  recoveryAnswerThird   String?
-  name        String?
-  avatarUrl   String?
-  role        Role     @default(USER)
-  pages       Page[]   @relation("PageAuthors")
-  revisions   Revision[]
-  comments    Comment[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  recoveryQuestionThird  String?
+  recoveryAnswerFirst    String?
+  recoveryAnswerSecond   String?
+  recoveryAnswerThird    String?
+  name                   String?
+  avatarUrl              String?
+  role                   Role       @default(USER)
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+  comments               Comment[]
+  pages                  Page[]     @relation("PageAuthors")
+  revisions              Revision[]
 }
 
 model Page {
-  id          String      @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
-  slug        String       @unique
+  slug        String     @unique
   content     String
   authorId    String
-  author      User         @relation("PageAuthors", fields: [authorId], references: [id])
-  revisions   Revision[]  
-  tags        PageTag[]
-  comments    Comment[]
-  parentId    String?      
-  parent      Page?        @relation("SubPages", fields: [parentId], references: [id], onDelete: SetNull)
-  children    Page[]       @relation("SubPages")
-  isPublished Boolean      @default(false)
+  parentId    String?
+  isPublished Boolean    @default(false)
   publishedAt DateTime?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  isMedia     Boolean      @default(false)
-  isRedirect  Boolean      @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  isMedia     Boolean    @default(false)
+  isRedirect  Boolean    @default(false)
+  comments    Comment[]
+  author      User       @relation("PageAuthors", fields: [authorId], references: [id])
+  parent      Page?      @relation("SubPages", fields: [parentId], references: [id])
+  children    Page[]     @relation("SubPages")
+  tags        PageTag[]
+  revisions   Revision[]
 }
 
 model Revision {
-  id          String   @id @default(cuid())
-  version     Int      @default(1)
-  pageId      String
-  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id])
-  content     String   
-  summary     String?
-  createdAt   DateTime @default(now())
-  isRedirect Boolean  @default(false)
+  id                 String   @id @default(cuid())
+  version            Int      @default(1)
+  pageId             String
+  authorId           String
+  content            String
+  summary            String?
+  createdAt          DateTime @default(now())
+  isRedirect         Boolean  @default(false)
   redirectTargetSlug String?
+  author             User     @relation(fields: [authorId], references: [id])
+  page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
-  id          String   @id @default(cuid())
-  pageId      String
-  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id])
-  content     String
-  parentId    String?
-  parent      Comment? @relation("ThreadedComments", fields: [parentId], references: [id])
-  replies     Comment[] @relation("ThreadedComments")
-  createdAt   DateTime @default(now())
+  id        String    @id @default(cuid())
+  pageId    String
+  authorId  String
+  content   String
+  parentId  String?
+  createdAt DateTime  @default(now())
+  author    User      @relation(fields: [authorId], references: [id])
+  page      Page      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("ThreadedComments", fields: [parentId], references: [id])
+  replies   Comment[] @relation("ThreadedComments")
 }
 
 model Tag {
-  id          String     @id @default(cuid())
-  name        String      @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
   description String?
+  createdAt   DateTime  @default(now())
   pages       PageTag[]
-  createdAt   DateTime    @default(now())
 }
 
 model PageTag {
   pageId String
   tagId  String
-  page   Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  tag    Tag  @relation(fields: [tagId], references: [id])
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id])
 
   @@id([pageId, tagId])
 }
