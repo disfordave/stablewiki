@@ -60,11 +60,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Media file is too large" }, { status: 400 });
   }
 
-  // Only allow PNG, JPG/JPEG, and SVG files
-  const allowedTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+  // Only allow PNG, JPG/JPEG, WEBP, GIF and SVG files
+  const allowedTypes = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
   if (!media.type || !allowedTypes.includes(media.type)) {
     return Response.json(
-      { error: "Only PNG, JPG, JPEG, and SVG files are allowed" },
+      { error: "Only PNG, JPG, JPEG, WEBP, GIF and SVG files are allowed" },
       { status: 400 },
     );
   }
