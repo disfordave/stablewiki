@@ -88,7 +88,7 @@ export default async function StableRevert({
   if (
     (decodeURIComponent(slug).startsWith("User:") ||
       decodeURIComponent(slug).startsWith("user:")) &&
-    user.username !== decodeURIComponent(slug).slice(5)
+    user.username !== decodeURIComponent(slug).split("/")[0].slice(5)
   ) {
     return (
       <>
