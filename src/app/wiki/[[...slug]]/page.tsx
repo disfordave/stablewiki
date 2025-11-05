@@ -255,6 +255,12 @@ export default async function WikiPage({
           />
         </div>
       )}
+      {isUserPage && (
+        <p className="mt-4 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
+          Text content on User: pages and its subpages is not licensed under the
+          same terms as regular wiki pages. All rights reserved.
+        </p>
+      )}
     </div>
   );
 }
