@@ -27,7 +27,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-2xl text-start bg-white px-4 py-8  sm:rounded-2xl dark:bg-gray-800">
+    <footer className="rounded-t-2xl bg-white px-4 py-8 text-start sm:rounded-2xl dark:bg-gray-800">
       <p className="text-sm text-gray-500">
         Content is licensed under{" "}
         <a
@@ -39,8 +39,8 @@ export default function Footer() {
           {WIKI_LICENSE_NAME}
         </a>
       </p>
-      
-      <p className="text-sm text-gray-500 mt-4">
+
+      <p className="mt-4 text-sm text-gray-500">
         &copy; {new Date().getFullYear()}{" "}
         <a
           href={WIKI_COPYRIGHT_HOLDER_URL}

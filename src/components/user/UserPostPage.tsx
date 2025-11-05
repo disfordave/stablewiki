@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { Breadcrumbs, TransitionFormButton, TransitionLinkButton } from "../ui";
+import { TransitionFormButton } from "../ui";
 import { Page } from "@/types";
-import { PencilSquareIcon, UserIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
 import { getUser } from "@/lib";
 import Pagination from "../ui/Pagination";
@@ -19,9 +19,7 @@ export default async function UserPostPage({
   async function handleSubmit(formData: FormData) {
     "use server";
     const title = formData.get("title") as string;
-    redirect(
-      `/wiki/User:${username}/post/${encodeURIComponent(title)}?action=edit`,
-    );
+    redirect(`/wiki/User:${username}/${encodeURIComponent(title)}?action=edit`);
     // Handle post creation logic here
   }
 
@@ -53,11 +51,7 @@ export default async function UserPostPage({
 
   return (
     <>
-      <h1 className="mb-2 text-3xl font-bold">Posts by User:{username}</h1>
-      <Breadcrumbs
-        slug={[`User:${username}`, "post"]}
-        titles={[`User:${username}`, "post"]}
-      />
+      <h3 className="mb-2 text-2xl font-bold">Posts by User:{username}</h3>
       {postOwner && (
         <form action={handleSubmit} className="flex flex-col gap-4">
           <input
@@ -81,15 +75,15 @@ export default async function UserPostPage({
       <Pagination
         currentPage={hPage ? parseInt(hPage as string, 10) : 1}
         totalPages={totalPaginationPages}
-        slug={`User:${username}/post?hPage=`}
+        slug={`User:${username}/#posts?hPage=`}
       />
-      <TransitionLinkButton
+      {/* <TransitionLinkButton
         href={`/wiki/User:${username}`}
         className="mt-4 bg-violet-500 text-white hover:bg-violet-600"
       >
         <UserIcon className="inline size-5" />
         Back to User Page
-      </TransitionLinkButton>
+      </TransitionLinkButton> */}
     </>
   );
 }

@@ -38,9 +38,7 @@ export async function GET(request: NextRequest) {
     const pagesCount = await prisma.page.count({
       where: {
         title: {
-          contains: userPostByUsername
-            ? `User:${userPostByUsername}/post/`
-            : query,
+          contains: userPostByUsername ? `User:${userPostByUsername}/` : query,
           mode: userPostByUsername ? "default" : "insensitive",
         },
       },
@@ -49,9 +47,7 @@ export async function GET(request: NextRequest) {
     const pages = await prisma.page.findMany({
       where: {
         title: {
-          contains: userPostByUsername
-            ? `User:${userPostByUsername}/post/`
-            : query,
+          contains: userPostByUsername ? `User:${userPostByUsername}/` : query,
           mode: userPostByUsername ? "default" : "insensitive",
         },
       },

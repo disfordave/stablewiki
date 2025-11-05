@@ -38,7 +38,9 @@ export default async function WikiList({
 
   const isUserPostPage = (page: Page) => {
     return (
-      page.title.startsWith("User:") && page.title.split("/")[1] === "post"
+      page.title.startsWith("User:") &&
+      page.title.split("/")[1] &&
+      page.title.split("/")[1].length > 0
     );
   };
 
@@ -53,13 +55,13 @@ export default async function WikiList({
                   className={`text-xl font-bold ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
                   {isPostList ? (
-                    `${page.title.split("/")[2]} `
+                    `${page.title.split("/")[1]} `
                   ) : isUserPostPage(page) ? (
                     <>
                       <span className="text-gray-500">
                         ({page.title.split("/")[0]})
                       </span>
-                      {` ${page.title.split("/")[2]}`}
+                      {` ${page.title.split("/")[1]}`}
                     </>
                   ) : (
                     page.title

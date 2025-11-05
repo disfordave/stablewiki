@@ -116,17 +116,16 @@ export default async function WikiPage({
     );
   }
 
-  if (isUserPage && slug[1] === "post" && slug.length === 2) {
-    return (
-      <UserPostPage
-        username={decodeURIComponent(slug[0]).split(":")[1]}
-        hPage={hPage}
-      />
-    );
-  }
+  // if (isUserPage && slug[1] === "post" && slug.length === 2) {
+  //   return (
+  //     <UserPostPage
+  //       username={decodeURIComponent(slug[0]).split(":")[1]}
+  //       hPage={hPage}
+  //     />
+  //   );
+  // }
 
-  const isUserPagePostPage =
-    isUserPage && slug[1] === "post" && slug.length > 2;
+  const isUserPagePostPage = isUserPage && slug.length >= 2;
 
   return (
     <div>
@@ -138,7 +137,7 @@ export default async function WikiPage({
         {page ? (
           isUserPagePostPage ? (
             <>
-              {`${page.title.split("/")[2]} `}
+              {`${page.title.split("/")[1]} `}
               <span className="text-gray-500">(Post)</span>
             </>
           ) : (
@@ -222,9 +221,9 @@ export default async function WikiPage({
             <PageDate page={page} isOld={false} />
             <Breadcrumbs slug={slug} titles={page.title.split("/")} />
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
-            {isUserPage && pageOwner && (
+            {isUserPage && (
               <TransitionLinkButton
-                href={`/wiki/User:${pageOwner}/post`}
+                href={`/wiki/User:${pageOwner}#posts`}
                 className="mt-3 bg-violet-500 text-white hover:bg-violet-600"
               >
                 <DocumentTextIcon className="inline size-5" />
@@ -247,6 +246,15 @@ export default async function WikiPage({
             </TransitionLinkButton>
           </div>
         ))}
+      {isUserPage && slug.length === 1 && (
+        <div id="posts" className="mt-8 border-gray-500">
+          <div className="mb-4 h-1 w-full rounded-full bg-gray-500/50"></div>
+          <UserPostPage
+            username={decodeURIComponent(slug[0]).split(":")[1]}
+            hPage={hPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

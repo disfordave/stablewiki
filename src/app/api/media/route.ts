@@ -61,7 +61,13 @@ export async function POST(request: NextRequest) {
   }
 
   // Only allow PNG, JPG/JPEG, WEBP, GIF and SVG files
-  const allowedTypes = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+  const allowedTypes = [
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
+  ];
   if (!media.type || !allowedTypes.includes(media.type)) {
     return Response.json(
       { error: "Only PNG, JPG, JPEG, WEBP, GIF and SVG files are allowed" },

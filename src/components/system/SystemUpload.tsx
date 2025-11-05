@@ -109,7 +109,9 @@ export default async function StableUpload() {
             required
           />
         </div>
-        <p>Allowed file types: PNG, JPG, JPEG, SVG, WEBP, GIF (max size: 1MB).</p>
+        <p>
+          Allowed file types: PNG, JPG, JPEG, SVG, WEBP, GIF (max size: 1MB).
+        </p>
         <TransitionFormButton
           useButtonWithoutForm={true}
           className="bg-green-500 text-white hover:bg-green-600"
