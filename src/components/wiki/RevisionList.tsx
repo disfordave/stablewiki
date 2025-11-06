@@ -49,14 +49,14 @@ export default function RevisionList({
             }) => (
               <li
                 key={rev.id}
-                className="flex flex-col items-start justify-between gap-1 border-b border-gray-300 pb-2 dark:border-gray-700"
+                className="flex flex-col items-start justify-between border-b border-gray-300 pb-2 dark:border-gray-700"
               >
                 <Link
                   className="hover:underline"
                   href={`/wiki/${decodedSlug}?action=history&ver=${rev.version}`}
                 >
                   <h2 className="font-bold">Revision ver. {rev.version}</h2>
-                  <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700">
+                  <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700 text-sm">
                     {rev.summary.length > 0 ? (
                       <span className="font-medium">{rev.summary}</span>
                     ) : (
@@ -70,7 +70,7 @@ export default function RevisionList({
                     {new Date(rev.createdAt).toLocaleString()}
                   </p>
                 </Link>
-                <div className="flex flex-col">
+                <div className="flex gap-2 flex-wrap">
                   <Link
                     href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
                     className="inline-block text-sm text-blue-500 hover:underline"

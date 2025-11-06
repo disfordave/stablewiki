@@ -96,7 +96,7 @@ export async function GET(
     }
   } else if (action === "history" && !ver && hPage) {
     try {
-      const itemsPerPage = 5;
+      const itemsPerPage = 10;
       const handledHPage = handleHPage(hPage) - 1;
 
       const revisionsCount = await prisma.revision.count({
