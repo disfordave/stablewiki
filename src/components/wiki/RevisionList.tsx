@@ -34,6 +34,10 @@ export default function RevisionList({
   historyPage: number;
 }) {
   const decodedSlug = decodeURIComponent(slug);
+
+  function isLatestRevision(revVersion: number): boolean {
+    return data.revisions[0].version === revVersion && historyPage === 1;
+  }
   return (
     <>
       <ul className="mt-4 flex flex-col gap-4">
@@ -55,8 +59,11 @@ export default function RevisionList({
                   className="hover:underline"
                   href={`/wiki/${decodedSlug}?action=history&ver=${rev.version}`}
                 >
-                  <h2 className="font-bold">Revision ver. {rev.version}</h2>
-                  <p className="border-s-4 border-gray-300 ps-2 dark:border-gray-700 text-sm">
+                  <h2 className="font-bold">
+                    Revision ver. {rev.version}
+                    {isLatestRevision(rev.version) && <span> (Latest)</span>}
+                  </h2>
+                  <p className="border-s-4 border-gray-300 ps-2 text-sm dark:border-gray-700">
                     {rev.summary.length > 0 ? (
                       <span className="font-medium">{rev.summary}</span>
                     ) : (
@@ -70,20 +77,22 @@ export default function RevisionList({
                     {new Date(rev.createdAt).toLocaleString()}
                   </p>
                 </Link>
-                <div className="flex gap-2 flex-wrap">
-                  <Link
-                    href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
-                    className="inline-block text-sm text-blue-500 hover:underline"
-                  >
-                    Differences
-                  </Link>
-                  <Link
-                    href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
-                    className="inline-block text-sm text-red-500 hover:underline"
-                  >
-                    Revert to ver. {rev.version}
-                  </Link>
-                </div>
+                {!isLatestRevision(rev.version) && (
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
+                      className="inline-block text-sm text-blue-500 hover:underline"
+                    >
+                      Differences
+                    </Link>
+                    <Link
+                      href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
+                      className="inline-block text-sm text-red-500 hover:underline"
+                    >
+                      Revert to ver. {rev.version}
+                    </Link>
+                  </div>
+                )}
               </li>
             ),
           )
