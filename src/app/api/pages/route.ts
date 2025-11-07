@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
   const userPostByUsername = searchParams.get("userPostByUsername");
   const itemsPerPage = 10;
   const hPage = searchParams.get("hPage") || "1";
+  const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
 
   try {
     const handledHPage = handleHPage(hPage) - 1;
@@ -43,6 +44,63 @@ export async function GET(request: NextRequest) {
         },
       },
     });
+
+    if (
+      !userPostByUsername &&
+      handleHPage(hPage) === 1 &&
+      !noAutomaticExactMatch
+    ) {
+      const exactMatch = await prisma.page.findFirst({
+        where: {
+          title: {
+            equals: query.toLowerCase(),
+            mode: "insensitive",
+          },
+        },
+        include: {
+          revisions: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            include: { author: { select: { id: true, username: true } } },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      if (exactMatch) {
+        return Response.json({
+          totalPaginationPages: Math.ceil(pagesCount / itemsPerPage),
+          pages: [
+            {
+              id: exactMatch.id,
+              title: exactMatch.title,
+              content:
+                exactMatch.revisions.length > 0
+                  ? exactMatch.revisions[0].content
+                  : exactMatch.content,
+              slug: [exactMatch.slug],
+              author:
+                exactMatch.revisions.length > 0
+                  ? {
+                      id: exactMatch.revisions[0].author.id,
+                      username: exactMatch.revisions[0].author.username,
+                    }
+                  : null,
+              createdAt: exactMatch.createdAt,
+              updatedAt:
+                exactMatch.revisions.length > 0
+                  ? exactMatch.revisions[0].createdAt
+                  : exactMatch.updatedAt,
+              tags: [],
+              isRedirect: exactMatch.isRedirect,
+              redirectTargetSlug:
+                exactMatch.revisions.length > 0
+                  ? exactMatch.revisions[0].redirectTargetSlug
+                  : undefined,
+            } as Page,
+          ],
+        });
+      }
+    }
 
     const pages = await prisma.page.findMany({
       where: {

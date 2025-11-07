@@ -24,6 +24,7 @@ import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
 import { SearchBox } from "../ui";
+import { WIKI_NAME } from "@/config";
 
 export default function SystemPages({
   slug,
@@ -42,13 +43,13 @@ export default function SystemPages({
           {!q ||
           (Array.isArray(q) && q.length === 0) ||
           (typeof q === "string" && q.trim() === "") ? (
-            <h1 className="text-3xl font-bold">Search</h1>
+            <h1 className="text-3xl font-bold">Search {WIKI_NAME}</h1>
           ) : (
             <h1 className="text-3xl font-bold">
               Search Results for &quot;{q}&quot;
             </h1>
           )}
-          <div className="mb-4">
+          <div className="mb-2">
             <SearchBox />
           </div>
           <StableSearch query={q} hPage={hPage} />

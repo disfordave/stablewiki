@@ -302,8 +302,10 @@ export async function generateMetadata({
       switch (systemPage) {
         case "Search":
           return {
-            title: `Search Results for "${q}" | ${WIKI_NAME}`,
-            description: `Search results for "${q}" on ${WIKI_NAME}.`,
+            title: `Search Results for "${
+              q === undefined ? "" : q
+            }" | ${WIKI_NAME}`,
+            description: `Search results for "${q === undefined ? "" : q}" on ${WIKI_NAME}.`,
           };
         case "Dashboard":
           return {
