@@ -247,8 +247,8 @@ export default async function WikiPage({
           </div>
         ))}
       {isUserPage && slug.length === 1 && (
-        <div id="posts" className="mt-8 border-gray-500">
-          <div className="mb-4 h-1 w-full rounded-full bg-gray-500/50"></div>
+        <div id="posts" className="mt-8">
+          <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
           <UserPostPage
             username={decodeURIComponent(slug[0]).split(":")[1]}
             hPage={hPage}
