@@ -237,6 +237,7 @@ export async function POST(request: Request) {
             summary,
             isRedirect: checkRedirect(content, title).isRedirect,
             redirectTargetSlug: checkRedirect(content, title).targetSlug,
+            title,
           },
         },
         isRedirect: checkRedirect(content, title).isRedirect,
