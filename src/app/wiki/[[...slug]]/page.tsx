@@ -144,7 +144,14 @@ export default async function WikiPage({
             page.title
           )
         ) : pageRevisions.revisions.length > 0 ? (
-          pageRevisions.revisions[0].title
+          isUserPagePostPage ? (
+            <>
+              {`${pageRevisions.revisions[0].title.split("/")[1]} `}
+              <span className="text-gray-500">(Post)</span>
+            </>
+          ) : (
+            pageRevisions.revisions[0].title
+          )
         ) : (
           decodeURIComponent(joinedSlug)
         )}
