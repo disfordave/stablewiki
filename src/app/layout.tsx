@@ -21,8 +21,10 @@
 import type { Metadata, Viewport } from "next";
 import {
   IBM_Plex_Mono,
-  IBM_Plex_Sans,
-  IBM_Plex_Sans_KR,
+  // IBM_Plex_Sans,
+  // IBM_Plex_Sans_KR,
+  Noto_Sans_KR,
+  Inter,
 } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
@@ -31,8 +33,8 @@ import { Header, Footer } from "@/components";
 import Head from "next/head";
 import { BackToTopButton } from "@/components/ui";
 
-const ibmPlexSans = IBM_Plex_Sans({
-  variable: "--font-ibm-plex-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: [
     "latin",
     "latin-ext",
@@ -43,11 +45,29 @@ const ibmPlexSans = IBM_Plex_Sans({
   ],
 });
 
-const ibmPlexSansKR = IBM_Plex_Sans_KR({
-  variable: "--font-ibm-plex-sans-kr",
+const notoSansKR = Noto_Sans_KR({
+  variable: "--font-noto-sans-kr",
   subsets: ["latin", "latin-ext"],
-  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
+
+// const ibmPlexSans = IBM_Plex_Sans({
+//   variable: "--font-ibm-plex-sans",
+//   subsets: [
+//     "latin",
+//     "latin-ext",
+//     "cyrillic",
+//     "cyrillic-ext",
+//     "greek",
+//     "vietnamese",
+//   ],
+// });
+
+// const ibmPlexSansKR = IBM_Plex_Sans_KR({
+//   variable: "--font-ibm-plex-sans-kr",
+//   subsets: ["latin", "latin-ext"],
+//   weight: ["100", "200", "300", "400", "500", "600", "700"],
+// });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
@@ -78,7 +98,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SidWiki" />
       </Head>
       <body
-        className={`${ibmPlexSans.variable} ${ibmPlexSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased selection:bg-violet-500/35 sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        className={`${inter.variable} ${notoSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased selection:bg-violet-500/35 sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">

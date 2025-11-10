@@ -253,15 +253,20 @@ export default async function WikiPage({
             </TransitionLinkButton>
           </div>
         ))}
-      {isUserPage && slug.length === 1 && !showHistoryList && !showEdit && !showDiff && !showRevert && (
-        <div id="posts" className="mt-8">
-          <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
-          <UserPostPage
-            username={decodeURIComponent(slug[0]).split(":")[1]}
-            hPage={hPage}
-          />
-        </div>
-      )}
+      {isUserPage &&
+        slug.length === 1 &&
+        !showHistoryList &&
+        !showEdit &&
+        !showDiff &&
+        !showRevert && (
+          <div id="posts" className="mt-8">
+            <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
+            <UserPostPage
+              username={decodeURIComponent(slug[0]).split(":")[1]}
+              hPage={hPage}
+            />
+          </div>
+        )}
       {isUserPage && (
         <p className="mt-4 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
           Text content on User: pages and its subpages is not licensed under the

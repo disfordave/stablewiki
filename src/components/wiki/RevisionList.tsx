@@ -77,22 +77,23 @@ export default function RevisionList({
                     {new Date(rev.createdAt).toLocaleString()}
                   </p>
                 </Link>
-                {!isLatestRevision(rev.version) && (
-                  <div className="flex flex-wrap gap-2">
-                    <Link
-                      href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
-                      className="inline-block text-sm text-blue-500 hover:underline"
-                    >
-                      Differences
-                    </Link>
+
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
+                    className="inline-block text-sm text-blue-500 hover:underline"
+                  >
+                    {isLatestRevision(rev.version) ? "Raw Page" : "Differences"}
+                  </Link>
+                  {!isLatestRevision(rev.version) && (
                     <Link
                       href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
                       className="inline-block text-sm text-red-500 hover:underline"
                     >
                       Revert to ver. {rev.version}
                     </Link>
-                  </div>
-                )}
+                  )}
+                </div>
               </li>
             ),
           )
