@@ -37,7 +37,7 @@ export function WikiMarkdown({ content }: { content: string }) {
 
   // ---- 2. Wiki links ----
   processed = processed.replace(
-    /\[\[([^[\]|]+?)(?:\s*\|\|\s*([^[\]]+))?\]\]/g,
+    /\[\[(.+?)(?:\s*\|\|\s*(.+?))?\]\]/g,
     (_, page, label) => {
       const pageName = page.trim();
       const linkLabel = label ? label.trim() : pageName;
