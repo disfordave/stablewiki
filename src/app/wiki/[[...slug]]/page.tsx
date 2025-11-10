@@ -253,7 +253,7 @@ export default async function WikiPage({
             </TransitionLinkButton>
           </div>
         ))}
-      {isUserPage && slug.length === 1 && !showHistoryList && (
+      {isUserPage && slug.length === 1 && !showHistoryList && !showEdit && !showDiff && !showRevert && (
         <div id="posts" className="mt-8">
           <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
           <UserPostPage
