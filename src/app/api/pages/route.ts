@@ -223,6 +223,13 @@ export async function POST(request: Request) {
     }
   }
 
+  if (title.startsWith("Media:") || title.startsWith("media:")) {
+    return Response.json(
+      { error: "Media pages cannot be created via this endpoint" },
+      { status: 403 },
+    );
+  }
+
   try {
     const page = await prisma.page.create({
       data: {

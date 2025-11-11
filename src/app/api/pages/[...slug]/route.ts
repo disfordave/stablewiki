@@ -22,7 +22,8 @@ import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
 import { checkRedirect, handleHPage, getDecodedToken, slugify } from "@/utils";
-
+import { unlink } from "fs/promises";
+import path from "path";
 // export function normalizeSlug(raw: string[]): string {
 //   raw = raw.map((s) => {
 //     const decoded = decodeURIComponent(s);
@@ -213,6 +214,20 @@ export async function POST(
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (title.length > 255) {
+    return Response.json(
+      { error: "Title exceeds maximum length of 255 characters" },
+      { status: 400 },
+    );
+  }
+
+  if (title.startsWith("System:") || title.startsWith("system:")) {
+    return Response.json(
+      { error: 'Titles cannot start with "System:" prefix' },
+      { status: 400 },
+    );
+  }
+
   const decodedToken = await getDecodedToken(request);
 
   if (!decodedToken || !decodedToken.id) {
@@ -246,6 +261,16 @@ export async function POST(
         { status: 403 },
       );
     }
+  }
+
+  if (title.startsWith("Media:") || title.startsWith("media:")) {
+    return Response.json(
+      {
+        error:
+          "Media pages cannot be modified via this endpoint, deletion is only allowed through the media endpoint",
+      },
+      { status: 403 },
+    );
   }
 
   try {
@@ -319,6 +344,17 @@ export async function DELETE(
     const page = await prisma.page.delete({
       where: { slug: slug.join("/") },
     });
+
+    if (page.isMedia) {
+      const titlePart = page.title.replace(/^Media:/, "");
+      const uploadDir = path.join(process.cwd(), "public", "media");
+      const filePath = path.join(uploadDir, titlePart);
+      try {
+        await unlink(filePath);
+      } catch (err) {
+        console.error(`Failed to delete media file: ${filePath}`, err);
+      }
+    }
     return Response.json(page, { status: 200 });
   } catch (error) {
     console.error(error);

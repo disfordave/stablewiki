@@ -51,7 +51,7 @@ export default async function DashboardPage() {
       <p>Hi, {user.username}!</p>
       <p>Your Role: {user.role as Role | null}</p>
       {user.role === Role.ADMIN && (
-        <p className="font-bold text-red-500">
+        <p className="font-bold text-violet-500">
           You have administrative privileges.
         </p>
       )}

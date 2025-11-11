@@ -42,54 +42,52 @@ export default function RevisionList({
     <>
       <ul className="mt-4 flex flex-col gap-4">
         {data.revisions.length > 0 ? (
-          data.revisions.map(
-            (rev: Revision) => (
-              <li
-                key={rev.id}
-                className="flex flex-col items-start justify-between border-b border-gray-300 pb-2 dark:border-gray-700"
+          data.revisions.map((rev: Revision) => (
+            <li
+              key={rev.id}
+              className="flex flex-col items-start justify-between border-b border-gray-300 pb-2 dark:border-gray-700"
+            >
+              <Link
+                className="hover:underline"
+                href={`/wiki/${decodedSlug}?action=history&ver=${rev.version}`}
               >
-                <Link
-                  className="hover:underline"
-                  href={`/wiki/${decodedSlug}?action=history&ver=${rev.version}`}
-                >
-                  <h2 className="font-bold">
-                    Revision ver. {rev.version}
-                    {isLatestRevision(rev.version) && <span> (Latest)</span>}
-                  </h2>
-                  <p className="border-s-4 border-gray-300 ps-2 text-sm dark:border-gray-700">
-                    {rev.summary.length > 0 ? (
-                      <span className="font-medium">{rev.summary}</span>
-                    ) : (
-                      <span className="text-gray-500 italic">
-                        No summary provided.
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Edited by {rev.author?.username ?? "Unknown (No User)"} on{" "}
-                    {new Date(rev.createdAt).toLocaleString()}
-                  </p>
-                </Link>
-
-                <div className="flex flex-wrap gap-2">
-                  <Link
-                    href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
-                    className="inline-block text-sm text-blue-500 hover:underline"
-                  >
-                    {isLatestRevision(rev.version) ? "Raw Page" : "Differences"}
-                  </Link>
-                  {!isLatestRevision(rev.version) && (
-                    <Link
-                      href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
-                      className="inline-block text-sm text-red-500 hover:underline"
-                    >
-                      Revert to ver. {rev.version}
-                    </Link>
+                <h2 className="font-bold">
+                  Revision ver. {rev.version}
+                  {isLatestRevision(rev.version) && <span> (Latest)</span>}
+                </h2>
+                <p className="border-s-4 border-gray-300 ps-2 text-sm dark:border-gray-700">
+                  {rev.summary.length > 0 ? (
+                    <span className="font-medium">{rev.summary}</span>
+                  ) : (
+                    <span className="text-gray-500 italic">
+                      No summary provided.
+                    </span>
                   )}
-                </div>
-              </li>
-            ),
-          )
+                </p>
+                <p className="text-sm text-gray-500">
+                  Edited by {rev.author?.username ?? "Unknown (No User)"} on{" "}
+                  {new Date(rev.createdAt).toLocaleString()}
+                </p>
+              </Link>
+
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href={`/wiki/${decodedSlug}?action=diff&ver=${rev.version}`}
+                  className="inline-block text-sm text-blue-500 hover:underline"
+                >
+                  {isLatestRevision(rev.version) ? "Raw Page" : "Differences"}
+                </Link>
+                {!isLatestRevision(rev.version) && (
+                  <Link
+                    href={`/wiki/${decodedSlug}?action=revert&ver=${rev.version}`}
+                    className="inline-block text-sm text-red-500 hover:underline"
+                  >
+                    Revert to ver. {rev.version}
+                  </Link>
+                )}
+              </div>
+            </li>
+          ))
         ) : (
           <div>
             <p>It&apos;s quiet here...</p>
