@@ -129,7 +129,7 @@ export default async function WikiPage({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">
+      <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
         {showRevert ? "Reverting " : ""}
