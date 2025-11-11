@@ -42,7 +42,7 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!request.nextUrl.pathname.startsWith("/api")) {
     return;
   }
@@ -67,8 +67,6 @@ export function middleware(request: NextRequest) {
   }
 }
 
-const config = {
+export const config = {
   matcher: ["/api/auth/signin", "/api/auth/signup"],
 };
-
-export { config };
