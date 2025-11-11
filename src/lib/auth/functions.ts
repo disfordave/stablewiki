@@ -18,8 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { safeRedirect } from "@/utils";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function getUser() {
   const cookieStore = await cookies();
@@ -48,7 +48,5 @@ export async function signOutUser() {
   "use server";
   const cookieStore = await cookies();
   cookieStore.delete("jwt");
-  redirect(
-    `/wiki/System:SignIn?success=${encodeURIComponent("Successfully signed out!")}`,
-  );
+  safeRedirect(`/wiki/System:SignIn?success=${"Successfully signed out!"}`);
 }
