@@ -30,7 +30,7 @@ import {
 } from "../ui";
 import StableDiffViewer from "./DiffViewer";
 import { getUser } from "@/lib";
-import { redirect } from "next/navigation";
+import { safeRedirect } from "@/utils";
 
 export default async function StableRevert({
   currentContent,
@@ -75,14 +75,14 @@ export default async function StableRevert({
     );
 
     if (!res.ok) {
-      redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to edit page")}`,
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${"Failed to edit page"}`,
       );
     }
 
     const data = await res.json();
     console.log("Edit response data:", data);
-    redirect(`/wiki/${slug}`);
+    safeRedirect(`/wiki/${slug}`);
   }
 
   if (

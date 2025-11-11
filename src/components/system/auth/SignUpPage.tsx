@@ -22,7 +22,7 @@ import { DisabledMessage, TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { safeRedirect } from "@/utils";
 
 export default async function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {
@@ -35,19 +35,16 @@ export default async function SignupPage() {
     const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
 
     if (password !== passwordConfirm) {
-      redirect(
-        `/wiki/System:SignUp?error=${encodeURIComponent(
-          "Passwords do not match",
-        )}`,
+      safeRedirect(
+        `/wiki/System:SignUp?error=${"Passwords do not match"}`,
       );
     }
     const consent = formData.get("consent") === "on";
 
     if (!consent) {
-      redirect(
-        `/wiki/System:SignUp?error=${encodeURIComponent(
-          "You must agree to the terms and conditions",
-        )}`,
+      safeRedirect(
+        `/wiki/System:SignUp?error=${
+          "You must agree to the terms and conditions"}`,
       );
     }
 
@@ -69,15 +66,14 @@ export default async function SignupPage() {
 
     if (res.ok) {
       // Redirect to signin page with success message
-      redirect(
-        `/wiki/System:SignIn?success=${encodeURIComponent("Account created successfully. Please sign in.")}`,
+      safeRedirect(
+        `/wiki/System:SignIn?success=${"Account created successfully. Please sign in."}`,
       );
     } else {
       const data = await res.json();
-      redirect(
-        `/wiki/System:SignUp?error=${encodeURIComponent(
-          data.error || "An unexpected error occurred",
-        )}`,
+      safeRedirect(
+        `/wiki/System:SignUp?error=${
+          data.error || "An unexpected error occurred" }`,
       );
     }
   }

@@ -19,7 +19,6 @@
 */
 
 import { getUser } from "@/lib";
-import { redirect } from "next/navigation";
 import {
   DisabledMessage,
   MustSignInMessage,
@@ -28,7 +27,7 @@ import {
 } from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
-import { slugify } from "@/utils";
+import { safeRedirect, slugify } from "@/utils";
 
 export default async function StableEditor({
   page,
@@ -63,13 +62,13 @@ export default async function StableEditor({
     });
 
     if (!res.ok) {
-      redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to create page: " + (await res.json()).error)}`,
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${"Failed to create page: " + (await res.json()).error}`,
       );
     }
 
     const data = await res.json();
-    redirect(`/wiki/${data.slug}`);
+    safeRedirect(`/wiki/${data.slug}`);
   }
 
   async function editPage(formData: FormData) {
@@ -104,14 +103,14 @@ export default async function StableEditor({
     );
 
     if (!res.ok) {
-      redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to edit page: " + (await res.json()).error)}`,
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${("Failed to edit page: " + (await res.json()).error)}`,
       );
     }
 
     const data = await res.json();
     console.log("Edit response data:", data);
-    redirect(`/wiki/${slugify(title)}`);
+    safeRedirect(`/wiki/${slugify(title)}`);
   }
 
   async function deletePage() {
@@ -136,12 +135,12 @@ export default async function StableEditor({
     );
 
     if (!res.ok) {
-      redirect(
-        `/wiki/${slug}?action=edit&error=${encodeURIComponent("Failed to delete page: " + (await res.json()).error)}`,
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${"Failed to delete page: " + (await res.json()).error}`,
       );
     }
 
-    redirect(`/`);
+    safeRedirect(`/`);
   }
 
   if (!user.username) {

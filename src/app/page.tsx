@@ -19,8 +19,8 @@
 */
 
 import { WIKI_HOMEPAGE_LINK } from "@/config";
-import { redirect } from "next/navigation";
+import { safeRedirect } from "@/utils";
 
 export default function Home() {
-  return redirect(WIKI_HOMEPAGE_LINK);
+  return safeRedirect(WIKI_HOMEPAGE_LINK);
 }

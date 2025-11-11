@@ -24,19 +24,19 @@ import { getUser } from "@/lib";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { safeRedirect } from "@/utils";
 
 export default async function SignIn() {
   const user = await getUser();
   if (user.username) {
-    redirect(`/wiki/System:Dashboard`);
+    safeRedirect(`/wiki/System:Dashboard`);
   }
 
   async function signIn(formData: FormData) {
     "use server";
 
     if (user.username) {
-      redirect(`/wiki/System:Dashboard`);
+      safeRedirect(`/wiki/System:Dashboard`);
     }
 
     //Extracting form data
@@ -68,13 +68,13 @@ export default async function SignIn() {
         sameSite: "lax",
       });
 
-      redirect(`/wiki/System:Dashboard`);
+      safeRedirect(`/wiki/System:Dashboard`);
     } else {
       const data = await res.json();
-      redirect(
-        `/wiki/System:SignIn?error=${encodeURIComponent(
-          data.error || "An unexpected error occurred",
-        )}`,
+      safeRedirect(
+        `/wiki/System:SignIn?error=${
+          data.error || "An unexpected error occurred"
+        }`,
       );
     }
   }

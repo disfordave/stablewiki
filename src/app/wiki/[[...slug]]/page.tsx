@@ -40,10 +40,10 @@ import {
   slugify,
   getPageData,
   getLatestPageRevision,
+  safeRedirect,
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 export default async function WikiPage({
   params,
@@ -70,7 +70,7 @@ export default async function WikiPage({
 
   // Redirect to homepage if no slug is provided
   if (!slug) {
-    return redirect(WIKI_HOMEPAGE_LINK);
+    return safeRedirect(WIKI_HOMEPAGE_LINK);
   }
 
   // Handle special System: pages
@@ -111,8 +111,8 @@ export default async function WikiPage({
   }
 
   if (page && page.isRedirect && !preventRedirect && !showEdit) {
-    redirect(
-      `/wiki/${slugify(page.redirectTargetSlug || "")}?redirectedFrom=${encodeURIComponent(page.title)}`,
+    safeRedirect(
+      `/wiki/${slugify(page.redirectTargetSlug || "")}?redirectedFrom=${page.title}`,
     );
   }
 

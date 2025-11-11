@@ -22,8 +22,8 @@ import { TransitionLinkButton } from "@/components/ui";
 import { WikiList } from "@/components";
 import type { Page } from "@/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
-import { redirect } from "next/navigation";
 import Pagination from "../ui/Pagination";
+import { safeRedirect } from "@/utils";
 
 export default async function SystemSearch({
   query,
@@ -81,7 +81,7 @@ export default async function SystemSearch({
     results[0]?.title.toLowerCase() ===
       removeTrailingSpace(query as string).toLowerCase()
   ) {
-    redirect(`/wiki/${decodeURIComponent(results[0]?.slug[0])}`);
+    safeRedirect(`/wiki/${decodeURIComponent(results[0]?.slug[0])}`);
   }
 
   return (

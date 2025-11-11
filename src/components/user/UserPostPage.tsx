@@ -18,13 +18,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { redirect } from "next/navigation";
 import { TransitionFormButton } from "../ui";
 import { Page } from "@/types";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
 import { getUser } from "@/lib";
 import Pagination from "../ui/Pagination";
+import { safeRedirect } from "@/utils";
 
 export default async function UserPostPage({
   username,
@@ -39,7 +39,7 @@ export default async function UserPostPage({
   async function handleSubmit(formData: FormData) {
     "use server";
     const title = formData.get("title") as string;
-    redirect(`/wiki/User:${username}/${encodeURIComponent(title)}?action=edit`);
+    safeRedirect(`/wiki/User:${username}/${title}?action=edit`);
     // Handle post creation logic here
   }
 
@@ -47,7 +47,7 @@ export default async function UserPostPage({
   let totalPaginationPages = 0;
   try {
     const fetchResults = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?userPostByUsername=${encodeURIComponent(username)}&hPage=${hPage ? encodeURIComponent(hPage as string) : "1"}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?userPostByUsername=${username}&hPage=${hPage ? hPage : "1"}`,
     );
 
     if (!fetchResults.ok) {

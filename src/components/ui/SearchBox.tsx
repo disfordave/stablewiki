@@ -18,16 +18,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { redirect } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { TransitionFormButton } from "./buttons/TransitionButton";
+import { safeRedirect } from "@/utils";
 
 export async function SearchBox() {
   async function search(formData: FormData) {
     "use server";
     const query = formData.get("search")?.toString() || "";
     // Go to search page
-    redirect(`/wiki/System:Search?q=${encodeURIComponent(query)}`);
+    safeRedirect(`/wiki/System:Search?q=${query}`);
   }
 
   return (

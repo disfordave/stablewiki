@@ -20,13 +20,13 @@
 
 import { getUser } from "@/lib";
 import { WIKI_DISABLE_MEDIA, WIKI_NAME } from "@/config";
-import { redirect } from "next/navigation";
 import {
   DisabledMessage,
   MustSignInMessage,
   TransitionFormButton,
 } from "@/components/ui";
 import { PhotoIcon } from "@heroicons/react/24/solid";
+import { safeRedirect } from "@/utils";
 
 export const metadata = {
   title: "Upload Media | " + WIKI_NAME,
@@ -72,13 +72,13 @@ export default async function StableUpload() {
       const errorData = await response.json();
       console.log("Response not ok:", errorData);
       const errorMsg = errorData.error || "Failed to upload media";
-      redirect(`/wiki/System:Upload?error=${encodeURIComponent(errorMsg)}`);
+      safeRedirect(`/wiki/System:Upload?error=${errorMsg}`);
     }
 
     const data = await response.json();
     console.log("Upload successful:", data);
 
-    redirect(`/wiki/${encodeURIComponent(data.slug)}`);
+    safeRedirect(`/wiki/${data.slug}`);
   }
 
   if (!user.username) {

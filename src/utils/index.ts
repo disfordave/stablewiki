@@ -23,3 +23,4 @@ export * from "./api/checkRedirect";
 export * from "./api/getPages";
 export * from "./api/pagination";
 export * from "./slugify";
+export * from "./safeRedirect";
