@@ -78,10 +78,11 @@ export default async function SystemSearch({
 
   if (
     results &&
+    results.length > 0 &&
     results[0]?.title.toLowerCase() ===
       removeTrailingSpace(query as string).toLowerCase()
   ) {
-    safeRedirect(`/wiki/${results[0]?.slug[0]}`);
+    safeRedirect(`/wiki/${results[0].slug[0]}`);
   }
 
   return (
