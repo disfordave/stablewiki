@@ -130,7 +130,7 @@ export default async function WikiPage({
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {showEdit ? "Editing " : ""}
+        {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
@@ -153,7 +153,7 @@ export default async function WikiPage({
             pageRevisions.revisions[0].title
           )
         ) : (
-          decodeURIComponent(joinedSlug)
+          "New Page"
         )}
         {showHistoryList && handledHPage && ` (Page ${handledHPage})`}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
@@ -244,7 +244,7 @@ export default async function WikiPage({
           </div>
         ) : (
           <div>
-            <p>Page not found.</p>
+            <p className="mt-2">Page not found.</p>
             <TransitionLinkButton
               href={`/wiki/${decodeURIComponent(slug.join("/"))}?action=edit`}
               className="mt-3 bg-blue-500 text-white hover:bg-blue-600"

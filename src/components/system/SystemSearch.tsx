@@ -86,7 +86,7 @@ export default async function SystemSearch({
   }
 
   return (
-    <div>
+    <div className="mt-4">
       {/* Placeholder for search results */}
       {results && results.length === 0 ? (
         <>

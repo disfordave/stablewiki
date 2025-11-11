@@ -25,7 +25,7 @@ import { TransitionLinkButton } from "../buttons/TransitionButton";
 export function DisabledMessage({ message }: { message: string }) {
   return (
     <>
-      <div className="mb-2">{message}</div>
+      <div className="mb-3">{message}</div>
       <TransitionLinkButton
         href={WIKI_HOMEPAGE_LINK}
         className="bg-blue-500 text-white hover:bg-blue-600"
