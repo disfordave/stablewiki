@@ -29,7 +29,7 @@ export function MustSignInMessage({
   return (
     <>
       <div className="">
-        <p className="mb-1">
+        <p className="mb-3">
           {customMessage || "You must be signed in to access this page."}
         </p>
         <TransitionLinkButton
