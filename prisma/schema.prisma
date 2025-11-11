@@ -27,6 +27,9 @@ model User {
   comments               Comment[]
   pages                  Page[]     @relation("PageAuthors")
   revisions              Revision[]
+  status                 Int        @default(0) // 0: Active, 1: Banned, 2: Suspended
+  bannedUntil            DateTime?
+  banReason              String?
 }
 
 model Page {
@@ -34,7 +37,7 @@ model Page {
   title       String
   slug        String     @unique
   content     String
-  authorId    String
+  authorId    String?
   parentId    String?
   isPublished Boolean    @default(false)
   publishedAt DateTime?
@@ -43,12 +46,14 @@ model Page {
   isMedia     Boolean    @default(false)
   isRedirect  Boolean    @default(false)
   comments    Comment[]
-  author      User       @relation("PageAuthors", fields: [authorId], references: [id])
+  author      User?      @relation("PageAuthors", fields: [authorId], references: [id], onDelete: SetNull)
   parent      Page?      @relation("SubPages", fields: [parentId], references: [id])
   children    Page[]     @relation("SubPages")
   tags        PageTag[]
   revisions   Revision[]
   accessLevel Int @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
+  license     Int @default(0) // 0: All Rights Reserved, 1: Creative Commons, etc.
+  isHidden    Boolean @default(false) // For hiding pages from search and listings
 }
 
 model Revision {
@@ -68,6 +73,7 @@ model Revision {
 
 model Comment {
   id        String    @id @default(cuid())
+  title     String
   pageId    String
   authorId  String
   content   String

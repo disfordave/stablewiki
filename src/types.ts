@@ -48,6 +48,6 @@ export interface Revision {
   title: string;
   content: string;
   createdAt: string;
-  author: { id: string; username: string };
+  author?: { id: string; username: string };
   summary: string;
 }

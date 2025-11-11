@@ -22,7 +22,7 @@ import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { TransitionLinkButton } from "../ui";
 import Pagination from "../ui/Pagination";
-import { PageRevisionData } from "@/types";
+import { PageRevisionData, Revision } from "@/types";
 
 export default function RevisionList({
   data,
@@ -43,14 +43,7 @@ export default function RevisionList({
       <ul className="mt-4 flex flex-col gap-4">
         {data.revisions.length > 0 ? (
           data.revisions.map(
-            (rev: {
-              id: string;
-              version: number;
-              content: string;
-              createdAt: string;
-              author: { id: string; username: string };
-              summary: string;
-            }) => (
+            (rev: Revision) => (
               <li
                 key={rev.id}
                 className="flex flex-col items-start justify-between border-b border-gray-300 pb-2 dark:border-gray-700"
@@ -73,7 +66,7 @@ export default function RevisionList({
                     )}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Edited by {rev.author.username} on{" "}
+                    Edited by {rev.author?.username ?? "Unknown (No User)"} on{" "}
                     {new Date(rev.createdAt).toLocaleString()}
                   </p>
                 </Link>
