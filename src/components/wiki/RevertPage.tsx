@@ -75,9 +75,7 @@ export default async function StableRevert({
     );
 
     if (!res.ok) {
-      safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to edit page"}`,
-      );
+      safeRedirect(`/wiki/${slug}?action=edit&error=${"Failed to edit page"}`);
     }
 
     const data = await res.json();

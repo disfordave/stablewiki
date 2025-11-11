@@ -104,7 +104,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       safeRedirect(
-        `/wiki/${slug}?action=edit&error=${("Failed to edit page: " + (await res.json()).error)}`,
+        `/wiki/${slug}?action=edit&error=${"Failed to edit page: " + (await res.json()).error}`,
       );
     }
 

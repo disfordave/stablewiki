@@ -35,16 +35,13 @@ export default async function SignupPage() {
     const passwordConfirm = formData.get("passwordConfirm")?.toString() || "";
 
     if (password !== passwordConfirm) {
-      safeRedirect(
-        `/wiki/System:SignUp?error=${"Passwords do not match"}`,
-      );
+      safeRedirect(`/wiki/System:SignUp?error=${"Passwords do not match"}`);
     }
     const consent = formData.get("consent") === "on";
 
     if (!consent) {
       safeRedirect(
-        `/wiki/System:SignUp?error=${
-          "You must agree to the terms and conditions"}`,
+        `/wiki/System:SignUp?error=${"You must agree to the terms and conditions"}`,
       );
     }
 
@@ -73,7 +70,8 @@ export default async function SignupPage() {
       const data = await res.json();
       safeRedirect(
         `/wiki/System:SignUp?error=${
-          data.error || "An unexpected error occurred" }`,
+          data.error || "An unexpected error occurred"
+        }`,
       );
     }
   }
