@@ -48,14 +48,46 @@ export default async function DashboardPage() {
   return (
     <>
       <h1 className="text-2xl font-bold">{user.username}&apos;s Dashboard</h1>
-      <p>Hi, {user.username}!</p>
-      <p>Your Role: {user.role as Role | null}</p>
+      <p className="font-semibold">Hi, {user.username}!</p>
+      <p>
+        You&apos;ve been a member since{" "}
+        <span className="font-semibold">{new Date(user.createdAt as string).toLocaleDateString()}</span>
+      </p>
       {user.role === Role.ADMIN && (
-        <p className="font-bold text-violet-500">
-          You have administrative privileges.
-        </p>
+        <>
+          <p className="font-bold text-violet-500">
+            You have administrative privileges.
+          </p>
+          <ul className="list-inside list-disc">
+            <li>You can create and edit pages.</li>
+            <li>You can comment on pages and participate in discussions.</li>
+            <li>You can review and approve changes made by other users.</li>
+            <li>You can manage users, pages, and site settings.</li>
+            <li>You can access the admin panel for advanced configurations.</li>
+          </ul>
+        </>
       )}
-
+      {user.role === Role.EDITOR && (
+        <>
+          <p className="font-bold text-blue-500">You have editor privileges.</p>
+          <ul className="list-inside list-disc">
+            <li>You can create and edit pages.</li>
+            <li>You can comment on pages and participate in discussions.</li>
+            <li>You can review and approve changes made by other users.</li>
+          </ul>
+        </>
+      )}
+      {user.role === Role.USER && (
+        <>
+          <p className="font-bold text-green-500">
+            You have standard user privileges.
+          </p>
+          <ul className="list-inside list-disc">
+            <li>You can create and edit pages.</li>
+            <li>You can comment on pages and participate in discussions.</li>
+          </ul>
+        </>
+      )}
       <details>
         <summary className="mt-4 mb-2 font-bold select-none">
           Debug Info

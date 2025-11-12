@@ -56,6 +56,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         avatarUrl: decodedToken.avatarUrl,
         role: decodedToken.role,
         token,
+        createdAt: decodedToken.createdAt,
       },
       { status: 200 },
     );

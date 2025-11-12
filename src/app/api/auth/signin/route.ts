@@ -63,6 +63,7 @@ export async function POST(request: Request) {
         username: user.username,
         avatarUrl: user.avatarUrl,
         role: user.role,
+        createdAt: user.createdAt,
       })
         .setProtectedHeader({ alg: "HS256", typ: "JWT" })
         .setIssuedAt()
@@ -87,6 +88,7 @@ export async function POST(request: Request) {
             username: user.username,
             avatarUrl: user.avatarUrl,
             role: user.role,
+            createdAt: user.createdAt,
           },
         },
         { status: 200 },
@@ -101,6 +103,7 @@ export async function POST(request: Request) {
         avatarUrl: user.avatarUrl,
         role: user.role,
         token,
+        createdAt: user.createdAt,
       },
     });
 
