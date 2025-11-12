@@ -214,6 +214,15 @@ export async function POST(request: Request) {
     );
   }
 
+  if (title.startsWith("Wiki:") || title.startsWith("wiki:")) {
+    if (decodedToken.role !== "ADMIN" && decodedToken.role !== "EDITOR") {
+      return Response.json(
+        { error: "Only admins and editors can create Wiki namespace pages" },
+        { status: 403 },
+      );
+    }
+  }
+
   if (title.startsWith("User:") || title.startsWith("user:")) {
     if ((title as string).split("/")[0].slice(5) !== decodedToken.username) {
       return Response.json(
