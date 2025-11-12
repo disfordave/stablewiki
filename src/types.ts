@@ -18,6 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { Role } from "@prisma/client";
+
 export interface Page {
   id: string;
   title: string;
@@ -35,6 +37,7 @@ export interface Page {
   }[];
   isRedirect?: boolean;
   redirectTargetSlug?: string;
+  comments: Comment[];
 }
 
 export interface PageRevisionData {
@@ -50,4 +53,24 @@ export interface Revision {
   createdAt: string;
   author?: { id: string; username: string };
   summary: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  avatarUrl: string;
+  role: Role;
+  token: string;
+  createdAt: Date;
+}
+
+export interface Comment {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  author: {
+    id: string;
+    username: string;
+  };
 }

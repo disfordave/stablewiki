@@ -89,6 +89,7 @@ export async function GET(
               ? page.revisions[0].createdAt
               : page.updatedAt,
           tags: [], // Tags can be fetched via a separate endpoint if needed
+          comments: [], // Comments can be fetched via a separate endpoint if needed
         } as Page,
       });
     } catch (error) {
@@ -156,6 +157,11 @@ export async function GET(
     const page = await prisma.page.findUnique({
       where: { slug: slug.join("/") },
       include: {
+        comments: {
+          include: {
+            author: { select: { id: true, username: true } },
+          },
+        },
         revisions: {
           orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
           take: 1,
@@ -195,6 +201,16 @@ export async function GET(
           page.revisions.length > 0
             ? page.revisions[0].redirectTargetSlug
             : undefined,
+        comments: page.comments.map((comment) => ({
+          id: comment.id,
+          title: comment.title,
+          content: comment.content,
+          createdAt: comment.createdAt,
+          author: {
+            id: comment.author.id,
+            username: comment.author.username,
+          },
+        })),
       } as Page,
     });
   } catch (error) {

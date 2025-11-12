@@ -18,7 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 // Use environment variables to configure the wiki, do not hardcode values here since they may change per deployment
 
 const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";

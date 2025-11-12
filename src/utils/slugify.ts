@@ -18,7 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 function slugify(text: string): string {
   return text.toString().trim().replace(/\s+/g, "_"); // Replace spaces with _
   // .replace(/[^\w\-]+/g, "") // Remove all non-word chars

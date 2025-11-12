@@ -21,6 +21,7 @@
 import { prisma } from "@/lib/prisma";
 import * as jose from "jose";
 import bcrypt from "bcryptjs";
+import { User } from "@/types";
 
 const DUMMY_HASH =
   "$2a$10$KIX/8sW3x3lP1n7i6E1w8u3hQKq5N7e2v1a8BqQH6G1nE7Hq1m0y."; // any valid bcrypt hash
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
         role: user.role,
         token,
         createdAt: user.createdAt,
-      },
+      } as User,
     });
 
     return response;

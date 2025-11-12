@@ -36,100 +36,106 @@ import { Role } from "@prisma/client";
 export default async function DashboardPage() {
   const user = await getUser();
 
-  if (user.error) {
+  if ("error" in user) {
     return (
       <>
         <h1 className="text-2xl font-bold">Access Denied</h1>
         <MustSignInMessage />
       </>
     );
-  }
-
-  return (
-    <>
-      <h1 className="text-2xl font-bold">{user.username}&apos;s Dashboard</h1>
-      <p className="font-semibold">Hi, {user.username}!</p>
-      <p>
-        You&apos;ve been a member since{" "}
-        <span className="font-semibold">{new Date(user.createdAt as string).toLocaleDateString()}</span>
-      </p>
-      {user.role === Role.ADMIN && (
-        <>
-          <p className="font-bold text-violet-500">
-            You have administrative privileges.
-          </p>
-          <ul className="list-inside list-disc">
-            <li>You can create and edit pages.</li>
-            <li>You can comment on pages and participate in discussions.</li>
-            <li>You can review and approve changes made by other users.</li>
-            <li>You can manage users, pages, and site settings.</li>
-            <li>You can access the admin panel for advanced configurations.</li>
-          </ul>
-        </>
-      )}
-      {user.role === Role.EDITOR && (
-        <>
-          <p className="font-bold text-blue-500">You have editor privileges.</p>
-          <ul className="list-inside list-disc">
-            <li>You can create and edit pages.</li>
-            <li>You can comment on pages and participate in discussions.</li>
-            <li>You can review and approve changes made by other users.</li>
-          </ul>
-        </>
-      )}
-      {user.role === Role.USER && (
-        <>
-          <p className="font-bold text-green-500">
-            You have standard user privileges.
-          </p>
-          <ul className="list-inside list-disc">
-            <li>You can create and edit pages.</li>
-            <li>You can comment on pages and participate in discussions.</li>
-          </ul>
-        </>
-      )}
-      <details>
-        <summary className="mt-4 mb-2 font-bold select-none">
-          Debug Info
-        </summary>
-        <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      </details>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <TransitionLinkButton
-            href={WIKI_HOMEPAGE_LINK}
-            className="bg-blue-500 text-white hover:bg-blue-600"
-          >
-            <HomeIcon className="inline size-5" />
-            Go to Home
-          </TransitionLinkButton>
-          <TransitionLinkButton
-            href={`/wiki/User:${user.username}`}
-            className="bg-violet-500 text-white hover:bg-violet-600"
-          >
-            <UserIcon className="inline size-5" />
-            User Page
-          </TransitionLinkButton>
-          {WIKI_DISABLE_MEDIA ? null : (
+  } else {
+    return (
+      <>
+        <h1 className="text-2xl font-bold">{user.username}&apos;s Dashboard</h1>
+        <p className="font-semibold">Hi, {user.username}!</p>
+        <p>
+          You&apos;ve been a member since{" "}
+          <span className="font-semibold">
+            {new Date(user.createdAt).toLocaleDateString()}
+          </span>
+        </p>
+        {user.role === Role.ADMIN && (
+          <>
+            <p className="font-bold text-violet-500">
+              You have administrative privileges.
+            </p>
+            <ul className="list-inside list-disc">
+              <li>You can create and edit pages.</li>
+              <li>You can comment on pages and participate in discussions.</li>
+              <li>You can review and approve changes made by other users.</li>
+              <li>You can manage users, pages, and site settings.</li>
+              <li>
+                You can access the admin panel for advanced configurations.
+              </li>
+            </ul>
+          </>
+        )}
+        {user.role === Role.EDITOR && (
+          <>
+            <p className="font-bold text-blue-500">
+              You have editor privileges.
+            </p>
+            <ul className="list-inside list-disc">
+              <li>You can create and edit pages.</li>
+              <li>You can comment on pages and participate in discussions.</li>
+              <li>You can review and approve changes made by other users.</li>
+            </ul>
+          </>
+        )}
+        {user.role === Role.USER && (
+          <>
+            <p className="font-bold text-green-500">
+              You have standard user privileges.
+            </p>
+            <ul className="list-inside list-disc">
+              <li>You can create and edit pages.</li>
+              <li>You can comment on pages and participate in discussions.</li>
+            </ul>
+          </>
+        )}
+        <details>
+          <summary className="mt-4 mb-2 font-bold select-none">
+            Debug Info
+          </summary>
+          <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
+            {JSON.stringify(user, null, 2)}
+          </pre>
+        </details>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <TransitionLinkButton
-              href="/wiki/System:Upload"
-              className="bg-green-500 text-white hover:bg-green-600"
+              href={WIKI_HOMEPAGE_LINK}
+              className="bg-blue-500 text-white hover:bg-blue-600"
             >
-              <PhotoIcon className="inline size-5" />
-              Upload
+              <HomeIcon className="inline size-5" />
+              Go to Home
             </TransitionLinkButton>
-          )}
+            <TransitionLinkButton
+              href={`/wiki/User:${user.username}`}
+              className="bg-violet-500 text-white hover:bg-violet-600"
+            >
+              <UserIcon className="inline size-5" />
+              User Page
+            </TransitionLinkButton>
+            {WIKI_DISABLE_MEDIA ? null : (
+              <TransitionLinkButton
+                href="/wiki/System:Upload"
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
+                <PhotoIcon className="inline size-5" />
+                Upload
+              </TransitionLinkButton>
+            )}
+          </div>
+          <TransitionFormButton
+            action={signOutUser}
+            className="bg-red-500 text-white hover:bg-red-600"
+          >
+            <ArrowLeftStartOnRectangleIcon className="inline size-5" />
+            Sign Out
+          </TransitionFormButton>
         </div>
-        <TransitionFormButton
-          action={signOutUser}
-          className="bg-red-500 text-white hover:bg-red-600"
-        >
-          <ArrowLeftStartOnRectangleIcon className="inline size-5" />
-          Sign Out
-        </TransitionFormButton>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }

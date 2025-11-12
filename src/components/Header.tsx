@@ -49,7 +49,7 @@ export default async function Header() {
           </Link>
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          {user.username ? (
+          {!("error" in user) && user ? (
             <div className="flex items-center gap-2">
               <TransitionLinkButton
                 href="/wiki/System:Dashboard"

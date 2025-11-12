@@ -18,6 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { User } from "@/types";
 import { safeRedirect } from "@/utils";
 import { cookies } from "next/headers";
 
@@ -41,7 +42,7 @@ export async function getUser() {
   }
 
   const user = await res.json();
-  return user;
+  return user as User;
 }
 
 export async function signOutUser() {

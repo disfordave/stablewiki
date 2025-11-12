@@ -18,6 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { User } from "@/types";
 import * as jose from "jose";
 import { NextRequest } from "next/server";
 
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         role: decodedToken.role,
         token,
         createdAt: decodedToken.createdAt,
-      },
+      } as User,
       { status: 200 },
     );
   } catch (error) {
