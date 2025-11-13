@@ -54,23 +54,27 @@ export default async function DashboardPage() {
             {new Date(user.createdAt).toLocaleDateString()}
           </span>
         </p>
-        {user.role === Role.ADMIN && (
-          <>
-            <p className="font-bold text-violet-500">
-              You have administrative privileges.
-            </p>
-            <ul className="list-inside list-disc">
-              <li>You can create and edit pages.</li>
-              <li>You can comment on pages and participate in discussions.</li>
-              <li>You can review and approve changes made by other users.</li>
-              <li>You can manage users, pages, and site settings.</li>
-              <li>
-                You can access the admin panel for advanced configurations.
-              </li>
-            </ul>
-          </>
-        )}
-        {user.role === Role.EDITOR && (
+
+        <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+          {user.role === Role.ADMIN && (
+            <>
+              <p className="font-bold text-violet-500">
+                You have administrative privileges.
+              </p>
+              <ul className="list-inside list-disc">
+                <li>You can create and edit pages.</li>
+                <li>
+                  You can comment on pages and participate in discussions.
+                </li>
+                <li>You can review and approve changes made by other users.</li>
+                <li>You can manage users, pages, and site settings.</li>
+                <li>
+                  You can access the admin panel for advanced configurations.
+                </li>
+              </ul>
+            </>
+          )}
+          {user.role === Role.EDITOR && (
           <>
             <p className="font-bold text-blue-500">
               You have editor privileges.
@@ -82,7 +86,7 @@ export default async function DashboardPage() {
             </ul>
           </>
         )}
-        {user.role === Role.USER && (
+                {user.role === Role.USER && (
           <>
             <p className="font-bold text-green-500">
               You have standard user privileges.
@@ -93,11 +97,12 @@ export default async function DashboardPage() {
             </ul>
           </>
         )}
+        </div>
         <details>
           <summary className="mt-4 mb-2 font-bold select-none">
             Debug Info
           </summary>
-          <pre className="overflow-auto rounded-2xl bg-gray-100 p-4 dark:bg-gray-900">
+          <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
             {JSON.stringify(user, null, 2)}
           </pre>
         </details>
