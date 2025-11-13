@@ -8,28 +8,26 @@ datasource db {
 }
 
 model User {
-  id                     String     @id @default(cuid())
-  email                  String?    @unique
-  username               String     @unique
+  id                     String        @id @default(cuid())
+  email                  String?       @unique
+  username               String        @unique
   password               String
-  recoverKey             String?    @unique
-  recoveryQuestionFirst  String?
-  recoveryQuestionSecond String?
-  recoveryQuestionThird  String?
-  recoveryAnswerFirst    String?
-  recoveryAnswerSecond   String?
-  recoveryAnswerThird    String?
+  recoverKey             String?       @unique
   name                   String?
   avatarUrl              String?
-  role                   Role       @default(USER)
-  createdAt              DateTime   @default(now())
-  updatedAt              DateTime   @updatedAt
+  role                   Role          @default(USER)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
   comments               Comment[]
-  pages                  Page[]     @relation("PageAuthors")
+  pages                  Page[]        @relation("PageAuthors")
   revisions              Revision[]
-  status                 Int        @default(0) // 0: Active, 1: Banned, 2: Suspended
+  status                 Int           @default(0) // 0: Active, 1: Banned, 2: Suspended
   bannedUntil            DateTime?
   banReason              String?
+  totalTrustCredits      Int           @default(0)
+  trustCredit            TrustCredit[]
+  reactions              Reaction[]
+  isHidden               Boolean       @default(false)
 }
 
 model Page {
@@ -51,9 +49,12 @@ model Page {
   children    Page[]     @relation("SubPages")
   tags        PageTag[]
   revisions   Revision[]
-  accessLevel Int @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
-  license     Int @default(0) // 0: All Rights Reserved, 1: Creative Commons, etc.
-  isHidden    Boolean @default(false) // For hiding pages from search and listings
+  accessLevel Int        @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
+  license     Int        @default(0) // 0: All Rights Reserved, 1: Creative Commons, etc.
+  licenseText String     @default("")
+  isHidden    Boolean    @default(false) // For hiding pages from search and listings
+  isTemplate  Boolean    @default(false)
+  ageRating   Int        @default(0) // 0, 13, 18 
 }
 
 model Revision {
@@ -72,17 +73,19 @@ model Revision {
 }
 
 model Comment {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   title     String
   pageId    String
   authorId  String
   content   String
   parentId  String?
-  createdAt DateTime  @default(now())
-  author    User      @relation(fields: [authorId], references: [id])
-  page      Page      @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  parent    Comment?  @relation("ThreadedComments", fields: [parentId], references: [id])
-  replies   Comment[] @relation("ThreadedComments")
+  createdAt DateTime   @default(now())
+  author    User       @relation(fields: [authorId], references: [id])
+  page      Page       @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent    Comment?   @relation("ThreadedComments", fields: [parentId], references: [id])
+  replies   Comment[]  @relation("ThreadedComments")
+  reactions Reaction[]
+  tags      CommentTag[]
 }
 
 model Tag {
@@ -91,6 +94,7 @@ model Tag {
   description String?
   createdAt   DateTime  @default(now())
   pages       PageTag[]
+  comments    CommentTag[]
 }
 
 model PageTag {
@@ -100,6 +104,37 @@ model PageTag {
   tag    Tag    @relation(fields: [tagId], references: [id])
 
   @@id([pageId, tagId])
+}
+
+model CommentTag {
+  commentId String
+  tagId     String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([commentId, tagId])
+}
+
+model TrustCredit {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int      @default(0)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  type      Int // e.g., 1: Like, 2: Dislike, etc.
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId, type])
 }
 
 enum Role {
