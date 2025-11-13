@@ -8,26 +8,26 @@ datasource db {
 }
 
 model User {
-  id                     String        @id @default(cuid())
-  email                  String?       @unique
-  username               String        @unique
-  password               String
-  recoverKey             String?       @unique
-  name                   String?
-  avatarUrl              String?
-  role                   Role          @default(USER)
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
-  comments               Comment[]
-  pages                  Page[]        @relation("PageAuthors")
-  revisions              Revision[]
-  status                 Int           @default(0) // 0: Active, 1: Banned, 2: Suspended
-  bannedUntil            DateTime?
-  banReason              String?
-  totalTrustCredits      Int           @default(0)
-  trustCredit            TrustCredit[]
-  reactions              Reaction[]
-  isHidden               Boolean       @default(false)
+  id                String        @id @default(cuid())
+  email             String?       @unique
+  username          String        @unique
+  password          String
+  recoverKey        String?       @unique
+  name              String?
+  avatarUrl         String?
+  role              Role          @default(USER)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  comments          Comment[]
+  pages             Page[]        @relation("PageAuthors")
+  revisions         Revision[]
+  status            Int           @default(0) // 0: Active, 1: Banned, 2: Suspended
+  bannedUntil       DateTime?
+  banReason         String?
+  totalTrustCredits Int           @default(0)
+  trustCredit       TrustCredit[]
+  reactions         Reaction[]
+  isHidden          Boolean       @default(false)
 }
 
 model Page {
@@ -45,7 +45,7 @@ model Page {
   isRedirect  Boolean    @default(false)
   comments    Comment[]
   author      User?      @relation("PageAuthors", fields: [authorId], references: [id], onDelete: SetNull)
-  parent      Page?      @relation("SubPages", fields: [parentId], references: [id])
+  parent      Page?      @relation("SubPages", fields: [parentId], references: [id], onDelete: SetNull)
   children    Page[]     @relation("SubPages")
   tags        PageTag[]
   revisions   Revision[]
@@ -55,44 +55,50 @@ model Page {
   isHidden    Boolean    @default(false) // For hiding pages from search and listings
   isTemplate  Boolean    @default(false)
   ageRating   Int        @default(0) // 0, 13, 18 
+
+  @@index([authorId])
 }
 
 model Revision {
   id                 String   @id @default(cuid())
   version            Int      @default(1)
   pageId             String
-  authorId           String
+  authorId           String?
   content            String
   summary            String?
   createdAt          DateTime @default(now())
   isRedirect         Boolean  @default(false)
   redirectTargetSlug String?
-  author             User     @relation(fields: [authorId], references: [id])
+  author             User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
   page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   title              String   @default("")
+
+  @@index([pageId])
 }
 
 model Comment {
-  id        String     @id @default(cuid())
+  id        String       @id @default(cuid())
   title     String
   pageId    String
-  authorId  String
+  authorId  String?
   content   String
   parentId  String?
-  createdAt DateTime   @default(now())
-  author    User       @relation(fields: [authorId], references: [id])
-  page      Page       @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  parent    Comment?   @relation("ThreadedComments", fields: [parentId], references: [id])
-  replies   Comment[]  @relation("ThreadedComments")
+  createdAt DateTime     @default(now())
+  author    User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  page      Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  parent    Comment?     @relation("ThreadedComments", fields: [parentId], references: [id], onDelete: SetNull)
+  replies   Comment[]    @relation("ThreadedComments")
   reactions Reaction[]
   tags      CommentTag[]
+
+  @@index([pageId, authorId])
 }
 
 model Tag {
-  id          String    @id @default(cuid())
-  name        String    @unique
+  id          String       @id @default(cuid())
+  name        String       @unique
   description String?
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime     @default(now())
   pages       PageTag[]
   comments    CommentTag[]
 }
@@ -101,7 +107,7 @@ model PageTag {
   pageId String
   tagId  String
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([pageId, tagId])
 }
@@ -110,7 +116,7 @@ model CommentTag {
   commentId String
   tagId     String
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  tag       Tag     @relation(fields: [tagId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([commentId, tagId])
 }
@@ -122,19 +128,20 @@ model TrustCredit {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
+  @@index([userId])
 }
 
 model Reaction {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String?
   commentId String
   type      Int // e.g., 1: Like, 2: Dislike, etc.
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId, type])
+  @@index([userId, commentId])
 }
 
 enum Role {
