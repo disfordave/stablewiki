@@ -22,12 +22,13 @@ import { User } from "@/types";
 import { safeRedirect } from "@/utils";
 import { cookies } from "next/headers";
 
-export async function getUser() {
+export async function getUser(): Promise<User | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt")?.value;
 
   if (!token) {
-    return { error: "User not authenticated" };
+    console.error("User not authenticated");
+    return null;
   }
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`, {
     headers: {
@@ -38,7 +39,8 @@ export async function getUser() {
   });
 
   if (!res.ok) {
-    return { error: "Failed to fetch user" };
+    console.error("Failed to fetch user:", await res.text());
+    return null;
   }
 
   const user = await res.json();

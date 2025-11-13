@@ -44,7 +44,7 @@ export default async function StableEditor({
     const content = formData.get("content") as string;
     const summary = formData.get("summary") as string;
 
-    if (!user.username) {
+    if (!user) {
       throw new Error("User not found");
     }
 
@@ -143,7 +143,7 @@ export default async function StableEditor({
     safeRedirect(`/`);
   }
 
-  if (!user.username) {
+  if (!user) {
     return <MustSignInMessage />;
   }
 

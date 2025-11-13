@@ -28,14 +28,14 @@ import { safeRedirect } from "@/utils";
 
 export default async function SignIn() {
   const user = await getUser();
-  if (user.username) {
+  if (user) {
     safeRedirect(`/wiki/System:Dashboard`);
   }
 
   async function signIn(formData: FormData) {
     "use server";
 
-    if (user.username) {
+    if (user) {
       safeRedirect(`/wiki/System:Dashboard`);
     }
 

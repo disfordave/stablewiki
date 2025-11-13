@@ -37,7 +37,7 @@ export interface Page {
   }[];
   isRedirect?: boolean;
   redirectTargetSlug?: string;
-  comments: Comment[];
+  comments?: Comment[];
 }
 
 export interface PageRevisionData {

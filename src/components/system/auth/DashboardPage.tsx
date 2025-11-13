@@ -36,7 +36,7 @@ import { Role } from "@prisma/client";
 export default async function DashboardPage() {
   const user = await getUser();
 
-  if ("error" in user) {
+  if (!user) {
     return (
       <>
         <h1 className="text-2xl font-bold">Access Denied</h1>

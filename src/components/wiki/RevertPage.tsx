@@ -45,7 +45,7 @@ export default async function StableRevert({
 }) {
   const user = await getUser();
 
-  if (!user.username) {
+  if (!user) {
     return <MustSignInMessage />;
   }
 

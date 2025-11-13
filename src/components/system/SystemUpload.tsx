@@ -81,7 +81,7 @@ export default async function StableUpload() {
     safeRedirect(`/wiki/${data.slug}`);
   }
 
-  if (!user.username) {
+  if (!user || !user.username) {
     return <MustSignInMessage />;
   }
   //   const error = searchParams.error as string | undefined;

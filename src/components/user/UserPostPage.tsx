@@ -34,7 +34,7 @@ export default async function UserPostPage({
   hPage: string | string[] | undefined;
 }) {
   const user = await getUser();
-  const postOwner = username === user.username;
+  const postOwner = username === user?.username;
 
   async function handleSubmit(formData: FormData) {
     "use server";
