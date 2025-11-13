@@ -273,7 +273,7 @@ export default async function WikiPage({
           same terms as regular wiki pages. All rights reserved.
         </p>
       )}
-      {!showEdit &&
+      {/* {!showEdit &&
         !historyList &&
         !showDiff &&
         !showRevert &&
@@ -282,7 +282,7 @@ export default async function WikiPage({
             Comments Section Coming Soon!
             <pre>{JSON.stringify(page?.comments, null, 2)}</pre>
           </div>
-        )}
+        )} */}
     </div>
   );
 }

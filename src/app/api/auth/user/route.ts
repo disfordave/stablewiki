@@ -18,7 +18,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { prisma } from "@/lib/prisma";
 import { User } from "@/types";
+import bcrypt from "bcryptjs";
 import * as jose from "jose";
 import { NextRequest } from "next/server";
 
@@ -67,6 +69,93 @@ export async function GET(request: NextRequest): Promise<Response> {
     return Response.json(
       { error: "Invalid or expired token." },
       { status: 403 },
+    );
+  }
+}
+
+export async function PUT(request: NextRequest): Promise<Response> {
+  const body = await request.json();
+  const { currentPassword, newPassword, newPasswordConfirm, consent } = body;
+
+  if (!currentPassword || !newPassword || !newPasswordConfirm || !consent) {
+    return Response.json(
+      { error: "Current password, new password, and consent are required" },
+      { status: 400 },
+    );
+  }
+
+  if (newPassword !== newPasswordConfirm) {
+    return Response.json({ error: "Passwords do not match" }, { status: 400 });
+  }
+
+  if (newPassword.length < 8) {
+    return Response.json(
+      { error: "Password must be at least 8 characters long" },
+      { status: 400 },
+    );
+  }
+
+  if (!consent) {
+    return Response.json(
+      { error: "You must agree to the terms and conditions" },
+      { status: 400 },
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  try {
+    const authHeader = request.headers.get("Authorization");
+
+    if (!authHeader) {
+      return Response.json(
+        { error: "Error! Token was not provided." },
+        { status: 401 },
+      );
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return Response.json(
+        { error: "Error! Token was not provided." },
+        { status: 401 },
+      );
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not defined in the environment variables.");
+      return Response.json({ error: "Internal server error" }, { status: 500 });
+    }
+
+    const decodedToken = await jose
+      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+      .then((result) => result.payload);
+
+    const user = await prisma.user.findUnique({
+      where: { id: decodedToken.id as string },
+    });
+
+    if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
+      return Response.json(
+        { error: "Current password is incorrect" },
+        { status: 401 },
+      );
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    return Response.json(
+      { message: "Password updated successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(error);
+    return Response.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 },
     );
   }
 }
