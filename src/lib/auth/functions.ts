@@ -27,7 +27,6 @@ export async function getUser(): Promise<User | null> {
   const token = cookieStore.get("jwt")?.value;
 
   if (!token) {
-    console.log("User not authenticated");
     return null;
   }
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`, {
@@ -39,7 +38,6 @@ export async function getUser(): Promise<User | null> {
   });
 
   if (!res.ok) {
-    console.log("Failed to fetch user:", await res.text());
     return null;
   }
 
