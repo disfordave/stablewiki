@@ -78,10 +78,12 @@ export async function GET(
           slug: [page.slug],
           author:
             page.revisions.length > 0
-              ? {
-                  id: page.revisions[0].author.id,
-                  username: page.revisions[0].author.username,
-                }
+              ? page.revisions[0].author
+                ? {
+                    id: page.revisions[0].author.id,
+                    username: page.revisions[0].author.username,
+                  }
+                : null
               : null,
           createdAt: page.createdAt,
           updatedAt:
@@ -132,7 +134,9 @@ export async function GET(
           id: page.id,
           title: page.title,
           revisions: page.revisions.map((rev) => ({
-            author: { id: rev.author.id, username: rev.author.username },
+            author: rev.author
+              ? { id: rev.author.id, username: rev.author.username }
+              : null,
             id: rev.id,
             title: page.title,
             version: rev.version,
@@ -185,10 +189,12 @@ export async function GET(
         slug: [page.slug],
         author:
           page.revisions.length > 0
-            ? {
-                id: page.revisions[0].author.id,
-                username: page.revisions[0].author.username,
-              }
+            ? page.revisions[0].author
+              ? {
+                  id: page.revisions[0].author.id,
+                  username: page.revisions[0].author.username,
+                }
+              : null
             : null,
         createdAt: page.createdAt,
         updatedAt:
@@ -206,10 +212,12 @@ export async function GET(
           title: comment.title,
           content: comment.content,
           createdAt: comment.createdAt,
-          author: {
-            id: comment.author.id,
-            username: comment.author.username,
-          },
+          author: comment.author
+            ? {
+                id: comment.author.id,
+                username: comment.author.username,
+              }
+            : null,
         })),
       } as Page,
     });

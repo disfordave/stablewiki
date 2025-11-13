@@ -69,7 +69,7 @@ export interface Comment {
   title: string;
   content: string;
   createdAt: Date;
-  author: {
+  author?: {
     id: string;
     username: string;
   };

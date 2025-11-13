@@ -80,10 +80,12 @@ export async function GET(request: NextRequest) {
               slug: [exactMatch.slug],
               author:
                 exactMatch.revisions.length > 0
-                  ? {
-                      id: exactMatch.revisions[0].author.id,
-                      username: exactMatch.revisions[0].author.username,
-                    }
+                  ? exactMatch.revisions[0].author
+                    ? {
+                        id: exactMatch.revisions[0].author.id,
+                        username: exactMatch.revisions[0].author.username,
+                      }
+                    : null
                   : null,
               createdAt: exactMatch.createdAt,
               updatedAt:
@@ -145,10 +147,12 @@ export async function GET(request: NextRequest) {
           slug: [page.slug],
           author:
             page.revisions.length > 0
-              ? {
-                  id: page.revisions[0].author.id,
-                  username: page.revisions[0].author.username,
-                }
+              ? page.revisions[0].author
+                ? {
+                    id: page.revisions[0].author.id,
+                    username: page.revisions[0].author.username,
+                  }
+                : null
               : null,
           createdAt: page.createdAt,
           updatedAt:

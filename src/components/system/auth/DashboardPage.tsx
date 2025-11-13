@@ -75,28 +75,32 @@ export default async function DashboardPage() {
             </>
           )}
           {user.role === Role.EDITOR && (
-          <>
-            <p className="font-bold text-blue-500">
-              You have editor privileges.
-            </p>
-            <ul className="list-inside list-disc">
-              <li>You can create and edit pages.</li>
-              <li>You can comment on pages and participate in discussions.</li>
-              <li>You can review and approve changes made by other users.</li>
-            </ul>
-          </>
-        )}
-                {user.role === Role.USER && (
-          <>
-            <p className="font-bold text-green-500">
-              You have standard user privileges.
-            </p>
-            <ul className="list-inside list-disc">
-              <li>You can create and edit pages.</li>
-              <li>You can comment on pages and participate in discussions.</li>
-            </ul>
-          </>
-        )}
+            <>
+              <p className="font-bold text-blue-500">
+                You have editor privileges.
+              </p>
+              <ul className="list-inside list-disc">
+                <li>You can create and edit pages.</li>
+                <li>
+                  You can comment on pages and participate in discussions.
+                </li>
+                <li>You can review and approve changes made by other users.</li>
+              </ul>
+            </>
+          )}
+          {user.role === Role.USER && (
+            <>
+              <p className="font-bold text-green-500">
+                You have standard user privileges.
+              </p>
+              <ul className="list-inside list-disc">
+                <li>You can create and edit pages.</li>
+                <li>
+                  You can comment on pages and participate in discussions.
+                </li>
+              </ul>
+            </>
+          )}
         </div>
         <details>
           <summary className="mt-4 mb-2 font-bold select-none">
