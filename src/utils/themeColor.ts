@@ -17,6 +17,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-violet-500",
       accent: "accent-violet-500",
+      selection: "selection:bg-violet-500/35",
     },
   },
   rose: {
@@ -35,6 +36,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-rose-500",
       accent: "accent-rose-500",
+      selection: "selection:bg-rose-500/35",
     },
   },
   //   red: {
@@ -71,6 +73,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-orange-500",
       accent: "accent-orange-500",
+      selection: "selection:bg-orange-500/35",
     },
   },
   sky: {
@@ -89,6 +92,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-sky-500",
       accent: "accent-sky-500",
+      selection: "selection:bg-sky-500/35",
     },
   },
   emerald: {
@@ -107,6 +111,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-emerald-500",
       accent: "accent-emerald-500",
+      selection: "selection:bg-emerald-500/35",
     },
   },
   //   blue: {
@@ -161,6 +166,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-yellow-500",
       accent: "accent-yellow-500",
+      selection: "selection:bg-yellow-500/35",
     },
   },
   pink: {
@@ -179,6 +185,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-pink-500",
       accent: "accent-pink-500",
+      selection: "selection:bg-pink-500/35",
     },
   },
   indigo: {
@@ -197,6 +204,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-indigo-500",
       accent: "accent-indigo-500",
+      selection: "selection:bg-indigo-500/35",
     },
   },
   zinc: {
@@ -215,6 +223,7 @@ const themeColors = {
     etc: {
       focusRing: "focus:ring-zinc-500",
       accent: "accent-zinc-500",
+      selection: "selection:bg-zinc-500/35",
     },
   },
 };
@@ -223,7 +232,7 @@ export function getThemeColor(): {
   bg: { base: string; hover: string };
   text: { base: string; hover: string };
   fill: { primary: string; secondary: string };
-  etc: { focusRing: string; accent: string };
+  etc: { focusRing: string; accent: string; selection: string };
 } {
   return (
     themeColors[WIKI_THEME_COLOR as keyof typeof themeColors] ||
