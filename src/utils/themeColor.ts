@@ -5,6 +5,7 @@ const themeColors = {
     bg: {
       base: "bg-violet-500",
       hover: "hover:bg-violet-600",
+      groupHover: "group-hover:bg-violet-600",
     },
     text: {
       base: "text-violet-500",
@@ -24,6 +25,7 @@ const themeColors = {
     bg: {
       base: "bg-rose-500",
       hover: "hover:bg-rose-600",
+      groupHover: "group-hover:bg-rose-600",
     },
     text: {
       base: "text-rose-500",
@@ -61,6 +63,7 @@ const themeColors = {
     bg: {
       base: "bg-orange-500",
       hover: "hover:bg-orange-600",
+      groupHover: "group-hover:bg-orange-600",
     },
     text: {
       base: "text-orange-500",
@@ -80,6 +83,7 @@ const themeColors = {
     bg: {
       base: "bg-sky-500",
       hover: "hover:bg-sky-600",
+      groupHover: "group-hover:bg-sky-600",
     },
     text: {
       base: "text-sky-500",
@@ -99,6 +103,7 @@ const themeColors = {
     bg: {
       base: "bg-emerald-500",
       hover: "hover:bg-emerald-600",
+      groupHover: "group-hover:bg-emerald-600",
     },
     text: {
       base: "text-emerald-500",
@@ -154,6 +159,7 @@ const themeColors = {
     bg: {
       base: "bg-yellow-500",
       hover: "hover:bg-yellow-600",
+      groupHover: "group-hover:bg-yellow-600",
     },
     text: {
       base: "text-yellow-500",
@@ -173,6 +179,7 @@ const themeColors = {
     bg: {
       base: "bg-pink-500",
       hover: "hover:bg-pink-600",
+      groupHover: "group-hover:bg-pink-600",
     },
     text: {
       base: "text-pink-500",
@@ -192,6 +199,7 @@ const themeColors = {
     bg: {
       base: "bg-indigo-500",
       hover: "hover:bg-indigo-600",
+      groupHover: "group-hover:bg-indigo-600",
     },
     text: {
       base: "text-indigo-500",
@@ -211,6 +219,7 @@ const themeColors = {
     bg: {
       base: "bg-zinc-500",
       hover: "hover:bg-zinc-600",
+      groupHover: "group-hover:bg-zinc-600",
     },
     text: {
       base: "text-zinc-500",
@@ -229,7 +238,7 @@ const themeColors = {
 };
 
 export function getThemeColor(): {
-  bg: { base: string; hover: string };
+  bg: { base: string; hover: string; groupHover: string };
   text: { base: string; hover: string };
   fill: { primary: string; secondary: string };
   etc: { focusRing: string; accent: string; selection: string };

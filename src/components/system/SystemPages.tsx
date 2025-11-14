@@ -23,10 +23,9 @@ import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
-import { SearchBox, TransitionLinkButton } from "../ui";
+import { SearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
-import { getThemeColor } from "@/utils";
-import { DocumentTextIcon } from "@heroicons/react/24/solid";
+import SystemLounge from "./SystemLounge";
 
 export default function SystemPages({
   slug,
@@ -66,19 +65,7 @@ export default function SystemPages({
     case "Upload":
       return <StableUpload />;
     case "Lounge":
-      return (
-        <div>
-          <h1 className="text-3xl font-bold">Lounge</h1>
-          <p>{`This is a placeholder for the System Page "Lounge for ${slug.slice(1) ? slug.slice(1).join("/") : "Lounge Home"}"`}</p>
-          <TransitionLinkButton
-            href={`/wiki/${slug.slice(1).join("/")}`}
-            className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
-          >
-            <DocumentTextIcon className="inline size-5" />
-            Back to Page
-          </TransitionLinkButton>
-        </div>
-      );
+      return <SystemLounge slug={slug} />;
     default:
       return (
         <div>

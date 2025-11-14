@@ -33,3 +33,4 @@ export { MarkdownComp } from "./MarkdownComp";
 export { Breadcrumbs } from "./Breadcrumbs";
 export { SearchBox } from "./SearchBox";
 export { DefaultWikiLogo } from "./DefaultWikiLogo";
+export { LoungePreview } from "./LoungePreview";

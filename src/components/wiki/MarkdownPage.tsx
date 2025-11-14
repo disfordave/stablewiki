@@ -18,14 +18,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getThemeColor } from "@/utils";
+// import { getThemeColor } from "@/utils";
 import { MarkdownComp } from "../ui/MarkdownComp";
 import { TransitionLinkButton } from "../ui/buttons/TransitionButton";
 import {
   ArrowPathIcon,
   PencilSquareIcon,
   DocumentTextIcon,
-  ChatBubbleBottomCenterTextIcon,
+  // ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
 
 export default function StableMarkdown({
@@ -54,13 +54,13 @@ export default function StableMarkdown({
           </TransitionLinkButton>
         ) : (
           <>
-            <TransitionLinkButton
+            {/* <TransitionLinkButton
               href={`/wiki/System:Lounge/${decodedSlug}`}
               className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
             >
               <ChatBubbleBottomCenterTextIcon className="inline size-5" />
               Lounge
-            </TransitionLinkButton>
+            </TransitionLinkButton> */}
             <TransitionLinkButton
               href={`/wiki/${decodedSlug}?action=edit`}
               className="bg-green-500 text-white hover:bg-green-600"

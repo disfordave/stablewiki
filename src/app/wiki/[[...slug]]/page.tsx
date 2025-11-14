@@ -21,6 +21,7 @@
 import { SystemPages } from "@/components/system";
 import {
   Breadcrumbs,
+  // LoungePreview,
   PageDate,
   RedirectedFromMessage,
   TransitionLinkButton,
@@ -242,6 +243,7 @@ export default async function WikiPage({
               slug={decodeURIComponent(slug.join("/"))}
               content={page.content}
             />
+            {/* <LoungePreview pageTitle={page.title} slug={page.slug.join("/")} /> */}
           </div>
         ) : (
           <div>
