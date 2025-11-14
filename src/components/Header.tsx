@@ -27,6 +27,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import { DefaultWikiLogo, TransitionLinkButton } from "@/components/ui";
+import { getThemeColor } from "@/utils";
 
 export default async function Header() {
   const user = await getUser();
@@ -39,11 +40,13 @@ export default async function Header() {
             <DefaultWikiLogo
               className="size-6"
               colors={{
-                primary: "fill-violet-600",
-                secondary: "fill-violet-400",
+                primary: getThemeColor().fill.primary,
+                secondary: getThemeColor().fill.secondary,
               }}
             />
-            <span className="transition-colors duration-300 hover:text-violet-500">
+            <span
+              className={`transition-colors duration-300 ${getThemeColor().text.hover}`}
+            >
               {WIKI_NAME}
             </span>
           </Link>
@@ -53,7 +56,7 @@ export default async function Header() {
             <div className="flex items-center gap-2">
               <TransitionLinkButton
                 href="/wiki/System:Dashboard"
-                className="bg-violet-500 text-white hover:bg-violet-600"
+                className={` ${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
               >
                 <UserIcon className="inline size-5" />
                 <span className="font-bold">{user.username}</span>
@@ -62,7 +65,7 @@ export default async function Header() {
           ) : (
             <TransitionLinkButton
               href="/wiki/System:SignIn"
-              className="bg-violet-500 text-white hover:bg-violet-600"
+              className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
             >
               <ArrowLeftEndOnRectangleIcon className="inline size-5" />
               Sign In
@@ -71,7 +74,7 @@ export default async function Header() {
           <TransitionLinkButton
             title="Search"
             href="/wiki/System:Search"
-            className="aspect-square h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"
+            className={`aspect-square h-full rounded-full text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
           >
             <MagnifyingGlassIcon className="inline size-4" />
           </TransitionLinkButton>

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser, signOutUser } from "@/lib";
+import { getThemeColor } from "@/utils";
 import {
   HomeIcon,
   PhotoIcon,
@@ -58,7 +59,7 @@ export default async function DashboardPage() {
         <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
           {user.role === Role.ADMIN && (
             <>
-              <p className="font-bold text-violet-500">
+              <p className={`font-bold ${getThemeColor().text.base}`}>
                 You have administrative privileges.
               </p>
               <ul className="list-inside list-disc">
@@ -121,7 +122,7 @@ export default async function DashboardPage() {
             </TransitionLinkButton>
             <TransitionLinkButton
               href={`/wiki/User:${user.username}`}
-              className="bg-violet-500 text-white hover:bg-violet-600"
+              className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover}`}
             >
               <UserIcon className="inline size-5" />
               User Page

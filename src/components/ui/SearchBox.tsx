@@ -20,7 +20,7 @@
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { TransitionFormButton } from "./buttons/TransitionButton";
-import { safeRedirect } from "@/utils";
+import { safeRedirect, getThemeColor } from "@/utils";
 
 export async function SearchBox() {
   async function search(formData: FormData) {
@@ -35,14 +35,14 @@ export async function SearchBox() {
       <input
         type="text"
         name="search"
-        className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+        className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
         placeholder="Search..."
         required
       />
       <TransitionFormButton
         title="Search"
         useButtonWithoutForm={true}
-        className="absolute end-0 h-full rounded-full bg-violet-500 text-white hover:bg-violet-600"
+        className={`absolute end-0 h-full rounded-full  text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
       >
         <MagnifyingGlassIcon className="inline size-4" />
       </TransitionFormButton>

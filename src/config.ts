@@ -23,6 +23,9 @@
 const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";
 const WIKI_HOMEPAGE_LINK =
   "/wiki/" + process.env.WIKI_HOMEPAGE_LINK || "WelcomePage";
+const WIKI_DISABLE_LOGO = process.env.WIKI_DISABLE_LOGO === "true";
+const WIKI_LOGO_URL = process.env.WIKI_LOGO_URL || "DEFAULT";
+const WIKI_THEME_COLOR = process.env.WIKI_THEME_COLOR || "violet";
 const WIKI_DESCRIPTION =
   process.env.WIKI_DESCRIPTION ||
   "StableWiki Engine is a modern, user-friendly wiki platform built with Next.js and TypeScript.";
@@ -41,6 +44,9 @@ const WIKI_LICENSE_URL =
 export {
   WIKI_NAME,
   WIKI_HOMEPAGE_LINK,
+  WIKI_DISABLE_LOGO,
+  WIKI_LOGO_URL,
+  WIKI_THEME_COLOR,
   WIKI_DESCRIPTION,
   WIKI_COPYRIGHT_HOLDER,
   WIKI_COPYRIGHT_HOLDER_URL,

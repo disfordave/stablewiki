@@ -24,7 +24,7 @@ import { getUser } from "@/lib";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { safeRedirect } from "@/utils";
+import { getThemeColor, safeRedirect } from "@/utils";
 
 export default async function SignIn() {
   const user = await getUser();
@@ -95,7 +95,7 @@ export default async function SignIn() {
             id="username"
             name="username"
             required
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
         </div>
         <div>
@@ -107,12 +107,12 @@ export default async function SignIn() {
             id="password"
             name="password"
             required
-            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
         </div>
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className="w-full bg-violet-500 text-white hover:bg-violet-600"
+          className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover} w-full`}
         >
           <ArrowLeftEndOnRectangleIcon className="inline size-5" />
           Sign In

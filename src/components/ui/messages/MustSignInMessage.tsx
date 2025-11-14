@@ -20,6 +20,7 @@
 
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { TransitionLinkButton } from "../buttons/TransitionButton";
+import { getThemeColor } from "@/utils";
 
 export function MustSignInMessage({
   customMessage,
@@ -34,7 +35,7 @@ export function MustSignInMessage({
         </p>
         <TransitionLinkButton
           href="/wiki/System:SignIn"
-          className="bg-violet-500 text-white hover:bg-violet-600"
+          className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
         >
           <ArrowLeftEndOnRectangleIcon className="inline size-5" />
           Sign In

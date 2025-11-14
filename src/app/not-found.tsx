@@ -20,6 +20,7 @@
 
 import { TransitionLinkButton } from "@/components/ui";
 import { WIKI_HOMEPAGE_LINK } from "@/config";
+import { getThemeColor } from "@/utils";
 import { HomeIcon } from "@heroicons/react/24/solid";
 
 const metadata = {
@@ -38,7 +39,7 @@ export default function NotFound() {
       </p>
       <TransitionLinkButton
         href={WIKI_HOMEPAGE_LINK}
-        className="bg-violet-500 text-white hover:bg-violet-600"
+        className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
       >
         <HomeIcon className="inline size-5" />
         Go to Homepage

@@ -41,6 +41,7 @@ import {
   getPageData,
   getLatestPageRevision,
   safeRedirect,
+  getThemeColor,
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
@@ -231,7 +232,7 @@ export default async function WikiPage({
             {isUserPage && (
               <TransitionLinkButton
                 href={`/wiki/User:${pageOwner}#posts`}
-                className="mt-3 bg-violet-500 text-white hover:bg-violet-600"
+                className={`mt-3 text-white ${getThemeColor().bg.hover} ${getThemeColor().bg.base}`}
               >
                 <DocumentTextIcon className="inline size-5" />
                 Posts by User:{pageOwner}
