@@ -29,8 +29,8 @@ export default function Footer() {
   return (
     <footer className="rounded-t-2xl bg-white px-4 py-8 text-start sm:rounded-2xl dark:bg-gray-800">
       <p className="max-w-lg text-sm text-gray-500">
-        All wiki text — except for content on User: pages and Media: pages — is
-        licensed under{" "}
+        All wiki text — except for content on User:, System:, and Media: pages —
+        is licensed under{" "}
         <a
           href={WIKI_LICENSE_URL}
           target="_blank"
