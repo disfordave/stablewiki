@@ -42,7 +42,7 @@ export async function SearchBox() {
       <TransitionFormButton
         title="Search"
         useButtonWithoutForm={true}
-        className={`absolute end-0 h-full rounded-full  text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
+        className={`absolute end-0 h-full rounded-full text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
       >
         <MagnifyingGlassIcon className="inline size-4" />
       </TransitionFormButton>

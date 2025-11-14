@@ -24,7 +24,8 @@ const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";
 const WIKI_HOMEPAGE_LINK =
   "/wiki/" + process.env.WIKI_HOMEPAGE_LINK || "WelcomePage";
 const WIKI_DISABLE_LOGO = process.env.WIKI_DISABLE_LOGO === "true";
-const WIKI_LOGO_URL = process.env.WIKI_LOGO_URL || "DEFAULT";
+const WIKI_ROUND_LOGO = process.env.WIKI_ROUND_LOGO === "true";
+const WIKI_LOGO_URL = process.env.WIKI_LOGO_URL || "";
 const WIKI_THEME_COLOR = process.env.WIKI_THEME_COLOR || "violet";
 const WIKI_DESCRIPTION =
   process.env.WIKI_DESCRIPTION ||
@@ -45,6 +46,7 @@ export {
   WIKI_NAME,
   WIKI_HOMEPAGE_LINK,
   WIKI_DISABLE_LOGO,
+  WIKI_ROUND_LOGO,
   WIKI_LOGO_URL,
   WIKI_THEME_COLOR,
   WIKI_DESCRIPTION,

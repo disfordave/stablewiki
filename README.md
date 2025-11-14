@@ -34,6 +34,8 @@ To install StableWiki Engine, follow these steps:
 
 `.env` contains various configuration options for StableWiki. such as...
 
+### Wiki Information
+
 - `WIKI_NAME`: The name of your wiki. (Default: StableWiki Engine)
 - `WIKI_HOMEPAGE_LINK`: The link to the homepage of your wiki. (Default: WelcomePage)
 - `WIKI_DESCRIPTION`: A brief description of your wiki. (Default: StableWiki Engine is a modern, user-friendly wiki platform built with Next.js and TypeScript.)
@@ -41,6 +43,27 @@ To install StableWiki Engine, follow these steps:
 - `WIKI_COPYRIGHT_HOLDER_URL`: The URL for the copyright holder. (Default: https://github.com/disfordave/stablewiki)
 - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads. (Default: false)
 - `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup. (Default: false)
+
+### Logo and Theme Configuration
+
+- `WIKI_DISABLE_LOGO`: A boolean to enable or disable displaying the logo in the header. (Default: false)
+- `WIKI_ROUND_LOGO`: A boolean to enable or disable displaying the logo with rounded corners. (Default: false)
+- `WIKI_LOGO_URL`: The URL to your custom logo image. (Default: "")
+- `WIKI_THEME_COLOR`: The primary theme color for your wiki. (Default: violet)
+
+### Available Theme Colors
+
+You can set `WIKI_THEME_COLOR` to any of the following colors:
+
+- violet (default)
+- rose
+- emerald
+- orange
+- sky
+- indigo
+- yellow
+- pink
+- zinc
 
 ## Important Notes
 

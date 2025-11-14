@@ -3,227 +3,227 @@ import { WIKI_THEME_COLOR } from "@/config";
 const themeColors = {
   violet: {
     bg: {
-        base: "bg-violet-500",
-        hover: "hover:bg-violet-600",
+      base: "bg-violet-500",
+      hover: "hover:bg-violet-600",
     },
     text: {
-        base: "text-violet-500",
-        hover: "hover:text-violet-600",
+      base: "text-violet-500",
+      hover: "hover:text-violet-600",
     },
     fill: {
-        primary: "fill-violet-600",
-        secondary: "fill-violet-400",
+      primary: "fill-violet-600",
+      secondary: "fill-violet-400",
     },
     etc: {
-        focusRing: "focus:ring-violet-500",
-        accent: "accent-violet-500",
-    }
+      focusRing: "focus:ring-violet-500",
+      accent: "accent-violet-500",
+    },
   },
   rose: {
     bg: {
-        base: "bg-rose-500",
-        hover: "hover:bg-rose-600",
+      base: "bg-rose-500",
+      hover: "hover:bg-rose-600",
     },
     text: {
-        base: "text-rose-500",
-        hover: "hover:text-rose-600",
+      base: "text-rose-500",
+      hover: "hover:text-rose-600",
     },
     fill: {
-        primary: "fill-rose-600",
-        secondary: "fill-rose-400",
+      primary: "fill-rose-600",
+      secondary: "fill-rose-400",
     },
     etc: {
-        focusRing: "focus:ring-rose-500",
-        accent: "accent-rose-500",
-    }
+      focusRing: "focus:ring-rose-500",
+      accent: "accent-rose-500",
+    },
   },
-//   red: {
-//     bg: {
-//         base: "bg-red-500",
-//         hover: "hover:bg-red-600",
-//     },
-//     text: {
-//         base: "text-red-500",
-//         hover: "hover:text-red-600",
-//     },
-//     fill: {
-//         primary: "fill-red-600",
-//         secondary: "fill-red-400",
-//     },
-//     etc: {
-//         focusRing: "focus:ring-red-500",
-//         accent: "accent-red-500",
-//     }
-//   },
+  //   red: {
+  //     bg: {
+  //         base: "bg-red-500",
+  //         hover: "hover:bg-red-600",
+  //     },
+  //     text: {
+  //         base: "text-red-500",
+  //         hover: "hover:text-red-600",
+  //     },
+  //     fill: {
+  //         primary: "fill-red-600",
+  //         secondary: "fill-red-400",
+  //     },
+  //     etc: {
+  //         focusRing: "focus:ring-red-500",
+  //         accent: "accent-red-500",
+  //     }
+  //   },
   orange: {
     bg: {
-        base: "bg-orange-500",
-        hover: "hover:bg-orange-600",
+      base: "bg-orange-500",
+      hover: "hover:bg-orange-600",
     },
     text: {
-        base: "text-orange-500",
-        hover: "hover:text-orange-600",
+      base: "text-orange-500",
+      hover: "hover:text-orange-600",
     },
     fill: {
-        primary: "fill-orange-600",
-        secondary: "fill-orange-400",
+      primary: "fill-orange-600",
+      secondary: "fill-orange-400",
     },
     etc: {
-        focusRing: "focus:ring-orange-500",
-        accent: "accent-orange-500",
-    }
+      focusRing: "focus:ring-orange-500",
+      accent: "accent-orange-500",
+    },
   },
   sky: {
     bg: {
-        base: "bg-sky-500",
-        hover: "hover:bg-sky-600",
+      base: "bg-sky-500",
+      hover: "hover:bg-sky-600",
     },
     text: {
-        base: "text-sky-500",
-        hover: "hover:text-sky-600",
+      base: "text-sky-500",
+      hover: "hover:text-sky-600",
     },
     fill: {
-        primary: "fill-sky-600",
-        secondary: "fill-sky-400",
+      primary: "fill-sky-600",
+      secondary: "fill-sky-400",
     },
     etc: {
-        focusRing: "focus:ring-sky-500",
-        accent: "accent-sky-500",
-    }
+      focusRing: "focus:ring-sky-500",
+      accent: "accent-sky-500",
+    },
   },
   emerald: {
     bg: {
-        base: "bg-emerald-500",
-        hover: "hover:bg-emerald-600",
+      base: "bg-emerald-500",
+      hover: "hover:bg-emerald-600",
     },
     text: {
-        base: "text-emerald-500",
-        hover: "hover:text-emerald-600",
+      base: "text-emerald-500",
+      hover: "hover:text-emerald-600",
     },
     fill: {
-        primary: "fill-emerald-600",
-        secondary: "fill-emerald-400",
+      primary: "fill-emerald-600",
+      secondary: "fill-emerald-400",
     },
     etc: {
-        focusRing: "focus:ring-emerald-500",
-        accent: "accent-emerald-500",
-    }
+      focusRing: "focus:ring-emerald-500",
+      accent: "accent-emerald-500",
+    },
   },
-//   blue: {
-//     bg: {
-//         base: "bg-blue-500",
-//         hover: "hover:bg-blue-600",
-//     },
-//     text: {
-//         base: "text-blue-500",
-//         hover: "hover:text-blue-600",
-//     },
-//     fill: {
-//         primary: "fill-blue-600",
-//         secondary: "fill-blue-400",
-//     },
-//     etc: {
-//         focusRing: "focus:ring-blue-500",
-//         accent: "accent-blue-500",
-//     }
-//   },
-//   green: {
-//     bg: {
-//         base: "bg-green-500",
-//         hover: "hover:bg-green-600",
-//     },
-//     text: {
-//         base: "text-green-500",
-//         hover: "hover:text-green-600",
-//     },
-//     fill: {
-//         primary: "fill-green-600",
-//         secondary: "fill-green-400",
-//     },
-//     etc: {
-//         focusRing: "focus:ring-green-500",
-//         accent: "accent-green-500",
-//     }
-//   },
+  //   blue: {
+  //     bg: {
+  //         base: "bg-blue-500",
+  //         hover: "hover:bg-blue-600",
+  //     },
+  //     text: {
+  //         base: "text-blue-500",
+  //         hover: "hover:text-blue-600",
+  //     },
+  //     fill: {
+  //         primary: "fill-blue-600",
+  //         secondary: "fill-blue-400",
+  //     },
+  //     etc: {
+  //         focusRing: "focus:ring-blue-500",
+  //         accent: "accent-blue-500",
+  //     }
+  //   },
+  //   green: {
+  //     bg: {
+  //         base: "bg-green-500",
+  //         hover: "hover:bg-green-600",
+  //     },
+  //     text: {
+  //         base: "text-green-500",
+  //         hover: "hover:text-green-600",
+  //     },
+  //     fill: {
+  //         primary: "fill-green-600",
+  //         secondary: "fill-green-400",
+  //     },
+  //     etc: {
+  //         focusRing: "focus:ring-green-500",
+  //         accent: "accent-green-500",
+  //     }
+  //   },
   yellow: {
     bg: {
-        base: "bg-yellow-500",
-        hover: "hover:bg-yellow-600",
+      base: "bg-yellow-500",
+      hover: "hover:bg-yellow-600",
     },
     text: {
-        base: "text-yellow-500",
-        hover: "hover:text-yellow-600",
+      base: "text-yellow-500",
+      hover: "hover:text-yellow-600",
     },
     fill: {
-        primary: "fill-yellow-600",
-        secondary: "fill-yellow-400",
+      primary: "fill-yellow-600",
+      secondary: "fill-yellow-400",
     },
     etc: {
-        focusRing: "focus:ring-yellow-500",
-        accent: "accent-yellow-500",
-    }
+      focusRing: "focus:ring-yellow-500",
+      accent: "accent-yellow-500",
+    },
   },
   pink: {
     bg: {
-        base: "bg-pink-500",
-        hover: "hover:bg-pink-600",
+      base: "bg-pink-500",
+      hover: "hover:bg-pink-600",
     },
     text: {
-        base: "text-pink-500",
-        hover: "hover:text-pink-600",
+      base: "text-pink-500",
+      hover: "hover:text-pink-600",
     },
     fill: {
-        primary: "fill-pink-600",
-        secondary: "fill-pink-400",
+      primary: "fill-pink-600",
+      secondary: "fill-pink-400",
     },
     etc: {
-        focusRing: "focus:ring-pink-500",
-        accent: "accent-pink-500",
-    }
+      focusRing: "focus:ring-pink-500",
+      accent: "accent-pink-500",
+    },
   },
   indigo: {
     bg: {
-        base: "bg-indigo-500",
-        hover: "hover:bg-indigo-600",
+      base: "bg-indigo-500",
+      hover: "hover:bg-indigo-600",
     },
     text: {
-        base: "text-indigo-500",
-        hover: "hover:text-indigo-600",
+      base: "text-indigo-500",
+      hover: "hover:text-indigo-600",
     },
     fill: {
-        primary: "fill-indigo-600",
-        secondary: "fill-indigo-400",
+      primary: "fill-indigo-600",
+      secondary: "fill-indigo-400",
     },
     etc: {
-        focusRing: "focus:ring-indigo-500",
-        accent: "accent-indigo-500",
-    }
+      focusRing: "focus:ring-indigo-500",
+      accent: "accent-indigo-500",
+    },
   },
   zinc: {
     bg: {
-        base: "bg-zinc-500",
-        hover: "hover:bg-zinc-600",
+      base: "bg-zinc-500",
+      hover: "hover:bg-zinc-600",
     },
     text: {
-        base: "text-zinc-500",
-        hover: "hover:text-zinc-600",
+      base: "text-zinc-500",
+      hover: "hover:text-zinc-600",
     },
     fill: {
-        primary: "fill-zinc-600",
-        secondary: "fill-zinc-400",
+      primary: "fill-zinc-600",
+      secondary: "fill-zinc-400",
     },
     etc: {
-        focusRing: "focus:ring-zinc-500",
-        accent: "accent-zinc-500",
-    }
+      focusRing: "focus:ring-zinc-500",
+      accent: "accent-zinc-500",
+    },
   },
 };
 
 export function getThemeColor(): {
-    bg: { base: string; hover: string };
-    text: { base: string; hover: string };
-    fill: { primary: string; secondary: string };
-    etc: { focusRing: string; accent: string };
+  bg: { base: string; hover: string };
+  text: { base: string; hover: string };
+  fill: { primary: string; secondary: string };
+  etc: { focusRing: string; accent: string };
 } {
   return (
     themeColors[WIKI_THEME_COLOR as keyof typeof themeColors] ||

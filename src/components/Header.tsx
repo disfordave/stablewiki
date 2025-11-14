@@ -19,7 +19,13 @@
 */
 
 import { getUser } from "@/lib";
-import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
+import {
+  WIKI_DISABLE_LOGO,
+  WIKI_HOMEPAGE_LINK,
+  WIKI_LOGO_URL,
+  WIKI_NAME,
+  WIKI_ROUND_LOGO,
+} from "@/config";
 import Link from "next/link";
 import {
   UserIcon,
@@ -37,13 +43,23 @@ export default async function Header() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xl font-bold">
           <Link href={WIKI_HOMEPAGE_LINK} className="flex items-center gap-1">
-            <DefaultWikiLogo
-              className="size-6"
-              colors={{
-                primary: getThemeColor().fill.primary,
-                secondary: getThemeColor().fill.secondary,
-              }}
-            />
+            {!WIKI_DISABLE_LOGO &&
+              (WIKI_LOGO_URL && WIKI_LOGO_URL.trim().length > 0 ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={WIKI_LOGO_URL}
+                  alt={`${WIKI_NAME} Logo`}
+                  className={`inline h-6 w-6 ${WIKI_ROUND_LOGO ? "rounded-full" : ""}`}
+                />
+              ) : (
+                <DefaultWikiLogo
+                  className="size-6"
+                  colors={{
+                    primary: getThemeColor().fill.primary,
+                    secondary: getThemeColor().fill.secondary,
+                  }}
+                />
+              ))}
             <span
               className={`transition-colors duration-300 ${getThemeColor().text.hover}`}
             >
