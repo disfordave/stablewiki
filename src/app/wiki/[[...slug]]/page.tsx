@@ -55,7 +55,7 @@ export default async function WikiPage({
   params: Promise<{ slug: string[] | undefined }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { slug } = await params;
+  const { slug: baseSlug } = await params;
   const {
     action,
     ver,
@@ -63,9 +63,19 @@ export default async function WikiPage({
     preventRedirect,
     q,
     hPage,
-    view,
+    // view,
     // loungeId,
   } = await searchParams;
+  // Determine if viewing lounge
+  const loungeIndex = baseSlug?.findIndex(
+    (p) => p === "_lounge" || p === encodeURIComponent("_lounge"),
+  );
+  // Extract the actual slug without lounge part
+  const slug =
+    loungeIndex !== undefined && loungeIndex !== -1
+      ? baseSlug?.slice(0, loungeIndex)
+      : baseSlug;
+
   const joinedSlug = slug ? slug.join("/") : "";
 
   const handledHPage = handleHPage(hPage);
@@ -78,7 +88,20 @@ export default async function WikiPage({
   const showHistoryVersion = historyList && ver;
   const showRevert = revertAction && ver;
   const showDiff = diffAction && ver;
-  const isLoungeView = view === "lounge";
+
+  // Determine if viewing lounge
+  const isLoungeView =
+    baseSlug &&
+    baseSlug.length > 0 &&
+    baseSlug.includes(encodeURIComponent("_lounge"));
+
+  // Extract loungeId if present (take the last parts after _lounge)
+  const loungeId =
+    isLoungeView && baseSlug
+      ? baseSlug
+          .slice(baseSlug.indexOf(encodeURIComponent("_lounge")) + 1)
+          .join("/")
+      : null;
 
   // Redirect to homepage if no slug is provided
   if (!slug) {
@@ -250,6 +273,13 @@ export default async function WikiPage({
             {isLoungeView ? (
               <>
                 <SystemLounge page={page} />
+                {loungeId && (
+                  <div>
+                    <p className="mt-4 mb-2 text-lg font-semibold">
+                      Lounge Thread ID: {loungeId}
+                    </p>
+                  </div>
+                )}
               </>
             ) : (
               <>
