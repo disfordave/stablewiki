@@ -64,7 +64,7 @@ export default async function WikiPage({
     q,
     hPage,
     view,
-    loungeId,
+    // loungeId,
   } = await searchParams;
   const joinedSlug = slug ? slug.join("/") : "";
 
