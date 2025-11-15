@@ -24,6 +24,7 @@ import { slugify } from "@/utils";
 import rehypeSlug from "rehype-slug";
 // import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import toc from "rehype-toc";
+import React from "react";
 
 export function WikiMarkdown({ content }: { content: string }) {
   let processed = content;

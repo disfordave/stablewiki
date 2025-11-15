@@ -25,7 +25,6 @@ import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
 import { SearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
-import SystemLounge from "./SystemLounge";
 
 export default function SystemPages({
   slug,
@@ -64,8 +63,6 @@ export default function SystemPages({
       return <SignupPage />;
     case "Upload":
       return <StableUpload />;
-    case "Lounge":
-      return <SystemLounge slug={slug} />;
     default:
       return (
         <div>

@@ -19,6 +19,7 @@
 */
 
 import { SystemPages } from "@/components/system";
+import SystemLounge from "@/components/system/SystemLounge";
 import {
   Breadcrumbs,
   // LoungePreview,
@@ -55,8 +56,16 @@ export default async function WikiPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-  const { action, ver, redirectedFrom, preventRedirect, q, hPage } =
-    await searchParams;
+  const {
+    action,
+    ver,
+    redirectedFrom,
+    preventRedirect,
+    q,
+    hPage,
+    view,
+    loungeId,
+  } = await searchParams;
   const joinedSlug = slug ? slug.join("/") : "";
 
   const handledHPage = handleHPage(hPage);
@@ -69,6 +78,7 @@ export default async function WikiPage({
   const showHistoryVersion = historyList && ver;
   const showRevert = revertAction && ver;
   const showDiff = diffAction && ver;
+  const isLoungeView = view === "lounge";
 
   // Redirect to homepage if no slug is provided
   if (!slug) {
@@ -131,6 +141,13 @@ export default async function WikiPage({
 
   return (
     <div>
+      {isLoungeView && (
+        <p
+          className={`mb-1 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
+        >
+          Lounge
+        </p>
+      )}
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
@@ -230,19 +247,27 @@ export default async function WikiPage({
             <PageDate page={page} isOld={false} />
             <Breadcrumbs slug={slug} titles={page.title.split("/")} />
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
-            {isUserPage && (
-              <TransitionLinkButton
-                href={`/wiki/User:${pageOwner}#posts`}
-                className={`mt-3 text-white ${getThemeColor().bg.hover} ${getThemeColor().bg.base}`}
-              >
-                <DocumentTextIcon className="inline size-5" />
-                Posts by User:{pageOwner}
-              </TransitionLinkButton>
+            {isLoungeView ? (
+              <>
+                <SystemLounge page={page} />
+              </>
+            ) : (
+              <>
+                {isUserPage && (
+                  <TransitionLinkButton
+                    href={`/wiki/User:${pageOwner}#posts`}
+                    className={`mt-3 text-white ${getThemeColor().bg.hover} ${getThemeColor().bg.base}`}
+                  >
+                    <DocumentTextIcon className="inline size-5" />
+                    Posts by User:{pageOwner}
+                  </TransitionLinkButton>
+                )}
+                <MarkdownPage
+                  slug={decodeURIComponent(slug.join("/"))}
+                  content={page.content}
+                />
+              </>
             )}
-            <MarkdownPage
-              slug={decodeURIComponent(slug.join("/"))}
-              content={page.content}
-            />
             {/* <LoungePreview pageTitle={page.title} slug={page.slug.join("/")} /> */}
           </div>
         ) : (

@@ -18,15 +18,66 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// import { getThemeColor } from "@/utils";
+import { getThemeColor } from "@/utils";
 import { MarkdownComp } from "../ui/MarkdownComp";
 import { TransitionLinkButton } from "../ui/buttons/TransitionButton";
 import {
   ArrowPathIcon,
   PencilSquareIcon,
   DocumentTextIcon,
-  // ChatBubbleBottomCenterTextIcon,
+  ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
+
+function MdPageButtons({
+  decodedSlug,
+  oldVersion,
+  isRedirect,
+}: {
+  decodedSlug: string;
+  oldVersion?: boolean;
+  isRedirect?: boolean;
+}) {
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        {oldVersion ? (
+          <TransitionLinkButton
+            href={`/wiki/${decodedSlug}${isRedirect ? "?preventRedirect=true" : ""}`}
+            className="bg-green-500 text-white hover:bg-green-600"
+          >
+            <ArrowPathIcon className="inline size-5" />
+            Latest Page
+          </TransitionLinkButton>
+        ) : (
+          <>
+            <TransitionLinkButton
+              href={`/wiki/${decodedSlug}?view=lounge`}
+              className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
+            >
+              <ChatBubbleBottomCenterTextIcon className="inline size-5" />
+              Lounge
+            </TransitionLinkButton>
+            <TransitionLinkButton
+              href={`/wiki/${decodedSlug}?action=edit`}
+              className="bg-green-500 text-white hover:bg-green-600"
+            >
+              <PencilSquareIcon className="inline size-5" />
+              Edit Page
+            </TransitionLinkButton>
+          </>
+        )}
+        <TransitionLinkButton
+          href={`/wiki/${decodedSlug}?action=history`}
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
+          <DocumentTextIcon className="inline size-5" />
+          History
+        </TransitionLinkButton>
+        <div className="flex-1"></div>
+      </div>
+    </>
+  );
+}
 
 export default function StableMarkdown({
   content,
@@ -41,45 +92,14 @@ export default function StableMarkdown({
 }) {
   const decodedSlug = decodeURIComponent(slug);
   return (
-    <>
+    <div className="flex h-full flex-col">
       <MarkdownComp content={content} />
-      <div className="flex flex-wrap items-center gap-2">
-        {oldVersion ? (
-          <TransitionLinkButton
-            href={`/wiki/${decodedSlug}${isRedirect ? "?preventRedirect=true" : ""}`}
-            className="bg-green-500 text-white hover:bg-green-600"
-          >
-            <ArrowPathIcon className="inline size-5" />
-            Latest Page
-          </TransitionLinkButton>
-        ) : (
-          <>
-            {/* <TransitionLinkButton
-              href={`/wiki/System:Lounge/${decodedSlug}`}
-              className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
-            >
-              <ChatBubbleBottomCenterTextIcon className="inline size-5" />
-              Lounge
-            </TransitionLinkButton> */}
-            <TransitionLinkButton
-              href={`/wiki/${decodedSlug}?action=edit`}
-              className="bg-green-500 text-white hover:bg-green-600"
-            >
-              <PencilSquareIcon className="inline size-5" />
-              Edit Page
-            </TransitionLinkButton>
-          </>
-        )}
-
-        <TransitionLinkButton
-          href={`/wiki/${decodedSlug}?action=history`}
-          className="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          <DocumentTextIcon className="inline size-5" />
-          History
-        </TransitionLinkButton>
-        <div className="flex-1"></div>
-      </div>
-    </>
+      <div className="flex-1"></div>
+      <MdPageButtons
+        decodedSlug={decodedSlug}
+        oldVersion={oldVersion}
+        isRedirect={isRedirect}
+      />
+    </div>
   );
 }
