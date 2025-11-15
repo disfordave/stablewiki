@@ -91,9 +91,10 @@ export default async function WikiPage({
 
   // Determine if viewing lounge
   const isLoungeView =
-    baseSlug &&
-    baseSlug.length > 0 &&
-    baseSlug.includes(encodeURIComponent("_lounge"));
+    (baseSlug &&
+      baseSlug.length > 0 &&
+      baseSlug.includes(encodeURIComponent("_lounge"))) ??
+    false;
 
   // Extract loungeId if present (take the last parts after _lounge)
   const loungeId =
@@ -268,7 +269,11 @@ export default async function WikiPage({
         (page ? (
           <div>
             <PageDate page={page} isOld={false} />
-            <Breadcrumbs slug={slug} titles={page.title.split("/")} />
+            <Breadcrumbs
+              slug={slug}
+              titles={page.title.split("/")}
+              isLoungeView={isLoungeView}
+            />
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
             {isLoungeView ? (
               <>
@@ -316,7 +321,8 @@ export default async function WikiPage({
         !showHistoryList &&
         !showEdit &&
         !showDiff &&
-        !showRevert && (
+        !showRevert &&
+        !isLoungeView && (
           <div id="posts" className="mt-8">
             <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
             <UserPostPage

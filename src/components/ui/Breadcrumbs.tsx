@@ -23,9 +23,11 @@ import Link from "next/link";
 export function Breadcrumbs({
   slug,
   titles,
+  isLoungeView,
 }: {
   slug: string[];
   titles: string[];
+  isLoungeView: boolean;
 }) {
   return (
     <>
@@ -33,7 +35,9 @@ export function Breadcrumbs({
         {slug.map((_, index) => (
           <span key={index}>
             <Link
-              href={`/wiki/${decodeURIComponent(slug.slice(0, index + 1).join("/"))}`}
+              href={`/wiki/${decodeURIComponent(slug.slice(0, index + 1).join("/"))}${
+                isLoungeView ? "/_lounge" : ""
+              }`}
               className={`${
                 index === slug.length - 1 ? "font-semibold" : "font-medium"
               } ${slug.length - 1 === index ? "text-gray-500" : "text-blue-600 hover:underline dark:text-blue-500"}`}
