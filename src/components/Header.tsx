@@ -55,13 +55,13 @@ export default async function Header() {
                 <DefaultWikiLogo
                   className="size-6"
                   colors={{
-                    primary: getThemeColor().fill.primary,
-                    secondary: getThemeColor().fill.secondary,
+                    primary: getThemeColor.fill.primary,
+                    secondary: getThemeColor.fill.secondary,
                   }}
                 />
               ))}
             <span
-              className={`transition-colors duration-300 ${getThemeColor().text.hover}`}
+              className={`transition-colors duration-300 ${getThemeColor.text.hover}`}
             >
               {WIKI_NAME}
             </span>
@@ -72,7 +72,7 @@ export default async function Header() {
             <div className="flex items-center gap-2">
               <TransitionLinkButton
                 href="/wiki/System:Dashboard"
-                className={` ${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
+                className={` ${getThemeColor.bg.base} ${getThemeColor.bg.hover} text-white`}
               >
                 <UserIcon className="inline size-5" />
                 <span className="font-bold">{user.username}</span>
@@ -81,7 +81,7 @@ export default async function Header() {
           ) : (
             <TransitionLinkButton
               href="/wiki/System:SignIn"
-              className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
+              className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
             >
               <ArrowLeftEndOnRectangleIcon className="inline size-5" />
               Sign In
@@ -90,7 +90,7 @@ export default async function Header() {
           <TransitionLinkButton
             title="Search"
             href="/wiki/System:Search"
-            className={`aspect-square h-full rounded-full text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
+            className={`aspect-square h-full rounded-full text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
           >
             <MagnifyingGlassIcon className="inline size-4" />
           </TransitionLinkButton>

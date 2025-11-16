@@ -52,7 +52,7 @@ function MdPageButtons({
           <>
             <TransitionLinkButton
               href={`/wiki/${decodedSlug}/_lounge`}
-              className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} text-white`}
+              className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} text-white`}
             >
               <ChatBubbleBottomCenterTextIcon className="inline size-5" />
               Lounge

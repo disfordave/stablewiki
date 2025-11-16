@@ -35,7 +35,7 @@ export function MustSignInMessage({
         </p>
         <TransitionLinkButton
           href="/wiki/System:SignIn"
-          className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
+          className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
         >
           <ArrowLeftEndOnRectangleIcon className="inline size-5" />
           Sign In

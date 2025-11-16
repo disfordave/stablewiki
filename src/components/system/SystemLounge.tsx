@@ -26,7 +26,7 @@ function BackToPageButton({
       {commentId && (
         <TransitionLinkButton
           href={`/wiki/${page.slug}/_lounge`}
-          className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} mt-4 text-white`}
+          className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} mt-4 text-white`}
         >
           <ChatBubbleBottomCenterTextIcon className="inline size-5" />
           Back to Lounge
@@ -34,7 +34,7 @@ function BackToPageButton({
       )}
       <TransitionLinkButton
         href={`/wiki/${page.slug}`}
-        className={`${getThemeColor().bg.base} ${getThemeColor().bg.hover} mt-4 text-white`}
+        className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} mt-4 text-white`}
       >
         <DocumentTextIcon className="inline size-5" />
         Back to Page
@@ -47,7 +47,7 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
   return (
     <Link href={`/wiki/${slug}/_lounge/${comment.id}`} className="">
       <div
-        className={`mt-4 scale-100 overflow-hidden rounded-xl border-2 transition-all hover:scale-[99%] ${!comment.rootCommentId ? `${getThemeColor().border.base}` : "border-gray-100 dark:border-gray-900"} shadow-xs`}
+        className={`mt-4 scale-100 overflow-hidden rounded-xl border-2 transition-all hover:scale-[99%] ${!comment.rootCommentId ? `${getThemeColor.border.base}` : "border-gray-100 dark:border-gray-900"} shadow-xs`}
       >
         {comment.deleted ? (
           <div className="p-4 text-center text-sm text-gray-500">
@@ -60,7 +60,7 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
         ) : (
           <>
             <div
-              className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+              className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
             >
               {comment.author.username}
 
@@ -86,7 +86,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
   return (
     <div
       id={comment.id}
-      className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor().border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
+      className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor.border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
     >
       {comment.deleted ? (
         <div className="p-4 text-center text-sm text-gray-500">
@@ -99,7 +99,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
       ) : (
         <>
           <div
-            className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+            className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
           >
             <span>
               <Link
@@ -326,7 +326,7 @@ export default async function SystemLounge({
                         id="title"
                         name="title"
                         required
-                        className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                        className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
                         defaultValue={
                           comments.find(
                             (c: any) => c.id === targetLoungeCommentId,
@@ -368,7 +368,7 @@ export default async function SystemLounge({
                 id="title"
                 name="title"
                 required
-                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
               />
             </div>
           )}
@@ -381,7 +381,7 @@ export default async function SystemLounge({
               id="content"
               name="content"
               rows={3}
-              className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+              className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
               required
               defaultValue={
                 targetLoungeCommentId
@@ -393,7 +393,7 @@ export default async function SystemLounge({
           </div>
           <TransitionFormButton
             useButtonWithoutForm={true}
-            className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover} mt-2 w-full`}
+            className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover} mt-2 w-full`}
           >
             Submit
           </TransitionFormButton>

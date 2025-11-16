@@ -99,7 +99,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SidWiki" />
       </Head>
       <body
-        className={`${inter.variable} ${notoSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor().etc.selection} sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        className={`${inter.variable} ${notoSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">

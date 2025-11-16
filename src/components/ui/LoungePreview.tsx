@@ -25,7 +25,7 @@ export function LoungePreview({
             </p>
           </div>
           {/* <div
-            className={`${getThemeColor().bg.base} ${getThemeColor().bg.groupHover} flex aspect-square w-full max-w-fit cursor-pointer items-center justify-between rounded-full p-2 text-white transition-colors duration-300`}
+            className={`${getThemeColor.bg.base} ${getThemeColor.bg.groupHover} flex aspect-square w-full max-w-fit cursor-pointer items-center justify-between rounded-full p-2 text-white transition-colors duration-300`}
           >
             <ArrowRightIcon className="inline size-5" />
           </div> */}

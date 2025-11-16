@@ -39,7 +39,7 @@ export default function NotFound() {
       </p>
       <TransitionLinkButton
         href={WIKI_HOMEPAGE_LINK}
-        className={`text-white ${getThemeColor().bg.base} ${getThemeColor().bg.hover}`}
+        className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
       >
         <HomeIcon className="inline size-5" />
         Go to Homepage

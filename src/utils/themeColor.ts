@@ -264,7 +264,7 @@ const themeColors = {
   },
 };
 
-export function getThemeColor(): {
+export function getThemeColorFunc(): {
   bg: { base: string; hover: string; groupHover: string };
   text: { base: string; hover: string };
   fill: { primary: string; secondary: string };
@@ -276,3 +276,5 @@ export function getThemeColor(): {
     themeColors.violet
   );
 }
+
+export const getThemeColor = getThemeColorFunc();

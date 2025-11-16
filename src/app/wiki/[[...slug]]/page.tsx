@@ -52,7 +52,7 @@ import { Metadata } from "next";
 function Chip({ text }: { text: string }) {
   return (
     <p
-      className={`mb-2 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
+      className={`mb-2 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor.bg.base} inline-block" text-white`}
     >
       {text}
     </p>
@@ -301,7 +301,7 @@ export default async function WikiPage({
                 {isUserPage && (
                   <TransitionLinkButton
                     href={`/wiki/User:${pageOwner}#posts`}
-                    className={`mt-3 text-white ${getThemeColor().bg.hover} ${getThemeColor().bg.base}`}
+                    className={`mt-3 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
                   >
                     <DocumentTextIcon className="inline size-5" />
                     Posts by User:{pageOwner}

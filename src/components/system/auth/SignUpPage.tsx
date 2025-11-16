@@ -93,7 +93,7 @@ export default async function SignupPage() {
             id="username"
             name="username"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
           <p className="mt-1 text-sm text-gray-500">
             Username must be 3-20 characters long and can only contain letters,
@@ -109,7 +109,7 @@ export default async function SignupPage() {
             id="password"
             name="password"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
           <p className="mt-1 text-sm text-gray-500">
             Password must be at least 8 characters long
@@ -124,7 +124,7 @@ export default async function SignupPage() {
             id="passwordConfirm"
             name="passwordConfirm"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export default async function SignupPage() {
             id="consent"
             name="consent"
             required
-            className={`h-4 w-4 ${getThemeColor().etc.accent}`}
+            className={`h-4 w-4 ${getThemeColor.etc.accent}`}
           />
           <label htmlFor="consent" className="select-none">
             I agree to the{" "}
@@ -150,7 +150,7 @@ export default async function SignupPage() {
         </div>
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover} w-full`}
+          className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover} w-full`}
         >
           <UserPlusIcon className="inline size-5" />
           Sign Up

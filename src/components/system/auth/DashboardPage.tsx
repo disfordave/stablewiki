@@ -59,7 +59,7 @@ export default async function DashboardPage() {
         <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
           {user.role === Role.ADMIN && (
             <>
-              <p className={`font-bold ${getThemeColor().text.base}`}>
+              <p className={`font-bold ${getThemeColor.text.base}`}>
                 You have administrative privileges.
               </p>
               <ul className="list-inside list-disc">
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
             </TransitionLinkButton>
             <TransitionLinkButton
               href={`/wiki/User:${user.username}`}
-              className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover}`}
+              className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
             >
               <UserIcon className="inline size-5" />
               User Page

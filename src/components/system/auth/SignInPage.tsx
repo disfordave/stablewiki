@@ -95,7 +95,7 @@ export default async function SignIn() {
             id="username"
             name="username"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
         </div>
         <div>
@@ -107,12 +107,12 @@ export default async function SignIn() {
             id="password"
             name="password"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
         </div>
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className={`${getThemeColor().bg.base} text-white ${getThemeColor().bg.hover} w-full`}
+          className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover} w-full`}
         >
           <ArrowLeftEndOnRectangleIcon className="inline size-5" />
           Sign In
