@@ -73,6 +73,7 @@ export default async function WikiPage({
     preventRedirect,
     q,
     hPage,
+    replyTo,
     // view,
     // loungeId,
   } = await searchParams;
@@ -175,11 +176,13 @@ export default async function WikiPage({
 
   return (
     <div>
-      {isLoungeView && <Chip text="Lounge" />}
-      {((page && isUserPagePostPage) ||
-        (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
-        <Chip text="User Post" />
-      )}
+      <div className="flex items-center justify-start gap-2">
+        {((page && isUserPagePostPage) ||
+          (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
+          <Chip text="User Post" />
+        )}
+        {isLoungeView && <Chip text="Lounge" />}
+      </div>
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
@@ -279,7 +282,11 @@ export default async function WikiPage({
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
             {isLoungeView ? (
               <>
-                <SystemLounge page={page} commentId={loungeId} />
+                <SystemLounge
+                  page={page}
+                  commentId={loungeId}
+                  replyTo={replyTo}
+                />
               </>
             ) : (
               <>

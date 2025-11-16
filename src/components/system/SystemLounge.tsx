@@ -73,15 +73,20 @@ function Comment({ comment }: { comment: any }) {
       className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor().border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
     >
       <div
-        className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+        className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
       >
-        <Link
-          className="no-underline hover:underline"
-          href={`/wiki/User:${comment.author.username}`}
-        >
-          {comment.author.username}
-        </Link>
-        {` on ${new Date(comment.createdAt).toLocaleString()}`}
+        <span>
+          <Link
+            className="no-underline hover:underline"
+            href={`/wiki/User:${comment.author.username}`}
+          >
+            {comment.author.username}
+          </Link>
+          {` on ${new Date(comment.createdAt).toLocaleString()}`}
+        </span>
+        {comment.rootCommentId && (
+          <Link href={`?replyTo=${comment.id}#writer`}>Reply</Link>
+        )}
       </div>
       <div className="p-4">
         {!comment.rootCommentId && (
@@ -90,9 +95,11 @@ function Comment({ comment }: { comment: any }) {
         {comment.parentId && comment.parentId !== comment.rootCommentId && (
           <Link
             href={`#${comment.parentId}`}
-            className="text-sm text-blue-500 no-underline hover:underline"
+            className="line-clamp-1 inline-block text-sm text-blue-500 no-underline hover:underline"
           >
-            Reply
+            Reply to @{comment.parent.author.username}: &quot;
+            {comment.parent.content.slice(0, 30)}
+            {comment.parent.content.length > 30 ? "..." : ""}&quot;
           </Link>
         )}
         <p>{comment.content}</p>
@@ -105,9 +112,11 @@ function Comment({ comment }: { comment: any }) {
 export default async function SystemLounge({
   page,
   commentId,
+  replyTo,
 }: {
   page: Page;
   commentId: string | null;
+  replyTo: string | string[] | undefined;
 }) {
   const user = await getUser();
 
@@ -125,7 +134,7 @@ export default async function SystemLounge({
 
   async function createComment(formData: FormData) {
     "use server";
-    const { title, content, parentId } = Object.fromEntries(formData);
+    const { title, content } = Object.fromEntries(formData);
 
     if (!user) {
       throw new Error("User not found");
@@ -139,7 +148,7 @@ export default async function SystemLounge({
           content,
           pageId: page.id,
           rootCommentId: commentId,
-          parentId: parentId || commentId || null,
+          parentId: replyTo || commentId || null,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -182,18 +191,25 @@ export default async function SystemLounge({
         <p className="mt-2">No Lounge threads found.</p>
       )}
       {user && (
-        <form action={createComment}>
+        <form action={createComment} id="writer">
           {commentId ? (
             <div className="mt-4">
-              <label htmlFor="parentId" className="block font-medium">
-                Parent ID
-              </label>
-              <input
-                type="text"
-                id="parentId"
-                name="parentId"
-                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
-              />
+              <p>
+                Replying to comment ID:{" "}
+                {replyTo
+                  ? replyTo === commentId
+                    ? "(root comment)"
+                    : replyTo
+                  : "(root comment)"}
+              </p>
+              {replyTo && replyTo !== commentId && (
+                <Link
+                  href={`?replyTo=${commentId}#writer`}
+                  className="text-sm text-blue-500 no-underline hover:underline"
+                >
+                  No Re-reply
+                </Link>
+              )}
             </div>
           ) : (
             <div className="mt-4">

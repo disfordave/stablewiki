@@ -36,6 +36,13 @@ export async function GET(
     },
     include: {
       author: { select: { username: true } },
+      parent: {
+        select: {
+          id: true,
+          author: { select: { username: true } },
+          content: true,
+        },
+      },
     },
   });
 
