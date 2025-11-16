@@ -5,7 +5,7 @@ import {
   DocumentTextIcon,
   ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
-import { Page } from "@/types";
+import { Page, User } from "@/types";
 // import Pagination from "../ui/Pagination";
 import { getUser } from "@/lib";
 import Link from "next/link";
@@ -65,7 +65,7 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
   );
 }
 
-function Comment({ comment }: { comment: any }) {
+function Comment({ comment, user }: { comment: any; user: User | null }) {
   // This is a root comment
   return (
     <div
@@ -83,10 +83,30 @@ function Comment({ comment }: { comment: any }) {
             {comment.author.username}
           </Link>
           {` on ${new Date(comment.createdAt).toLocaleString()}`}
+          {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
+            <span className="ms-2 text-xs">
+              (edited on {new Date(comment.updatedAt).toLocaleString()})
+            </span>
+          )}
         </span>
-        {comment.rootCommentId && (
-          <Link href={`?replyTo=${comment.id}#writer`}>Reply</Link>
-        )}
+        <span className="flex gap-2">
+          {comment.rootCommentId && (
+            <Link
+              href={`?replyTo=${comment.id}#writer`}
+              className="hover:underline"
+            >
+              Reply
+            </Link>
+          )}
+          {user && comment.authorId === user.id && (
+            <Link
+              href={`?targetLoungeCommentId=${comment.id}#writer`}
+              className="hover:underline"
+            >
+              Edit
+            </Link>
+          )}
+        </span>
       </div>
       <div className="p-4">
         {!comment.rootCommentId && (
@@ -112,10 +132,12 @@ export default async function SystemLounge({
   page,
   commentId,
   replyTo,
+  targetLoungeCommentId,
 }: {
   page: Page;
   commentId: string | null;
   replyTo: string | string[] | undefined;
+  targetLoungeCommentId?: string | string[] | undefined;
 }) {
   const user = await getUser();
 
@@ -164,7 +186,59 @@ export default async function SystemLounge({
     const result = await response.json();
     console.log("Lounge post created:", result);
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}#${result.id}`,
+    );
+  }
+
+  async function editComment(formData: FormData) {
+    "use server";
+    const { content, title } = Object.fromEntries(formData);
+
+    if (!user) {
+      safeRedirect("/login");
+    }
+
+    if (!targetLoungeCommentId || typeof targetLoungeCommentId !== "string") {
+      safeRedirect(
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
+      );
+    }
+
+    if (
+      user.id !==
+      comments.find((c: any) => c.id === targetLoungeCommentId)?.authorId
+    ) {
+      safeRedirect(
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to edit this comment`,
+      );
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          content,
+          title: title || "No Title",
+          id: targetLoungeCommentId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      safeRedirect(
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
+      );
+    }
+    // Optionally, you can handle success (e.g., redirect or show a message)
+    const result = await response.json();
+    console.log("Lounge post edited:", result);
+    safeRedirect(
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}#${result.id}`,
     );
   }
 
@@ -181,7 +255,7 @@ export default async function SystemLounge({
                   slug={page.slug.join("/")}
                 />
               ) : (
-                <Comment key={comment.id} comment={comment} />
+                <Comment key={comment.id} comment={comment} user={user} />
               )}
             </div>
           ))}
@@ -190,25 +264,67 @@ export default async function SystemLounge({
         <p className="mt-2">No Lounge threads found.</p>
       )}
       {user && (
-        <form action={createComment} id="writer">
+        <form
+          action={targetLoungeCommentId ? editComment : createComment}
+          id="writer"
+        >
           {commentId ? (
             <div className="mt-4">
-              <p className="line-clamp-1">
-                Replying to:{" "}
-                {replyTo
-                  ? replyTo === commentId
-                    ? "(root comment)"
-                    : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` ||
-                      replyTo
-                  : "(root comment)"}
-              </p>
-              {replyTo && replyTo !== commentId && (
-                <Link
-                  href={`?replyTo=${commentId}#writer`}
-                  className="text-sm text-blue-500 no-underline hover:underline"
-                >
-                  No Re-reply
-                </Link>
+              {targetLoungeCommentId ? (
+                <>
+                  <p className="line-clamp-1">
+                    Editing comment:{" "}
+                    {targetLoungeCommentId === commentId
+                      ? "(root comment)"
+                      : `"${comments.find((c: any) => c.id === targetLoungeCommentId)?.content}" by ${comments.find((c: any) => c.id === targetLoungeCommentId)?.author.username || "Unknown"}` ||
+                        targetLoungeCommentId}
+                  </p>
+                  <Link
+                    href={`?#writer`}
+                    className="text-sm text-blue-500 no-underline hover:underline"
+                  >
+                    No Edit
+                  </Link>
+                  {targetLoungeCommentId === commentId && (
+                    <div className="mt-4">
+                      <label htmlFor="title" className="block font-medium">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                        defaultValue={
+                          comments.find(
+                            (c: any) => c.id === targetLoungeCommentId,
+                          )?.title
+                        }
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="line-clamp-1">
+                    Replying to:{" "}
+                    {replyTo
+                      ? replyTo === commentId
+                        ? "(root comment)"
+                        : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` ||
+                          replyTo
+                      : "(root comment)"}
+                  </p>
+                  {replyTo && replyTo !== commentId && (
+                    <Link
+                      href={`?#writer`}
+                      className="text-sm text-blue-500 no-underline hover:underline"
+                    >
+                      No Re-reply
+                    </Link>
+                  )}
+                </>
               )}
             </div>
           ) : (
@@ -236,6 +352,12 @@ export default async function SystemLounge({
               rows={3}
               className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
               required
+              defaultValue={
+                targetLoungeCommentId
+                  ? comments.find((c: any) => c.id === targetLoungeCommentId)
+                      ?.content
+                  : ""
+              }
             ></textarea>
           </div>
           <TransitionFormButton
@@ -246,6 +368,53 @@ export default async function SystemLounge({
           </TransitionFormButton>
         </form>
       )}
+      {/* {
+        user && targetLoungeCommentId && (
+          <button
+            onClick={async () => {
+              "use server";
+
+              if (!targetLoungeCommentId || typeof targetLoungeCommentId !== "string") {
+                safeRedirect(
+                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
+                );
+              }
+
+              if (!user) {
+                safeRedirect("/login");
+              }
+
+              if (user.id !== comments.find((c: any) => c.id === targetLoungeCommentId)?.authorId) {
+                safeRedirect(
+                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to delete this comment`,
+                );
+              }
+
+              const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`, {
+                method: "DELETE",
+                body: JSON.stringify({ id: targetLoungeCommentId }),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${user.token}`,
+                },
+              });
+
+              if (!response.ok) {
+                safeRedirect(
+                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
+                );
+              }
+
+              safeRedirect(
+                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
+              );
+            }}
+            className="mt-4 text-red-500 hover:underline"
+          >
+            Delete Comment
+          </button>
+        )
+      } */}
       <BackToPageButton page={page} commentId={commentId} />
     </div>
   );

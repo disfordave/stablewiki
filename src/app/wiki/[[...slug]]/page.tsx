@@ -75,6 +75,7 @@ export default async function WikiPage({
     q,
     hPage,
     replyTo,
+    targetLoungeCommentId,
     // view,
     // loungeId,
   } = await searchParams;
@@ -292,6 +293,7 @@ export default async function WikiPage({
                   page={page}
                   commentId={loungeId}
                   replyTo={replyTo}
+                  targetLoungeCommentId={targetLoungeCommentId}
                 />
               </>
             ) : (
@@ -387,8 +389,24 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] | undefined }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: baseSlug } = await params;
   const { action, ver, q } = await searchParams;
+
+  const loungeIndex = baseSlug?.findIndex(
+    (p) => p === "_lounge" || p === encodeURIComponent("_lounge"),
+  );
+
+  const isLoungeView =
+    (baseSlug &&
+      baseSlug.length > 0 &&
+      baseSlug.includes(encodeURIComponent("_lounge"))) ??
+    false;
+
+  const slug =
+    loungeIndex !== undefined && loungeIndex !== -1
+      ? baseSlug?.slice(0, loungeIndex)
+      : baseSlug;
+
   const joinedSlug = slug ? slug.join("/") : "";
 
   if (!slug) {
@@ -499,6 +517,13 @@ export async function generateMetadata({
       return {
         title: `${page.title.split("/")[2]} | ${WIKI_NAME}`,
         description: `User post titled "${page.title.split("/")[2]}".`,
+      };
+    }
+
+    if (isLoungeView) {
+      return {
+        title: `Lounge for ${page.title} | ${WIKI_NAME}`,
+        description: `Discussion lounge for the wiki page titled "${page.title}".`,
       };
     }
 

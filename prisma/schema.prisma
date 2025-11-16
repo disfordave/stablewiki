@@ -85,6 +85,7 @@ model Comment {
   rootCommentId String?
   parentId      String?
   createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt // Automatically updates on modification
   author        User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
   page          Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
   root          Comment?     @relation("RootComments", fields: [rootCommentId], references: [id], onDelete: SetNull)
@@ -93,6 +94,8 @@ model Comment {
   replies       Comment[]    @relation("ThreadedComments")
   reactions     Reaction[]
   tags          CommentTag[]
+  deleted       Boolean      @default(false)
+  isHidden      Boolean      @default(false)
 
   @@index([pageId, authorId])
 }
