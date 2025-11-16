@@ -51,7 +51,7 @@ import { Metadata } from "next";
 function Chip({ text }: { text: string }) {
   return (
     <p
-      className={`mb-1 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
+      className={`mb-2 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
     >
       {text}
     </p>
@@ -176,10 +176,10 @@ export default async function WikiPage({
   return (
     <div>
       {isLoungeView && <Chip text="Lounge" />}
-      {(page && isUserPagePostPage) ||
-        (pageRevisions.revisions.length > 0 && isUserPagePostPage && (
-          <Chip text="Post" />
-        ))}
+      {((page && isUserPagePostPage) ||
+        (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
+        <Chip text="User Post" />
+      )}
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}

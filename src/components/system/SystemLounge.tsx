@@ -69,6 +69,7 @@ function Comment({ comment }: { comment: any }) {
   // This is a root comment
   return (
     <div
+      id={comment.id}
       className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor().border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
     >
       <div
@@ -86,7 +87,16 @@ function Comment({ comment }: { comment: any }) {
         {!comment.rootCommentId && (
           <h4 className="text-lg font-semibold">{comment.title}</h4>
         )}
+        {comment.parentId && comment.parentId !== comment.rootCommentId && (
+          <Link
+            href={`#${comment.parentId}`}
+            className="text-sm text-blue-500 no-underline hover:underline"
+          >
+            Reply
+          </Link>
+        )}
         <p>{comment.content}</p>
+        <p className="text-xs opacity-50">ID: {comment.id}</p>
       </div>
     </div>
   );
@@ -115,8 +125,7 @@ export default async function SystemLounge({
 
   async function createComment(formData: FormData) {
     "use server";
-    const { title, content, rootCommentId, parentId } =
-      Object.fromEntries(formData);
+    const { title, content, parentId } = Object.fromEntries(formData);
 
     if (!user) {
       throw new Error("User not found");
@@ -126,11 +135,11 @@ export default async function SystemLounge({
       {
         method: "POST",
         body: JSON.stringify({
-          title,
+          title: title || "No Title",
           content,
           pageId: page.id,
-          rootCommentId,
-          parentId,
+          rootCommentId: commentId,
+          parentId: parentId || commentId || null,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -140,18 +149,20 @@ export default async function SystemLounge({
     );
     if (!response.ok) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge?error=failed_to_create_post`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
       );
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
     console.log("Lounge post created:", result);
-    safeRedirect(`/wiki/${page.slug.join("/")}/_lounge/${result.id}`);
+    safeRedirect(
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
+    );
   }
 
   return (
     <div>
-      {comments && comments.length > 0 ? (
+      {comments && comments.length > 0 && !comments[0].rootCommentId ? (
         <div className="mt-4">
           {comments.map((comment: any) => (
             <div key={comment.id}>
@@ -172,42 +183,36 @@ export default async function SystemLounge({
       )}
       {user && (
         <form action={createComment}>
-          <div className="mt-4">
-            <label htmlFor="rootCommentId" className="block font-medium">
-              Root Comment ID
-            </label>
-            <input
-              type="text"
-              id="rootCommentId"
-              name="rootCommentId"
-              className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
-            />
-          </div>
-          <div className="mt-4">
-            <label htmlFor="parentId" className="block font-medium">
-              Parent ID
-            </label>
-            <input
-              type="text"
-              id="parentId"
-              name="parentId"
-              className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
-            />
-          </div>
-          <div className="mt-4">
-            <label htmlFor="title" className="block font-medium">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
-            />
-          </div>
+          {commentId ? (
+            <div className="mt-4">
+              <label htmlFor="parentId" className="block font-medium">
+                Parent ID
+              </label>
+              <input
+                type="text"
+                id="parentId"
+                name="parentId"
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+              />
+            </div>
+          ) : (
+            <div className="mt-4">
+              <label htmlFor="title" className="block font-medium">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor().etc.focusRing} focus:outline-none dark:bg-gray-900`}
+              />
+            </div>
+          )}
+
           <div className="mt-4">
             <label htmlFor="content" className="block font-medium">
-              Content
+              Comment
             </label>
             <textarea
               id="content"
