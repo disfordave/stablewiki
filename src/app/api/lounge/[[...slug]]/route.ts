@@ -42,6 +42,8 @@ export async function GET(
           id: true,
           author: { select: { username: true } },
           content: true,
+          deleted: true,
+          isHidden: true,
         },
       },
     },
@@ -148,36 +150,39 @@ export async function PUT(request: Request) {
   return NextResponse.json({ id: updatedComment.id }, { status: 200 });
 }
 
-// export async function DELETE(request: Request) {
-//   const { id } = await request.json();
+export async function DELETE(request: Request) {
+  const { id } = await request.json();
 
-//   // Validate input
-//   if (!id) {
-//     return new Response("Missing required fields", { status: 400 });
-//   }
+  // Validate input
+  if (!id) {
+    return new Response("Missing required fields", { status: 400 });
+  }
 
-//   const decodedToken = await getDecodedToken(request);
+  const decodedToken = await getDecodedToken(request);
 
-//   if (!decodedToken || !decodedToken.id) {
-//     return new Response("Unauthorized", { status: 401 });
-//   }
+  if (!decodedToken || !decodedToken.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
-//   const existingComment = await prisma.comment.findUnique({
-//     where: { id },
-//   });
+  const existingComment = await prisma.comment.findUnique({
+    where: { id },
+  });
 
-//   if (!existingComment) {
-//     return new Response("Comment not found", { status: 404 });
-//   }
+  if (!existingComment) {
+    return new Response("Comment not found", { status: 404 });
+  }
 
-//   if (existingComment.authorId !== decodedToken.id) {
-//     return new Response("Forbidden", { status: 403 });
-//   }
+  if (existingComment.authorId !== decodedToken.id) {
+    return new Response("Forbidden", { status: 403 });
+  }
 
-//   // Delete lounge post
-//   await prisma.comment.delete({
-//     where: { id },
-//   });
+  // Delete lounge post
+  await prisma.comment.update({
+    where: { id },
+    data: {
+      deleted: true,
+    },
+  });
 
-//   return new Response("Comment deleted successfully", { status: 200 });
-// }
+  return new Response("Comment deleted successfully", { status: 200 });
+}

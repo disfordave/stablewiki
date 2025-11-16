@@ -26,7 +26,13 @@ import rehypeSlug from "rehype-slug";
 import toc from "rehype-toc";
 import React from "react";
 
-export function WikiMarkdown({ content }: { content: string }) {
+export function WikiMarkdown({
+  content,
+  isComment,
+}: {
+  content: string;
+  isComment?: boolean;
+}) {
   let processed = content;
 
   // ---- 1. Media embeds ----
@@ -74,7 +80,7 @@ export function WikiMarkdown({ content }: { content: string }) {
         nav(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children, className, node, ...rest } = props;
-          if (className === "toc") {
+          if (className === "toc" && !isComment) {
             return (
               <details className="-mb-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
                 <summary className="-m-4 p-4 font-bold select-none">
@@ -148,10 +154,18 @@ export function WikiMarkdown({ content }: { content: string }) {
   );
 }
 
-function MarkdownComp({ content }: { content: string }) {
+function MarkdownComp({
+  content,
+  isComment = false,
+}: {
+  content: string;
+  isComment?: boolean;
+}) {
   return (
-    <div className="prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 mt-4 max-w-none">
-      <WikiMarkdown content={content} />
+    <div
+      className={`prose dark:prose-invert prose-hr:mt-8 prose-hr:mb-8 prose-blue prose-a:no-underline prose-a:hover:underline prose-blockquote:not-italic prose-blockquote:prose-p:before:content-none prose-blockquote:prose-p:after:content-none prose-a:font-semibold my-8 mt-4 max-w-none ${isComment ? "prose-base mt-0 mb-0" : ""}`}
+    >
+      <WikiMarkdown content={content} isComment={isComment} />
     </div>
   );
 }

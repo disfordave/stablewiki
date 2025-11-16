@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getThemeColor, safeRedirect } from "@/utils";
-import { TransitionFormButton, TransitionLinkButton } from "../ui";
+import {
+  MarkdownComp,
+  TransitionFormButton,
+  TransitionLinkButton,
+} from "../ui";
 import {
   DocumentTextIcon,
   ChatBubbleBottomCenterTextIcon,
@@ -45,21 +49,33 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
       <div
         className={`mt-4 scale-100 overflow-hidden rounded-xl border-2 transition-all hover:scale-[99%] ${!comment.rootCommentId ? `${getThemeColor().border.base}` : "border-gray-100 dark:border-gray-900"} shadow-xs`}
       >
-        <div
-          className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
-        >
-          {comment.author.username}
+        {comment.deleted ? (
+          <div className="p-4 text-center text-sm text-gray-500">
+            [This lounge has been deleted.]
+          </div>
+        ) : comment.isHidden ? (
+          <div className="p-4 text-center text-sm text-gray-500">
+            [This lounge is hidden.]
+          </div>
+        ) : (
+          <>
+            <div
+              className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+            >
+              {comment.author.username}
 
-          {` on ${new Date(comment.createdAt).toLocaleString()}`}
-        </div>
-        <div className="p-4">
-          {!comment.rootCommentId && (
-            <h4 className="line-clamp-2 text-lg font-semibold">
-              {comment.title}
-            </h4>
-          )}
-          <p className="line-clamp-2">{comment.content}</p>
-        </div>
+              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+            </div>
+            <div className="p-4">
+              {!comment.rootCommentId && (
+                <h4 className="line-clamp-2 text-lg font-semibold">
+                  {comment.title}
+                </h4>
+              )}
+              <p className="line-clamp-2">{comment.content}</p>
+            </div>
+          </>
+        )}
       </div>
     </Link>
   );
@@ -72,58 +88,73 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
       id={comment.id}
       className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor().border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
     >
-      <div
-        className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
-      >
-        <span>
-          <Link
-            className="no-underline hover:underline"
-            href={`/wiki/User:${comment.author.username}`}
+      {comment.deleted ? (
+        <div className="p-4 text-center text-sm text-gray-500">
+          [This {comment.rootCommentId ? "reply" : "lounge"} has been deleted.]
+        </div>
+      ) : comment.isHidden ? (
+        <div className="p-4 text-center text-sm text-gray-500">
+          [This {comment.rootCommentId ? "reply" : "lounge"} is hidden.]
+        </div>
+      ) : (
+        <>
+          <div
+            className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor().bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
           >
-            {comment.author.username}
-          </Link>
-          {` on ${new Date(comment.createdAt).toLocaleString()}`}
-          {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
-            <span className="ms-2 text-xs">
-              (edited on {new Date(comment.updatedAt).toLocaleString()})
+            <span>
+              <Link
+                className="no-underline hover:underline"
+                href={`/wiki/User:${comment.author.username}`}
+              >
+                {comment.author.username}
+              </Link>
+              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+              {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
+                <span className="ms-2 text-xs">
+                  (edited on {new Date(comment.updatedAt).toLocaleString()})
+                </span>
+              )}
             </span>
-          )}
-        </span>
-        <span className="flex gap-2">
-          {comment.rootCommentId && (
-            <Link
-              href={`?replyTo=${comment.id}#writer`}
-              className="hover:underline"
-            >
-              Reply
-            </Link>
-          )}
-          {user && comment.authorId === user.id && (
-            <Link
-              href={`?targetLoungeCommentId=${comment.id}#writer`}
-              className="hover:underline"
-            >
-              Edit
-            </Link>
-          )}
-        </span>
-      </div>
-      <div className="p-4">
-        {!comment.rootCommentId && (
-          <h4 className="text-lg font-semibold">{comment.title}</h4>
-        )}
-        {comment.parentId && comment.parentId !== comment.rootCommentId && (
-          <Link
-            href={`#${comment.parentId}`}
-            className="line-clamp-1 inline-block text-sm text-blue-500 no-underline hover:underline"
-          >
-            Reply to @{comment.parent.author.username}: &quot;
-            {comment.parent.content.slice(0, 30)}
-            {comment.parent.content.length > 30 ? "..." : ""}&quot;
-          </Link>
-        )}
-        <p>{comment.content}</p>
-      </div>
+            <span className="flex gap-2">
+              {comment.rootCommentId && (
+                <Link
+                  href={`?replyTo=${comment.id}#writer`}
+                  className="hover:underline"
+                >
+                  Reply
+                </Link>
+              )}
+              {user && comment.authorId === user.id && (
+                <Link
+                  href={`?targetLoungeCommentId=${comment.id}#writer`}
+                  className="hover:underline"
+                >
+                  Edit
+                </Link>
+              )}
+            </span>
+          </div>
+          <div className="px-4 pt-0 pb-4">
+            {!comment.rootCommentId && (
+              <h4 className="text-lg font-semibold">{comment.title}</h4>
+            )}
+            {comment.parentId && comment.parentId !== comment.rootCommentId && (
+              <p className="mt-4 mb-1 line-clamp-1 max-w-md">
+                <Link
+                  href={`#${comment.parentId}`}
+                  className="line-clamp-1 text-blue-500 no-underline hover:underline"
+                >
+                  {comment.parent.deleted
+                    ? `Reply to @${comment.parent.author.username}: [Deleted]`
+                    : `Reply to @${comment.parent.author.username}: 
+              "${comment.parent.content}"`}
+                </Link>
+              </p>
+            )}
+            <MarkdownComp content={comment.content} isComment={true} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -368,53 +399,61 @@ export default async function SystemLounge({
           </TransitionFormButton>
         </form>
       )}
-      {/* {
-        user && targetLoungeCommentId && (
-          <button
-            onClick={async () => {
-              "use server";
+      {user && targetLoungeCommentId && (
+        <button
+          onClick={async () => {
+            "use server";
 
-              if (!targetLoungeCommentId || typeof targetLoungeCommentId !== "string") {
-                safeRedirect(
-                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
-                );
-              }
+            if (
+              !targetLoungeCommentId ||
+              typeof targetLoungeCommentId !== "string"
+            ) {
+              safeRedirect(
+                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
+              );
+            }
 
-              if (!user) {
-                safeRedirect("/login");
-              }
+            if (!user) {
+              safeRedirect("/login");
+            }
 
-              if (user.id !== comments.find((c: any) => c.id === targetLoungeCommentId)?.authorId) {
-                safeRedirect(
-                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to delete this comment`,
-                );
-              }
+            if (
+              user.id !==
+              comments.find((c: any) => c.id === targetLoungeCommentId)
+                ?.authorId
+            ) {
+              safeRedirect(
+                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to delete this comment`,
+              );
+            }
 
-              const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`, {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`,
+              {
                 method: "DELETE",
                 body: JSON.stringify({ id: targetLoungeCommentId }),
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${user.token}`,
                 },
-              });
+              },
+            );
 
-              if (!response.ok) {
-                safeRedirect(
-                  `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
-                );
-              }
-
+            if (!response.ok) {
               safeRedirect(
-                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
+                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
               );
-            }}
-            className="mt-4 text-red-500 hover:underline"
-          >
-            Delete Comment
-          </button>
-        )
-      } */}
+            }
+
+            safeRedirect(
+              `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
+            );
+          }}
+          className="mt-4 text-red-500 hover:underline"
+        >
+          Delete Comment
+        </button>
+      )}
       <BackToPageButton page={page} commentId={commentId} />
     </div>
   );
