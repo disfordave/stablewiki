@@ -14,6 +14,103 @@ import { Page, User } from "@/types";
 import { getUser } from "@/lib";
 import Link from "next/link";
 
+function commentReactionButton({
+  comment,
+  user,
+}: {
+  comment: any;
+  user: User | null;
+}) {
+  return (
+    <TransitionFormButton
+      action={async () => {
+        "use server";
+        const type = "1";
+
+        if (!user) {
+          safeRedirect("/wiki/System:SignIn");
+        }
+
+        if (
+          comment.reactions.some(
+            (r: any) => r.userId === user?.id && r.type === 1,
+          )
+        ) {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/reactions`,
+            {
+              method: "DELETE",
+              body: JSON.stringify({
+                reactionId: comment.reactions.find(
+                  (r: any) => r.userId === user?.id && r.type === 1,
+                ).id,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user.token}`,
+              },
+            },
+          );
+
+          if (!response.ok) {
+            safeRedirect(
+              `/wiki/${comment.page.slug}/_lounge/${
+                comment.rootCommentId ? comment.rootCommentId : comment.id
+              }?error=${await response.text()}`,
+            );
+          }
+          // Optionally, you can handle success (e.g., redirect or show a message)
+          safeRedirect(
+            `/wiki/${comment.page.slug}/_lounge/${
+              comment.rootCommentId ? comment.rootCommentId : comment.id
+            }#${comment.id}`,
+          );
+        }
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/reactions`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              commentId: comment.id,
+              type,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          },
+        );
+
+        if (!response.ok) {
+          safeRedirect(
+            `/wiki/${comment.page.slug}/_lounge/${
+              comment.rootCommentId ? comment.rootCommentId : comment.id
+            }?error=${await response.text()}`,
+          );
+        }
+        safeRedirect(
+          `/wiki/${comment.page.slug}/_lounge/${
+            comment.rootCommentId ? comment.rootCommentId : comment.id
+          }#${comment.id}`,
+        );
+      }}
+      className={`mt-4 shadow-xs ${
+        comment.reactions.some(
+          (r: any) => r.userId === user?.id && r.type === 1,
+        )
+          ? "bg-blue-500 text-white hover:bg-blue-600"
+          : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
+      }`}
+    >
+      👍{" "}
+      <span className="tabular-nums">
+        {comment.reactions.filter((r: any) => r.type === 1).length}
+      </span>
+    </TransitionFormButton>
+  );
+}
+
 function BackToPageButton({
   page,
   commentId,
@@ -155,6 +252,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
               </p>
             )}
             <MarkdownComp content={comment.content} isComment={true} />
+            <div>{commentReactionButton({ comment, user })}</div>
           </div>
         </>
       )}
@@ -383,7 +481,7 @@ export default async function SystemLounge({
             <textarea
               id="content"
               name="content"
-              rows={3}
+              rows={5}
               className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
               required
               defaultValue={

@@ -41,11 +41,18 @@ export function LoungePreview({
           <li key={comment.id}>
             <Link href={`/wiki/${slug}/_lounge/${comment.id}`}>
               <div className="rounded-lg bg-white p-4 hover:underline dark:bg-gray-800">
-                <p className="line-clamp-2 font-medium">{comment.title}</p>
+                {
+                  comment.deleted ? (
+                    <p className="text-sm text-gray-500">Deleted Lounge by {comment.author.username}</p>
+                  ) : (
+                    <>
+                    <p className="line-clamp-2 font-medium">{comment.title}</p>
                 <p className="text-sm text-gray-500">
                   By {comment.author.username} on{" "}
                   {new Date(comment.createdAt).toLocaleDateString()}
                 </p>
+                    </>)
+                }
               </div>
             </Link>
           </li>

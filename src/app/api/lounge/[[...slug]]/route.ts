@@ -37,6 +37,8 @@ export async function GET(
     orderBy: { createdAt: "asc" },
     include: {
       author: { select: { username: true } },
+      reactions: true,
+      page: { select: { slug: true } },
       parent: {
         select: {
           id: true,
@@ -56,7 +58,57 @@ export async function GET(
   return NextResponse.json(findParticularComment);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request, { params }: { params: Promise<{ slug?: string[] | undefined }> }) {
+
+  const { slug } = await params;
+
+  if (slug && slug[0] === "reactions") {
+    // Handle reactions separately
+    const { commentId, type: baseType } = await request.json();
+
+    // Validate input
+    if (!commentId || !baseType) {
+      return new Response("Missing required fields", { status: 400 });
+    }
+
+    const type = Number(baseType);
+
+    const decodedToken = await getDecodedToken(request);
+
+    if (!decodedToken || !decodedToken.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    // Check if reaction already exists
+    const existingReaction = await prisma.reaction.findFirst({
+      where: {
+        commentId,
+        userId: decodedToken.id as string,
+      },
+    });
+
+    if (existingReaction) {
+      // Update existing reaction
+      const updatedReaction = await prisma.reaction.update({
+        where: { id: existingReaction.id },
+        data: { type },
+      });
+
+      return NextResponse.json({ id: updatedReaction.id }, { status: 200 });
+    } else {
+      // Create new reaction
+      const newReaction = await prisma.reaction.create({
+        data: {
+          commentId,
+          userId: decodedToken.id as string,
+          type,
+        },
+      });
+
+      return NextResponse.json({ id: newReaction.id }, { status: 201 });
+    }
+  }
+
   const { title, content, pageId, parentId, rootCommentId } =
     await request.json();
 
@@ -150,8 +202,46 @@ export async function PUT(request: Request) {
   return NextResponse.json({ id: updatedComment.id }, { status: 200 });
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ slug?: string[] | undefined }> }) {
+  const { slug } = await params;
+
+  if (slug && slug[0] === "reactions") {
+    // Handle deletion of reactions separately
+    const { reactionId } = await request.json();
+
+    // Validate input
+    if (!reactionId) {
+      return new Response("Missing required fields", { status: 400 });
+    }
+
+    const decodedToken = await getDecodedToken(request);
+
+    if (!decodedToken || !decodedToken.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const existingReaction = await prisma.reaction.findUnique({
+      where: { id: reactionId },
+    });
+
+    if (!existingReaction) {
+      return new Response("Reaction not found", { status: 404 });
+    }
+
+    if (existingReaction.userId !== decodedToken.id) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    // Delete reaction
+    await prisma.reaction.delete({
+      where: { id: reactionId },
+    });
+
+    return new Response("Reaction deleted successfully", { status: 200 });
+  }
+
   const { id } = await request.json();
+
 
   // Validate input
   if (!id) {

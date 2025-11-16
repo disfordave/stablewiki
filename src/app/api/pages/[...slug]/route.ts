@@ -214,6 +214,7 @@ export async function GET(
           title: comment.title,
           content: comment.content,
           createdAt: comment.createdAt,
+          deleted: comment.deleted,
           author: comment.author
             ? {
                 id: comment.author.id,
