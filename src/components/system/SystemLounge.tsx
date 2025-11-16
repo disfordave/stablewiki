@@ -62,7 +62,7 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
             <div
               className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
             >
-              {comment.author.username}
+              <span className="font-semibold">{comment.author.username}</span>
 
               {` on ${new Date(comment.createdAt).toLocaleString()}`}
             </div>
