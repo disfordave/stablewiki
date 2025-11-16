@@ -136,7 +136,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
           </div>
           <div className="px-4 pt-0 pb-4">
             {!comment.rootCommentId && (
-              <h4 className="text-lg font-semibold">{comment.title}</h4>
+              <h4 className="text-lg mt-4 font-semibold">{comment.title}</h4>
             )}
             {comment.parentId && comment.parentId !== comment.rootCommentId && (
               <p className="mt-4 mb-1 line-clamp-1 max-w-md">
