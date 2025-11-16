@@ -177,11 +177,11 @@ export default async function WikiPage({
   return (
     <div>
       <div className="flex items-center justify-start gap-2">
+        {isLoungeView && <Chip text="Lounge" />}
         {((page && isUserPagePostPage) ||
           (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
           <Chip text="User Post" />
         )}
-        {isLoungeView && <Chip text="Lounge" />}
       </div>
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}

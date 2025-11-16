@@ -194,12 +194,12 @@ export default async function SystemLounge({
         <form action={createComment} id="writer">
           {commentId ? (
             <div className="mt-4">
-              <p>
-                Replying to comment ID:{" "}
+              <p className="line-clamp-1">
+                Replying to:{" "}
                 {replyTo
                   ? replyTo === commentId
                     ? "(root comment)"
-                    : replyTo
+                    : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` || replyTo
                   : "(root comment)"}
               </p>
               {replyTo && replyTo !== commentId && (
