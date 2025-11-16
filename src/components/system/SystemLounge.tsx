@@ -99,24 +99,27 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
       ) : (
         <>
           <div
-            className={`flex items-center justify-between px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+            className={`flex items-center justify-between gap-2 px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
           >
-            <span>
-              <Link
-                className="no-underline hover:underline"
-                href={`/wiki/User:${comment.author.username}`}
-              >
-                {comment.author.username}
-              </Link>
-              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+            <div className="flex flex-col items-start">
+              <span>
+                <Link
+                  className="font-semibold no-underline hover:underline"
+                  href={`/wiki/User:${comment.author.username}`}
+                >
+                  {comment.author.username}
+                </Link>
+                {` on ${new Date(comment.createdAt).toLocaleString()}`}
+              </span>
               {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
-                <span className="ms-2 text-xs">
-                  (edited on {new Date(comment.updatedAt).toLocaleString()})
+                <span className="text-xs opacity-75">
+                  Edited on {new Date(comment.updatedAt).toLocaleString()}
                 </span>
               )}
-            </span>
+            </div>
+
             <span className="flex gap-2">
-              {comment.rootCommentId && (
+              {user && comment.rootCommentId && (
                 <Link
                   href={`?replyTo=${comment.id}#writer`}
                   className="hover:underline"
@@ -136,7 +139,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
           </div>
           <div className="px-4 pt-0 pb-4">
             {!comment.rootCommentId && (
-              <h4 className="text-lg mt-4 font-semibold">{comment.title}</h4>
+              <h4 className="mt-4 text-lg font-semibold">{comment.title}</h4>
             )}
             {comment.parentId && comment.parentId !== comment.rootCommentId && (
               <p className="mt-4 mb-1 line-clamp-1 max-w-md">
