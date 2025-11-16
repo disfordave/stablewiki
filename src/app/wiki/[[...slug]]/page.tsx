@@ -48,6 +48,16 @@ import {
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 
+function Chip({ text }: { text: string }) {
+  return (
+    <p
+      className={`mb-1 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
+    >
+      {text}
+    </p>
+  );
+}
+
 export default async function WikiPage({
   params,
   searchParams,
@@ -165,13 +175,11 @@ export default async function WikiPage({
 
   return (
     <div>
-      {isLoungeView && (
-        <p
-          className={`mb-1 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor().bg.base} inline-block" text-white`}
-        >
-          Lounge
-        </p>
-      )}
+      {isLoungeView && <Chip text="Lounge" />}
+      {(page && isUserPagePostPage) ||
+        (pageRevisions.revisions.length > 0 && isUserPagePostPage && (
+          <Chip text="Post" />
+        ))}
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
@@ -179,19 +187,13 @@ export default async function WikiPage({
         {showDiff ? "Differences of " : ""}
         {page ? (
           isUserPagePostPage ? (
-            <>
-              {`${page.title.split("/")[1]} `}
-              <span className="text-gray-500">(Post)</span>
-            </>
+            <>{`${page.title.split("/")[1]} `}</>
           ) : (
             page.title
           )
         ) : pageRevisions.revisions.length > 0 ? (
           isUserPagePostPage ? (
-            <>
-              {`${pageRevisions.revisions[0].title.split("/")[1]} `}
-              <span className="text-gray-500">(Post)</span>
-            </>
+            <>{`${pageRevisions.revisions[0].title.split("/")[1]} `}</>
           ) : (
             pageRevisions.revisions[0].title
           )
@@ -278,13 +280,6 @@ export default async function WikiPage({
             {isLoungeView ? (
               <>
                 <SystemLounge page={page} commentId={loungeId} />
-                {loungeId && (
-                  <div>
-                    <p className="mt-4 mb-2 text-lg font-semibold">
-                      Lounge Thread ID: {loungeId}
-                    </p>
-                  </div>
-                )}
               </>
             ) : (
               <>

@@ -4,7 +4,7 @@ import { getDecodedToken } from "@/utils";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string[] | undefined }> },
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
 ) {
   const { slug } = await params;
 
@@ -19,6 +19,9 @@ export async function GET(
         parentId: null,
       },
       orderBy: { createdAt: "desc" },
+      include: {
+        author: { select: { username: true } },
+      },
     });
 
     return NextResponse.json(allComments);
@@ -31,6 +34,9 @@ export async function GET(
         { rootCommentId: slug[1], pageId: slug[0] },
       ],
     },
+    include: {
+      author: { select: { username: true } },
+    },
   });
 
   if (!findParticularComment) {
@@ -41,7 +47,8 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const { title, content, pageId, parentId, rootCommentId } = await request.json();
+  const { title, content, pageId, parentId, rootCommentId } =
+    await request.json();
 
   // Validate input
   if (!title || !content || !pageId) {
@@ -49,11 +56,15 @@ export async function POST(request: Request) {
   }
 
   if (parentId && !rootCommentId) {
-    return new Response("Missing rootCommentId for threaded comments", { status: 400 });
+    return new Response("Missing rootCommentId for threaded comments", {
+      status: 400,
+    });
   }
 
   if (rootCommentId && !parentId) {
-    return new Response("Missing parentId for threaded comments", { status: 400 });
+    return new Response("Missing parentId for threaded comments", {
+      status: 400,
+    });
   }
 
   const decodedToken = await getDecodedToken(request);

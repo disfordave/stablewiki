@@ -15,6 +15,9 @@ const themeColors = {
       primary: "fill-violet-600",
       secondary: "fill-violet-400",
     },
+    border: {
+      base: "border-violet-500",
+    },
     etc: {
       focusRing: "focus:ring-violet-500",
       accent: "accent-violet-500",
@@ -34,6 +37,9 @@ const themeColors = {
     fill: {
       primary: "fill-rose-600",
       secondary: "fill-rose-400",
+    },
+    border: {
+      base: "border-rose-500",
     },
     etc: {
       focusRing: "focus:ring-rose-500",
@@ -73,6 +79,9 @@ const themeColors = {
       primary: "fill-orange-600",
       secondary: "fill-orange-400",
     },
+    border: {
+      base: "border-orange-500",
+    },
     etc: {
       focusRing: "focus:ring-orange-500",
       accent: "accent-orange-500",
@@ -93,6 +102,9 @@ const themeColors = {
       primary: "fill-sky-600",
       secondary: "fill-sky-400",
     },
+    border: {
+      base: "border-sky-500",
+    },
     etc: {
       focusRing: "focus:ring-sky-500",
       accent: "accent-sky-500",
@@ -112,6 +124,9 @@ const themeColors = {
     fill: {
       primary: "fill-emerald-600",
       secondary: "fill-emerald-400",
+    },
+    border: {
+      base: "border-emerald-500",
     },
     etc: {
       focusRing: "focus:ring-emerald-500",
@@ -169,6 +184,9 @@ const themeColors = {
       primary: "fill-yellow-600",
       secondary: "fill-yellow-400",
     },
+    border: {
+      base: "border-yellow-500",
+    },
     etc: {
       focusRing: "focus:ring-yellow-500",
       accent: "accent-yellow-500",
@@ -188,6 +206,9 @@ const themeColors = {
     fill: {
       primary: "fill-pink-600",
       secondary: "fill-pink-400",
+    },
+    border: {
+      base: "border-pink-500",
     },
     etc: {
       focusRing: "focus:ring-pink-500",
@@ -209,6 +230,9 @@ const themeColors = {
       primary: "fill-indigo-600",
       secondary: "fill-indigo-400",
     },
+    border: {
+      base: "border-indigo-500",
+    },
     etc: {
       focusRing: "focus:ring-indigo-500",
       accent: "accent-indigo-500",
@@ -229,6 +253,9 @@ const themeColors = {
       primary: "fill-zinc-600",
       secondary: "fill-zinc-400",
     },
+    border: {
+      base: "border-zinc-500",
+    },
     etc: {
       focusRing: "focus:ring-zinc-500",
       accent: "accent-zinc-500",
@@ -241,6 +268,7 @@ export function getThemeColor(): {
   bg: { base: string; hover: string; groupHover: string };
   text: { base: string; hover: string };
   fill: { primary: string; secondary: string };
+  border: { base: string };
   etc: { focusRing: string; accent: string; selection: string };
 } {
   return (
