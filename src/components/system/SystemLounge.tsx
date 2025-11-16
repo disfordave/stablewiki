@@ -22,11 +22,11 @@ function BackToPageButton({
   commentId: string | null;
 }) {
   return (
-    <div className="flex items-center justify-start gap-2">
+    <div className="flex flex-wrap items-center justify-start">
       {commentId && (
         <TransitionLinkButton
           href={`/wiki/${page.slug}/_lounge`}
-          className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} mt-4 text-white`}
+          className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} me-2 mt-4 text-white`}
         >
           <ChatBubbleBottomCenterTextIcon className="inline size-5" />
           Back to Lounge

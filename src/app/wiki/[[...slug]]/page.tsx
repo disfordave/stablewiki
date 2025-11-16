@@ -52,7 +52,7 @@ import { Metadata } from "next";
 function Chip({ text }: { text: string }) {
   return (
     <p
-      className={`mb-2 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor.bg.base} inline-block" text-white`}
+      className={`me-2 mb-2 max-w-fit rounded-full px-3 py-1 text-sm font-medium ${getThemeColor.bg.base} inline-block text-white`}
     >
       {text}
     </p>
@@ -182,7 +182,7 @@ export default async function WikiPage({
 
   return (
     <div>
-      <div className="flex items-center justify-start gap-2">
+      <div className="flex flex-wrap items-center justify-start">
         {isLoungeView && <Chip text="Lounge" />}
         {((page && isUserPagePostPage) ||
           (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
