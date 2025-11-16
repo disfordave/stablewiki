@@ -22,6 +22,7 @@ import { SystemPages } from "@/components/system";
 import SystemLounge from "@/components/system/SystemLounge";
 import {
   Breadcrumbs,
+  LoungePreview,
   // LoungePreview,
   PageDate,
   RedirectedFromMessage,
@@ -173,6 +174,10 @@ export default async function WikiPage({
   // }
 
   const isUserPagePostPage = isUserPage && slug.length >= 2;
+  const isMediaPage =
+    (page && page.title.startsWith("Media:")) ||
+    (pageRevisions.revisions.length > 0 &&
+      pageRevisions.revisions[0].title.startsWith("Media:"));
 
   return (
     <div>
@@ -182,6 +187,7 @@ export default async function WikiPage({
           (pageRevisions.revisions.length > 0 && isUserPagePostPage)) && (
           <Chip text="User Post" />
         )}
+        {isMediaPage && <Chip text="Media" />}
       </div>
       <h1 className="text-3xl font-bold wrap-break-word">
         {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
@@ -299,10 +305,31 @@ export default async function WikiPage({
                     Posts by User:{pageOwner}
                   </TransitionLinkButton>
                 )}
+                {isMediaPage && (
+                  <div className="mt-3 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
+                    <p>
+                      Media pages are used to store and display media files such
+                      as images, videos, and audio. You can embed this media
+                      file in other wiki pages using{" "}
+                      <code className="select-all">
+                        ![[{page.title.replace("Media:", "")}]]
+                      </code>
+                      .
+                    </p>
+                  </div>
+                )}
                 <MarkdownPage
                   slug={decodeURIComponent(slug.join("/"))}
                   content={page.content}
                 />
+
+                {!showHistoryVersion && (
+                  <LoungePreview
+                    pageTitle={page.title}
+                    slug={page.slug.join("/")}
+                    comments={page.comments}
+                  />
+                )}
               </>
             )}
             {/* <LoungePreview pageTitle={page.title} slug={page.slug.join("/")} /> */}

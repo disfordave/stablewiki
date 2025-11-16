@@ -103,7 +103,6 @@ function Comment({ comment }: { comment: any }) {
           </Link>
         )}
         <p>{comment.content}</p>
-        <p className="text-xs opacity-50">ID: {comment.id}</p>
       </div>
     </div>
   );
@@ -199,7 +198,8 @@ export default async function SystemLounge({
                 {replyTo
                   ? replyTo === commentId
                     ? "(root comment)"
-                    : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` || replyTo
+                    : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` ||
+                      replyTo
                   : "(root comment)"}
               </p>
               {replyTo && replyTo !== commentId && (

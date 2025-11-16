@@ -162,6 +162,8 @@ export async function GET(
       where: { slug: slug.join("/") },
       include: {
         comments: {
+          where: { parentId: null },
+          orderBy: { createdAt: "desc" },
           include: {
             author: { select: { id: true, username: true } },
           },
@@ -236,6 +238,13 @@ export async function POST(
 
   if (!title || !content) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  if (title.split("/").some((p: string) => p.toLowerCase() === "_lounge")) {
+    return Response.json(
+      { error: 'Titles cannot contain "_lounge" segment' },
+      { status: 400 },
+    );
   }
 
   if (title.length > 255) {

@@ -180,6 +180,13 @@ export async function POST(request: Request) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (title.split("/").some((p: string) => p.toLowerCase() === "_lounge")) {
+    return Response.json(
+      { error: 'Titles cannot contain "_lounge" segment' },
+      { status: 400 },
+    );
+  }
+
   if (title.length > 255) {
     return Response.json(
       { error: "Title exceeds maximum length of 255 characters" },
