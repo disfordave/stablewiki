@@ -38,7 +38,6 @@ export function safeRedirect(href: string): never {
       .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
       .join("/");
 
-
     const safeHash = url.hash ? encodeURI(url.hash) : "";
 
     // Rebuild full encoded URL (browser will decode visually)

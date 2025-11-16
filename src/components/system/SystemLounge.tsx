@@ -13,6 +13,7 @@ import { Page, User } from "@/types";
 // import Pagination from "../ui/Pagination";
 import { getUser } from "@/lib";
 import Link from "next/link";
+import Pagination from "../ui/Pagination";
 
 function commentReactionButton({
   comment,
@@ -265,17 +266,19 @@ export default async function SystemLounge({
   commentId,
   replyTo,
   targetLoungeCommentId,
+  hPage,
 }: {
   page: Page;
   commentId: string | null;
   replyTo: string | string[] | undefined;
   targetLoungeCommentId?: string | string[] | undefined;
+  hPage: number;
 }) {
   const user = await getUser();
 
   async function fetchComments() {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${page.id}/${commentId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${page.id}/${commentId}?hPage=${hPage}`,
     );
     if (!response.ok) {
       return null;
@@ -283,7 +286,9 @@ export default async function SystemLounge({
     return await response.json();
   }
 
-  const comments = await fetchComments();
+  const data = await fetchComments();
+  const comments = data ? data.data : [];
+  const totalPaginationPages = data ? data.totalPaginationPages : 0;
 
   async function createComment(formData: FormData) {
     "use server";
@@ -391,6 +396,11 @@ export default async function SystemLounge({
               )}
             </div>
           ))}
+          <Pagination
+            currentPage={hPage}
+            totalPages={totalPaginationPages}
+            slug={`/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=`}
+          />
         </div>
       ) : (
         <p className="mt-2">No Lounge threads found.</p>

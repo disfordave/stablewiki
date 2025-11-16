@@ -7,12 +7,20 @@ export async function GET(
   { params }: { params: Promise<{ slug?: string[] | undefined }> },
 ) {
   const { slug } = await params;
-
+  const searchParams = request.nextUrl.searchParams;
+  const hPage = searchParams.get("hPage") || "1";
+  const itemsPerPage = 10;
   if (!slug || slug.length === 0) {
     return new Response("Bad Request", { status: 400 });
   }
 
   if (slug.length === 1) {
+    const count = await prisma.comment.count({
+      where: {
+        pageId: slug[0],
+        parentId: null,
+      },
+    });
     const allComments = await prisma.comment.findMany({
       where: {
         pageId: slug[0],
@@ -22,19 +30,18 @@ export async function GET(
       include: {
         author: { select: { username: true } },
       },
+      skip: (Number(hPage) - 1) * itemsPerPage,
+      take: itemsPerPage,
     });
 
-    return NextResponse.json(allComments);
+    return NextResponse.json({
+      data: allComments,
+      totalPaginationPages: Math.ceil(count / itemsPerPage),
+    });
   }
 
-  const findParticularComment = await prisma.comment.findMany({
-    where: {
-      OR: [
-        { id: slug[1], pageId: slug[0] },
-        { rootCommentId: slug[1], pageId: slug[0] },
-      ],
-    },
-    orderBy: { createdAt: "asc" },
+  const findFirstComment = await prisma.comment.findUnique({
+    where: { id: slug[1], pageId: slug[0] },
     include: {
       author: { select: { username: true } },
       reactions: true,
@@ -51,15 +58,58 @@ export async function GET(
     },
   });
 
+  const count = await prisma.comment.count({
+    where: {
+      rootCommentId: slug[1],
+      pageId: slug[0],
+    },
+  });
+
+  if (!findFirstComment) {
+    return new Response("Comment not found", { status: 404 });
+  }
+
+  const findParticularComment = await prisma.comment.findMany({
+    where: {
+      rootCommentId: slug[1],
+      pageId: slug[0],
+    },
+    orderBy: { createdAt: "asc" },
+    include: {
+      author: { select: { username: true } },
+      reactions: true,
+      page: { select: { slug: true } },
+      parent: {
+        select: {
+          id: true,
+          author: { select: { username: true } },
+          content: true,
+          deleted: true,
+          isHidden: true,
+        },
+      },
+    },
+    skip: (Number(hPage) - 1) * itemsPerPage,
+    take: itemsPerPage,
+  });
+
   if (!findParticularComment) {
     return new Response("Comment not found", { status: 404 });
   }
 
-  return NextResponse.json(findParticularComment);
+  return NextResponse.json({
+    data: [findFirstComment, ...findParticularComment],
+    totalPaginationPages:
+      Math.ceil(count / itemsPerPage) <= 0
+        ? 1
+        : Math.ceil(count / itemsPerPage),
+  });
 }
 
-export async function POST(request: Request, { params }: { params: Promise<{ slug?: string[] | undefined }> }) {
-
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
   const { slug } = await params;
 
   if (slug && slug[0] === "reactions") {
@@ -202,7 +252,10 @@ export async function PUT(request: Request) {
   return NextResponse.json({ id: updatedComment.id }, { status: 200 });
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ slug?: string[] | undefined }> }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
   const { slug } = await params;
 
   if (slug && slug[0] === "reactions") {
@@ -241,7 +294,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ s
   }
 
   const { id } = await request.json();
-
 
   // Validate input
   if (!id) {

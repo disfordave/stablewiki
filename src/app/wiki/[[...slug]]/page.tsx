@@ -294,6 +294,7 @@ export default async function WikiPage({
                   commentId={loungeId}
                   replyTo={replyTo}
                   targetLoungeCommentId={targetLoungeCommentId}
+                  hPage={hPage ? parseInt(hPage as string, 10) : 1}
                 />
               </>
             ) : (
