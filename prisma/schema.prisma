@@ -77,19 +77,22 @@ model Revision {
 }
 
 model Comment {
-  id        String       @id @default(cuid())
-  title     String
-  pageId    String
-  authorId  String?
-  content   String
-  parentId  String?
-  createdAt DateTime     @default(now())
-  author    User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  page      Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  parent    Comment?     @relation("ThreadedComments", fields: [parentId], references: [id], onDelete: SetNull)
-  replies   Comment[]    @relation("ThreadedComments")
-  reactions Reaction[]
-  tags      CommentTag[]
+  id            String       @id @default(cuid())
+  title         String
+  pageId        String
+  authorId      String?
+  content       String
+  rootCommentId String?
+  parentId      String?
+  createdAt     DateTime     @default(now())
+  author        User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  page          Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  root          Comment?     @relation("RootComments", fields: [rootCommentId], references: [id], onDelete: SetNull)
+  rootReplies   Comment[]    @relation("RootComments")
+  parent        Comment?     @relation("ThreadedComments", fields: [parentId], references: [id], onDelete: SetNull)
+  replies       Comment[]    @relation("ThreadedComments")
+  reactions     Reaction[]
+  tags          CommentTag[]
 
   @@index([pageId, authorId])
 }

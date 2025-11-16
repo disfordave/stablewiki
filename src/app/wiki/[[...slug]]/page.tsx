@@ -277,7 +277,7 @@ export default async function WikiPage({
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
             {isLoungeView ? (
               <>
-                <SystemLounge page={page} />
+                <SystemLounge page={page} commentId={loungeId} />
                 {loungeId && (
                   <div>
                     <p className="mt-4 mb-2 text-lg font-semibold">
