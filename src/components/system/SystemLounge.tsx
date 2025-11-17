@@ -101,9 +101,7 @@ function commentReactionButton({
         );
       }}
       className={`mt-4 shadow-xs ${
-        comment.reactions.some(
-          (r: any) => r.userId === user?.id,
-        )
+        comment.reactions.some((r: any) => r.userId === user?.id)
           ? "bg-blue-500 text-white hover:bg-blue-600"
           : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
       }`}
@@ -184,10 +182,8 @@ function RootCommentForList({
               )}
               <p className="line-clamp-2">{comment.content}</p>
               <div
-                className={`mt-4 shadow-xs max-w-fit px-2 py-1 rounded-full ${
-                  comment.reactions.some(
-                    (r: any) => r.userId === user?.id,
-                  )
+                className={`mt-4 max-w-fit rounded-full px-2 py-1 shadow-xs ${
+                  comment.reactions.some((r: any) => r.userId === user?.id)
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100 dark:bg-gray-900"
                 }`}
