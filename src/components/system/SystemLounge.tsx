@@ -179,7 +179,15 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
   );
 }
 
-function Comment({ comment, user, hPage }: { comment: any; user: User | null; hPage: number }) {
+function Comment({
+  comment,
+  user,
+  hPage,
+}: {
+  comment: any;
+  user: User | null;
+  hPage: number;
+}) {
   // This is a root comment
   return (
     <div
@@ -208,9 +216,7 @@ function Comment({ comment, user, hPage }: { comment: any; user: User | null; hP
                   {comment.author.username}
                 </Link>
                 {` on ${new Date(comment.createdAt).toLocaleString()}`}
-                {
-                  comment.rootCommentId && ` (#${comment.index})`
-                }
+                {comment.rootCommentId && ` (#${comment.index})`}
               </span>
               {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
                 <span className="text-xs opacity-75">
@@ -396,7 +402,12 @@ export default async function SystemLounge({
                 />
               ) : (
                 <>
-                <Comment key={comment.id} comment={comment} user={user} hPage={hPage} />
+                  <Comment
+                    key={comment.id}
+                    comment={comment}
+                    user={user}
+                    hPage={hPage}
+                  />
                 </>
               )}
             </div>

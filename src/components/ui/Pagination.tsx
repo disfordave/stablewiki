@@ -18,7 +18,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDoubleRightIcon,
+  ChevronDoubleLeftIcon,
+} from "@heroicons/react/24/solid";
 import { TransitionLinkButton } from "./buttons/TransitionButton";
 
 export default function Pagination({
@@ -34,6 +39,13 @@ export default function Pagination({
     <>
       <div className="mt-4 flex items-center justify-center gap-2">
         <TransitionLinkButton
+          href={`/wiki/${slug}${1}`}
+          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage === 1 || currentPage === 2) && "invisible"}`}
+          title="First Page"
+        >
+          <ChevronDoubleLeftIcon className="inline size-5" />
+        </TransitionLinkButton>
+        <TransitionLinkButton
           href={`/wiki/${slug}${currentPage - 1}`}
           className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${currentPage <= 1 && "invisible"}`}
           title="Previous Page"
@@ -47,6 +59,13 @@ export default function Pagination({
           title="Next Page"
         >
           <ChevronRightIcon className="inline size-5" />
+        </TransitionLinkButton>
+        <TransitionLinkButton
+          href={`/wiki/${slug}${totalPages}`}
+          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage >= totalPages || currentPage === totalPages - 1) && "invisible"}`}
+          title="Last Page"
+        >
+          <ChevronDoubleRightIcon className="inline size-5" />
         </TransitionLinkButton>
       </div>
     </>
