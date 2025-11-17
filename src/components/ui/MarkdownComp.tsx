@@ -124,7 +124,7 @@ export function WikiMarkdown({
             const videoId = href?.substring(4).trim();
             return (
               <iframe
-                className="my-4 h-80 w-full overflow-auto rounded-xl"
+                className={`my-4 h-80 w-full overflow-auto ${isComment ? "rounded-lg" : "rounded-xl"}`}
                 src={`https://www.youtube-nocookie.com/embed/${videoId}`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

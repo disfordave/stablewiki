@@ -27,7 +27,7 @@ import {
 } from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
-import { safeRedirect, slugify } from "@/utils";
+import { getThemeColor, safeRedirect, slugify } from "@/utils";
 
 export default async function StableEditor({
   page,
@@ -175,19 +175,19 @@ export default async function StableEditor({
 
   if (!page?.id) {
     return (
-      <form action={createPage}>
+      <form action={createPage} className="flex flex-col gap-3">
         <input
           type="text"
           name="title"
           defaultValue={decodeURIComponent(slug)}
           placeholder="Edit title"
-          className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+          className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           required
         />
         <WikiEditor />
         <TransitionFormButton
           useButtonWithoutForm={true}
-          className="mt-3 bg-blue-500 text-white hover:bg-blue-600"
+          className="bg-blue-500 text-white hover:bg-blue-600"
         >
           <PencilSquareIcon className="inline size-5" />
           Create Page
@@ -197,19 +197,19 @@ export default async function StableEditor({
   } else {
     return (
       <>
-        <form action={editPage}>
+        <form action={editPage} className="flex flex-col gap-3">
           <input
             type="text"
             name="title"
             defaultValue={page.title}
             placeholder="Edit title"
-            className="mb-3 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+            className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
             required
           />
           <WikiEditor defaultValue={page.content} />
           <TransitionFormButton
             useButtonWithoutForm={true}
-            className="mt-3 bg-green-500 text-white hover:bg-green-600"
+            className="bg-green-500 text-white hover:bg-green-600"
           >
             <PencilSquareIcon className="inline size-5" />
             Save Changes

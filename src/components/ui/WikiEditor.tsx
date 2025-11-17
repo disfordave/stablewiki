@@ -18,21 +18,24 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { getThemeColor } from "@/utils";
+
 export function WikiEditor({ defaultValue }: { defaultValue?: string }) {
   return (
     <>
       <textarea
         name="content"
         defaultValue={defaultValue}
+        rows={20}
         placeholder="Page content in Markdown"
-        className="h-[60vh] w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+        className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
         required
       ></textarea>
       <input
         type="text"
         name="summary"
         placeholder="Edit summary (optional)"
-        className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+        className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
       />
     </>
   );
