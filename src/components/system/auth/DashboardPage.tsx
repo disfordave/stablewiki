@@ -111,6 +111,56 @@ export default async function DashboardPage() {
             {JSON.stringify(user, null, 2)}
           </pre>
         </details>
+        <details>
+          <summary className="mt-4 mb-2 font-bold select-none">
+            Change Password
+          </summary>
+          <form
+            className="flex flex-col gap-4"
+            action="/api/system/change-password"
+            method="POST"
+          >
+            <div>
+              <label className="mb-2 block font-medium">Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                placeholder="Current Password"
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-2 block font-medium">New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                placeholder="New Password"
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-2 block font-medium">
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                name="confirmNewPassword"
+                placeholder="Confirm New Password"
+                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                required
+              />
+            </div>
+            <input type="hidden" name="username" value={user.username} />
+            <TransitionFormButton
+              useButtonWithoutForm
+              className={` text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+            >
+              Change Password
+            </TransitionFormButton>
+          </form>
+        </details>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <TransitionLinkButton
