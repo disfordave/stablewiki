@@ -28,12 +28,16 @@ export async function GET(
         pageId: slug[0],
         parentId: null,
       },
-      orderBy: {
-        createdAt: validSortBy === "createdAt" ? "desc" : undefined,
-        reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
-      },
+      orderBy:
+        validSortBy === "likes"
+          ? [{ reactions: { _count: "desc" } }, { createdAt: "asc" }]
+          : { createdAt: "desc" },
       include: {
         author: { select: { username: true } },
+        reactions: {
+          where: { type: 1 },
+          select: { id: true, userId: true },
+        },
       },
       skip: (Number(hPage) - 1) * itemsPerPage,
       take: itemsPerPage,
@@ -79,10 +83,10 @@ export async function GET(
       rootCommentId: slug[1],
       pageId: slug[0],
     },
-    orderBy: {
-      createdAt: validSortBy === "createdAt" ? "asc" : undefined,
-      reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
-    },
+    orderBy:
+      validSortBy === "likes"
+        ? [{ reactions: { _count: "desc" } }, { createdAt: "asc" }]
+        : { createdAt: "asc" },
     select: { id: true },
   });
 
@@ -91,10 +95,10 @@ export async function GET(
       rootCommentId: slug[1],
       pageId: slug[0],
     },
-    orderBy: {
-      createdAt: validSortBy === "createdAt" ? "asc" : undefined,
-      reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
-    },
+    orderBy:
+      validSortBy === "likes"
+        ? [{ reactions: { _count: "desc" } }, { createdAt: "asc" }]
+        : { createdAt: "asc" },
     include: {
       author: { select: { username: true } },
       reactions: true,

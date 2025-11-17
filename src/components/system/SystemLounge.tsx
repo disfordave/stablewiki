@@ -102,7 +102,7 @@ function commentReactionButton({
       }}
       className={`mt-4 shadow-xs ${
         comment.reactions.some(
-          (r: any) => r.userId === user?.id && r.type === 1,
+          (r: any) => r.userId === user?.id,
         )
           ? "bg-blue-500 text-white hover:bg-blue-600"
           : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
@@ -145,7 +145,15 @@ function BackToPageButton({
   );
 }
 
-function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
+function RootCommentForList({
+  comment,
+  slug,
+  user,
+}: {
+  comment: any;
+  slug: string;
+  user: User | null;
+}) {
   return (
     <Link href={`/wiki/${slug}/_lounge/${comment.id}`} className="">
       <div
@@ -175,6 +183,18 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
                 </h4>
               )}
               <p className="line-clamp-2">{comment.content}</p>
+              <div
+                className={`mt-4 shadow-xs max-w-fit px-2 py-1 rounded-full ${
+                  comment.reactions.some(
+                    (r: any) => r.userId === user?.id,
+                  )
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-900"
+                }`}
+              >
+                👍{" "}
+                <span className="tabular-nums">{comment.reactions.length}</span>
+              </div>
             </div>
           </>
         )}
@@ -399,9 +419,19 @@ export default async function SystemLounge({
   return (
     <div>
       <div className="mt-1">
-        <Link href={`?hPage=${hPage}&sortBy=likes`}>Sort by Likes</Link>
+        <Link
+          href={`?hPage=${hPage}&sortBy=createdAt`}
+          className={`${sortBy === "createdAt" ? "underline" : "hover:underline"}`}
+        >
+          Sort by Date
+        </Link>
         {" | "}
-        <Link href={`?hPage=${hPage}&sortBy=createdAt`}>Sort by Date</Link>
+        <Link
+          href={`?hPage=${hPage}&sortBy=likes`}
+          className={`${sortBy === "likes" ? "underline" : "hover:underline"}`}
+        >
+          Sort by Likes
+        </Link>
       </div>
       {comments && comments.length > 0 && !comments[0].rootCommentId ? (
         <div className="mt-4">
@@ -412,6 +442,7 @@ export default async function SystemLounge({
                   key={comment.id}
                   comment={comment}
                   slug={page.slug.join("/")}
+                  user={user}
                 />
               ) : (
                 <>
