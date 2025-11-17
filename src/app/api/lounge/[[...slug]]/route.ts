@@ -9,6 +9,8 @@ export async function GET(
   const { slug } = await params;
   const searchParams = request.nextUrl.searchParams;
   const hPage = searchParams.get("hPage") || "1";
+  const sortBy = searchParams.get("sortBy") || "createdAt";
+  const validSortBy = sortBy === "likes" ? "likes" : "createdAt";
   const itemsPerPage = 10;
   if (!slug || slug.length === 0) {
     return new Response("Bad Request", { status: 400 });
@@ -26,7 +28,10 @@ export async function GET(
         pageId: slug[0],
         parentId: null,
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: {
+        createdAt: validSortBy === "createdAt" ? "desc" : undefined,
+        reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
+      },
       include: {
         author: { select: { username: true } },
       },
@@ -74,7 +79,10 @@ export async function GET(
       rootCommentId: slug[1],
       pageId: slug[0],
     },
-    orderBy: { createdAt: "asc" },
+    orderBy: {
+      createdAt: validSortBy === "createdAt" ? "asc" : undefined,
+      reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
+    },
     select: { id: true },
   });
 
@@ -83,7 +91,10 @@ export async function GET(
       rootCommentId: slug[1],
       pageId: slug[0],
     },
-    orderBy: { createdAt: "asc" },
+    orderBy: {
+      createdAt: validSortBy === "createdAt" ? "asc" : undefined,
+      reactions: validSortBy === "likes" ? { _count: "desc" } : undefined,
+    },
     include: {
       author: { select: { username: true } },
       reactions: true,

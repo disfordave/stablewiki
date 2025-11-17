@@ -18,9 +18,13 @@ import Pagination from "../ui/Pagination";
 function commentReactionButton({
   comment,
   user,
+  hPage,
+  sortBy,
 }: {
   comment: any;
   user: User | null;
+  hPage: number;
+  sortBy: "likes" | "createdAt";
 }) {
   return (
     <TransitionFormButton
@@ -57,14 +61,14 @@ function commentReactionButton({
             safeRedirect(
               `/wiki/${comment.page.slug}/_lounge/${
                 comment.rootCommentId ? comment.rootCommentId : comment.id
-              }?error=${await response.text()}`,
+              }?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
             );
           }
           // Optionally, you can handle success (e.g., redirect or show a message)
           safeRedirect(
             `/wiki/${comment.page.slug}/_lounge/${
               comment.rootCommentId ? comment.rootCommentId : comment.id
-            }#${comment.id}`,
+            }?hPage=${hPage}&sortBy=${sortBy}#${comment.id}`,
           );
         }
 
@@ -87,13 +91,13 @@ function commentReactionButton({
           safeRedirect(
             `/wiki/${comment.page.slug}/_lounge/${
               comment.rootCommentId ? comment.rootCommentId : comment.id
-            }?error=${await response.text()}`,
+            }?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
           );
         }
         safeRedirect(
           `/wiki/${comment.page.slug}/_lounge/${
             comment.rootCommentId ? comment.rootCommentId : comment.id
-          }#${comment.id}`,
+          }?hPage=${hPage}&sortBy=${sortBy}#${comment.id}`,
         );
       }}
       className={`mt-4 shadow-xs ${
@@ -183,10 +187,12 @@ function Comment({
   comment,
   user,
   hPage,
+  sortBy,
 }: {
   comment: any;
   user: User | null;
   hPage: number;
+  sortBy: "likes" | "createdAt";
 }) {
   // This is a root comment
   return (
@@ -228,7 +234,7 @@ function Comment({
             <span className="flex gap-2">
               {user && comment.rootCommentId && (
                 <Link
-                  href={`?hPage=${hPage}&replyTo=${comment.id}#writer`}
+                  href={`?hPage=${hPage}&sortBy=${sortBy}&replyTo=${comment.id}#writer`}
                   className="hover:underline"
                 >
                   Reply
@@ -236,7 +242,7 @@ function Comment({
               )}
               {user && comment.authorId === user.id && (
                 <Link
-                  href={`?hPage=${hPage}&targetLoungeCommentId=${comment.id}#writer`}
+                  href={`?hPage=${hPage}&sortBy=${sortBy}&targetLoungeCommentId=${comment.id}#writer`}
                   className="hover:underline"
                 >
                   Edit
@@ -262,7 +268,7 @@ function Comment({
               </p>
             )}
             <MarkdownComp content={comment.content} isComment={true} />
-            <div>{commentReactionButton({ comment, user })}</div>
+            <div>{commentReactionButton({ comment, user, hPage, sortBy })}</div>
           </div>
         </>
       )}
@@ -276,18 +282,20 @@ export default async function SystemLounge({
   replyTo,
   targetLoungeCommentId,
   hPage,
+  sortBy,
 }: {
   page: Page;
   commentId: string | null;
   replyTo: string | string[] | undefined;
   targetLoungeCommentId?: string | string[] | undefined;
   hPage: number;
+  sortBy: "likes" | "createdAt";
 }) {
   const user = await getUser();
 
   async function fetchComments() {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${page.id}/${commentId}?hPage=${hPage}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${page.id}/${commentId}?hPage=${hPage}&sortBy=${sortBy}`,
     );
     if (!response.ok) {
       return null;
@@ -325,14 +333,14 @@ export default async function SystemLounge({
     );
     if (!response.ok) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
       );
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
     console.log("Lounge post created:", result);
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}#${result.id}`,
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
     );
   }
 
@@ -346,7 +354,7 @@ export default async function SystemLounge({
 
     if (!targetLoungeCommentId || typeof targetLoungeCommentId !== "string") {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Invalid targetLoungeCommentId`,
       );
     }
 
@@ -355,7 +363,7 @@ export default async function SystemLounge({
       comments.find((c: any) => c.id === targetLoungeCommentId)?.authorId
     ) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to edit this comment`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Unauthorized to edit this comment`,
       );
     }
 
@@ -377,19 +385,24 @@ export default async function SystemLounge({
 
     if (!response.ok) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&error=${await response.text()}`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
       );
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
     console.log("Lounge post edited:", result);
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}#${result.id}`,
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
     );
   }
 
   return (
     <div>
+      <div className="mt-1">
+        <Link href={`?hPage=${hPage}&sortBy=likes`}>Sort by Likes</Link>
+        {" | "}
+        <Link href={`?hPage=${hPage}&sortBy=createdAt`}>Sort by Date</Link>
+      </div>
       {comments && comments.length > 0 && !comments[0].rootCommentId ? (
         <div className="mt-4">
           {comments.map((comment: any) => (
@@ -407,6 +420,7 @@ export default async function SystemLounge({
                     comment={comment}
                     user={user}
                     hPage={hPage}
+                    sortBy={sortBy}
                   />
                 </>
               )}
@@ -438,7 +452,7 @@ export default async function SystemLounge({
                         targetLoungeCommentId}
                   </p>
                   <Link
-                    href={`?hPage=${hPage}#writer`}
+                    href={`?hPage=${hPage}&sortBy=${sortBy}#writer`}
                     className="text-sm text-blue-500 no-underline hover:underline"
                   >
                     No Edit
@@ -476,7 +490,7 @@ export default async function SystemLounge({
                   </p>
                   {replyTo && replyTo !== commentId && (
                     <Link
-                      href={`?hPage=${hPage}#writer`}
+                      href={`?hPage=${hPage}&sortBy=${sortBy}#writer`}
                       className="text-sm text-blue-500 no-underline hover:underline"
                     >
                       No Re-reply

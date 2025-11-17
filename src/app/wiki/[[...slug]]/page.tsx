@@ -76,8 +76,7 @@ export default async function WikiPage({
     hPage,
     replyTo,
     targetLoungeCommentId,
-    // view,
-    // loungeId,
+    sortBy,
   } = await searchParams;
   // Determine if viewing lounge
   const loungeIndex = baseSlug?.findIndex(
@@ -101,6 +100,8 @@ export default async function WikiPage({
   const showHistoryVersion = historyList && ver;
   const showRevert = revertAction && ver;
   const showDiff = diffAction && ver;
+
+  const handledSortBy = sortBy === "likes" ? "likes" : "createdAt";
 
   // Determine if viewing lounge
   const isLoungeView =
@@ -296,6 +297,7 @@ export default async function WikiPage({
                   replyTo={replyTo}
                   targetLoungeCommentId={targetLoungeCommentId}
                   hPage={hPage ? parseInt(hPage as string, 10) : 1}
+                  sortBy={handledSortBy}
                 />
               </>
             ) : (
