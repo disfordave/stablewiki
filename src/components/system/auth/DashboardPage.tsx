@@ -156,14 +156,6 @@ export default async function DashboardPage() {
         </div>
         <details>
           <summary className="mt-4 mb-2 font-bold select-none">
-            Debug Info
-          </summary>
-          <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
-            {JSON.stringify(user, null, 2)}
-          </pre>
-        </details>
-        <details>
-          <summary className="mt-4 mb-2 font-bold select-none">
             Change Password
           </summary>
           <form className="flex flex-col gap-4" action={changePassword}>
@@ -207,6 +199,14 @@ export default async function DashboardPage() {
               Change Password
             </TransitionFormButton>
           </form>
+        </details>
+        <details>
+          <summary className="mt-4 mb-2 font-bold select-none">
+            Debug Info
+          </summary>
+          <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+            {JSON.stringify(user, null, 2)}
+          </pre>
         </details>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
