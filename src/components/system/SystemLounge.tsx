@@ -179,7 +179,7 @@ function RootCommentForList({ comment, slug }: { comment: any; slug: string }) {
   );
 }
 
-function Comment({ comment, user }: { comment: any; user: User | null }) {
+function Comment({ comment, user, hPage }: { comment: any; user: User | null; hPage: number }) {
   // This is a root comment
   return (
     <div
@@ -219,7 +219,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
             <span className="flex gap-2">
               {user && comment.rootCommentId && (
                 <Link
-                  href={`?replyTo=${comment.id}#writer`}
+                  href={`?hPage=${hPage}&replyTo=${comment.id}#writer`}
                   className="hover:underline"
                 >
                   Reply
@@ -227,7 +227,7 @@ function Comment({ comment, user }: { comment: any; user: User | null }) {
               )}
               {user && comment.authorId === user.id && (
                 <Link
-                  href={`?targetLoungeCommentId=${comment.id}#writer`}
+                  href={`?hPage=${hPage}&targetLoungeCommentId=${comment.id}#writer`}
                   className="hover:underline"
                 >
                   Edit
@@ -392,7 +392,7 @@ export default async function SystemLounge({
                   slug={page.slug.join("/")}
                 />
               ) : (
-                <Comment key={comment.id} comment={comment} user={user} />
+                <Comment key={comment.id} comment={comment} user={user} hPage={hPage} />
               )}
             </div>
           ))}
@@ -422,7 +422,7 @@ export default async function SystemLounge({
                         targetLoungeCommentId}
                   </p>
                   <Link
-                    href={`?#writer`}
+                    href={`?hPage=${hPage}#writer`}
                     className="text-sm text-blue-500 no-underline hover:underline"
                   >
                     No Edit
@@ -460,7 +460,7 @@ export default async function SystemLounge({
                   </p>
                   {replyTo && replyTo !== commentId && (
                     <Link
-                      href={`?#writer`}
+                      href={`?hPage=${hPage}#writer`}
                       className="text-sm text-blue-500 no-underline hover:underline"
                     >
                       No Re-reply
