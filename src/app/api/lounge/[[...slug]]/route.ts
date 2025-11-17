@@ -69,6 +69,15 @@ export async function GET(
     return new Response("Comment not found", { status: 404 });
   }
 
+  const commentsForIndexFinder = await prisma.comment.findMany({
+    where: {
+      rootCommentId: slug[1],
+      pageId: slug[0],
+    },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+
   const findParticularComment = await prisma.comment.findMany({
     where: {
       rootCommentId: slug[1],
@@ -98,7 +107,22 @@ export async function GET(
   }
 
   return NextResponse.json({
-    data: [findFirstComment, ...findParticularComment],
+    data: [{
+      index: 0, ...findFirstComment,
+    }, ...findParticularComment.map((c) => {
+      const { parent, ...rest } = c;
+      return {
+        index: commentsForIndexFinder.findIndex(ci => ci.id === c.id) + 1,
+        parent: parent
+          ? {
+              index: commentsForIndexFinder.findIndex(ci => ci.id === parent.id) + 1,
+              ...parent,
+            }
+          : null,
+        ...rest,
+      };
+    })],
+    // data: [findFirstComment, ...findParticularComment],
     totalPaginationPages:
       Math.ceil(count / itemsPerPage) <= 0
         ? 1

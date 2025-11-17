@@ -208,6 +208,9 @@ function Comment({ comment, user, hPage }: { comment: any; user: User | null; hP
                   {comment.author.username}
                 </Link>
                 {` on ${new Date(comment.createdAt).toLocaleString()}`}
+                {
+                  comment.rootCommentId && ` (#${comment.index})`
+                }
               </span>
               {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
                 <span className="text-xs opacity-75">
@@ -242,7 +245,7 @@ function Comment({ comment, user, hPage }: { comment: any; user: User | null; hP
             {comment.parentId && comment.parentId !== comment.rootCommentId && (
               <p className="mt-4 mb-1 line-clamp-1 max-w-md">
                 <Link
-                  href={`#${comment.parentId}`}
+                  href={`?hPage=${Math.ceil(comment.parent.index / 10)}#${comment.parent.id}`}
                   className="line-clamp-1 text-blue-500 no-underline hover:underline"
                 >
                   {comment.parent.deleted
@@ -368,14 +371,14 @@ export default async function SystemLounge({
 
     if (!response.ok) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&error=${await response.text()}`,
       );
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
     console.log("Lounge post edited:", result);
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}#${result.id}`,
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}#${result.id}`,
     );
   }
 
@@ -392,7 +395,9 @@ export default async function SystemLounge({
                   slug={page.slug.join("/")}
                 />
               ) : (
+                <>
                 <Comment key={comment.id} comment={comment} user={user} hPage={hPage} />
+                </>
               )}
             </div>
           ))}
