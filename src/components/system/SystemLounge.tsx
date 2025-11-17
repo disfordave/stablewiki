@@ -273,7 +273,7 @@ function Comment({
             {comment.parentId && comment.parentId !== comment.rootCommentId && (
               <p className="mt-4 mb-1 line-clamp-1 max-w-md">
                 <Link
-                  href={`?hPage=${Math.ceil(comment.parent.index / 10)}#${comment.parent.id}`}
+                  href={`?hPage=${Math.ceil(comment.parent.index / 10)}&sortBy=${sortBy}#${comment.parent.id}`}
                   className="line-clamp-1 text-blue-500 no-underline hover:underline"
                 >
                   {comment.parent.deleted
@@ -456,7 +456,7 @@ export default async function SystemLounge({
           <Pagination
             currentPage={hPage}
             totalPages={totalPaginationPages}
-            slug={`/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=`}
+            slug={`/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?sortBy=${sortBy}&hPage=`}
           />
         </div>
       ) : (
