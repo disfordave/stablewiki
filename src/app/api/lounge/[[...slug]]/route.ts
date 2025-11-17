@@ -160,6 +160,10 @@ export async function POST(
       return new Response("Unauthorized", { status: 401 });
     }
 
+    if (decodedToken.status > 0) {
+      return Response.json({ error: "Banned user" }, { status: 403 });
+    }
+
     // Check if reaction already exists
     const existingReaction = await prisma.reaction.findFirst({
       where: {
@@ -253,6 +257,10 @@ export async function PUT(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  if (decodedToken.status > 0) {
+    return Response.json({ error: "Banned user" }, { status: 403 });
+  }
+
   const existingComment = await prisma.comment.findUnique({
     where: { id },
   });
@@ -302,6 +310,10 @@ export async function DELETE(
 
     if (!decodedToken || !decodedToken.id) {
       return new Response("Unauthorized", { status: 401 });
+    }
+
+    if (decodedToken.status > 0) {
+      return Response.json({ error: "Banned user" }, { status: 403 });
     }
 
     const existingReaction = await prisma.reaction.findUnique({

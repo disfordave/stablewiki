@@ -52,14 +52,31 @@ export async function GET(request: NextRequest): Promise<Response> {
       .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
       .then((result) => result.payload);
 
+    const id = decodedToken.id;
+    if (!decodedToken || !id) {
+      return Response.json(
+        { error: "Invalid or expired token." },
+        { status: 403 },
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: id as string },
+    });
+
+    if (!user) {
+      return Response.json({ error: "User not found." }, { status: 404 });
+    }
+
     return Response.json(
       {
-        id: decodedToken.id,
-        username: decodedToken.username,
-        avatarUrl: decodedToken.avatarUrl,
-        role: decodedToken.role,
+        id: user.id,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+        role: user.role,
         token,
-        createdAt: decodedToken.createdAt,
+        createdAt: user.createdAt,
+        status: user.status,
       } as User,
       { status: 200 },
     );

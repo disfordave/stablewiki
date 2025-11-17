@@ -43,6 +43,13 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (decodedToken.status > 0) {
+    return Response.json(
+      { error: "Banned users cannot upload media" },
+      { status: 403 },
+    );
+  }
+
   const body = await request.formData();
   const title = body.get("title") as string;
   const media = body.get("media") as File;

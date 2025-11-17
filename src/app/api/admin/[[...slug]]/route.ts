@@ -1,0 +1,49 @@
+import { prisma } from "@/lib/prisma";
+import { getDecodedToken } from "@/utils";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
+  const { slug } = await params;
+
+  if (!slug || slug.length === 0) {
+    return new Response("Bad Request", { status: 400 });
+  }
+
+  const decodedToken = await getDecodedToken(request);
+  if (!decodedToken || decodedToken.role !== "ADMIN") {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  if (slug[0] === "pages" && slug.length === 2) {
+    const body = await request.json();
+    const { accessLevel } = body;
+
+    const updatedPage = await prisma.page.update({
+      where: { id: slug[1] },
+      data: {
+        accessLevel,
+      },
+    });
+
+    return NextResponse.json({ data: updatedPage });
+  }
+
+  if (slug[0] === "users" && slug.length === 2) {
+    const body = await request.json();
+    const { status } = body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: slug[1] },
+      data: {
+        status,
+      },
+    });
+
+    return NextResponse.json({ data: updatedUser });
+  }
+
+  return NextResponse.json({ data: null });
+}

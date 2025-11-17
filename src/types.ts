@@ -38,6 +38,7 @@ export interface Page {
   isRedirect?: boolean;
   redirectTargetSlug?: string;
   comments?: Comment[];
+  accessLevel: number;
 }
 
 export interface PageRevisionData {
@@ -62,6 +63,7 @@ export interface User {
   role: Role;
   token: string;
   createdAt: Date;
+  status: number;
 }
 
 export interface Comment {

@@ -94,6 +94,7 @@ export async function GET(request: NextRequest) {
                   : exactMatch.updatedAt,
               tags: [],
               isRedirect: exactMatch.isRedirect,
+              accessLevel: exactMatch.accessLevel,
               redirectTargetSlug:
                 exactMatch.revisions.length > 0
                   ? exactMatch.revisions[0].redirectTargetSlug
@@ -161,6 +162,7 @@ export async function GET(request: NextRequest) {
               : page.updatedAt,
           tags: [],
           isRedirect: page.isRedirect,
+          accessLevel: page.accessLevel,
           redirectTargetSlug:
             page.revisions.length > 0
               ? page.revisions[0].redirectTargetSlug
@@ -213,6 +215,10 @@ export async function POST(request: Request) {
 
   console.log({ decodedToken });
   console.log({ title, link: WIKI_HOMEPAGE_LINK.slice(6) });
+
+  if (decodedToken.status > 0) {
+    return Response.json({ error: "Banned user" }, { status: 403 });
+  }
 
   if (
     "/wiki/" + title === WIKI_HOMEPAGE_LINK &&

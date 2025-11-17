@@ -24,17 +24,6 @@ import { Page } from "@/types";
 import { checkRedirect, handleHPage, getDecodedToken, slugify } from "@/utils";
 import { unlink } from "fs/promises";
 import path from "path";
-// export function normalizeSlug(raw: string[]): string {
-//   raw = raw.map((s) => {
-//     const decoded = decodeURIComponent(s);
-//     const trimmed = decoded.trim().replace(/\s+/g, " ");
-//     if (!trimmed) return trimmed;
-
-//     // Capitalize the first letter only, preserve the rest as-is
-//     return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-//   });
-//   return raw.join("/");
-// }
 
 export async function GET(
   request: Request,
@@ -86,6 +75,7 @@ export async function GET(
                 : null
               : null,
           createdAt: page.createdAt,
+          accessLevel: page.accessLevel,
           updatedAt:
             page.revisions.length > 0
               ? page.revisions[0].createdAt
@@ -209,6 +199,7 @@ export async function GET(
           page.revisions.length > 0
             ? page.revisions[0].redirectTargetSlug
             : undefined,
+        accessLevel: page.accessLevel,
         comments: page.comments.map((comment) => ({
           id: comment.id,
           title: comment.title,
@@ -235,7 +226,7 @@ export async function POST(
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const { slug } = await params;
-  const { title, content, summary } = await request.json();
+  const { title, content, summary, accessLevel } = await request.json();
 
   if (!title || !content) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
@@ -279,6 +270,13 @@ export async function POST(
   ) {
     return Response.json(
       { error: "Only admins and editors can create or modify the homepage" },
+      { status: 403 },
+    );
+  }
+
+  if (decodedToken.status > 0) {
+    return Response.json(
+      { error: "Banned users cannot create nor modify pages" },
       { status: 403 },
     );
   }
@@ -340,6 +338,7 @@ export async function POST(
         title: title,
         slug: slugify(title),
         isRedirect: redirection.isRedirect,
+        accessLevel,
       },
     });
 
@@ -371,6 +370,13 @@ export async function DELETE(
 
   if (!decodedToken?.username) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (decodedToken.status > 0) {
+    return Response.json(
+      { error: "Banned users cannot delete pages" },
+      { status: 403 },
+    );
   }
 
   if (

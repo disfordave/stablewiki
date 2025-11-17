@@ -20,6 +20,7 @@
 
 import { NextRequest } from "next/server";
 import * as jose from "jose";
+import { User } from "@/types";
 
 export async function validAuthorizationWithJwt(
   request: NextRequest | Request,
@@ -56,7 +57,7 @@ export async function validAuthorizationWithJwt(
 
 export async function getDecodedToken(
   request: NextRequest | Request,
-): Promise<jose.JWTPayload | null> {
+): Promise<User | null> {
   try {
     const authHeader = request.headers.get("Authorization");
 
@@ -73,11 +74,27 @@ export async function getDecodedToken(
       return null;
     }
 
-    const decodedToken = await jose
-      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-      .then((result) => result.payload);
+    // const decodedToken = await jose
+    //   .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+    //   .then((result) => result.payload);
 
-    return decodedToken;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+        credentials: "include",
+      },
+    );
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const user = await res.json();
+    return user as User;
   } catch (error) {
     console.error("Error decoding JWT:", error);
     return null;

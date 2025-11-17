@@ -37,6 +37,41 @@ import { Role } from "@prisma/client";
 export default async function DashboardPage() {
   const user = await getUser();
 
+  //   async function getAdminInfo() {
+
+  //     if (!user) {
+  //       return {
+  //         error: "Unauthorized",
+  //       };
+  //     }
+
+  //     if (user.role !== Role.ADMIN) {
+  //       return {
+  //         error: "Forbidden",
+  //       };
+  //     }
+  //   const res = await fetch(
+  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //       },
+  //       cache: "no-store",
+  //     },
+  //   );
+
+  //   if (!res.ok) {
+  //     return {
+  //       error: `Error fetching admin info: ${res.statusText}`,
+  //     };
+  //   }
+
+  //   const data = await res.json();
+  //   return data;
+  // }
+
+  // const adminInfo = await getAdminInfo();
+
   async function changePassword(formData: FormData) {
     "use server";
     const currentPassword = formData.get("currentPassword") as string;
@@ -154,6 +189,16 @@ export default async function DashboardPage() {
             </>
           )}
         </div>
+        {user.role === Role.ADMIN && (
+          <details>
+            <summary className="mt-4 mb-2 font-bold select-none">
+              Admin Panel
+            </summary>
+            <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+              {JSON.stringify("Admin panel coming soon...", null, 2)}
+            </pre>
+          </details>
+        )}
         <details>
           <summary className="mt-4 mb-2 font-bold select-none">
             Change Password
