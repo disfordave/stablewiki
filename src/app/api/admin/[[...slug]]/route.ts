@@ -12,37 +12,42 @@ export async function PUT(
     return new Response("Bad Request", { status: 400 });
   }
 
-  const decodedToken = await getDecodedToken(request);
-  if (!decodedToken || decodedToken.role !== "ADMIN") {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  try {
+    const decodedToken = await getDecodedToken(request);
+    if (!decodedToken || decodedToken.role !== "ADMIN") {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
-  if (slug[0] === "pages" && slug.length === 2) {
-    const body = await request.json();
-    const { accessLevel } = body;
+    if (slug[0] === "pages" && slug.length === 2) {
+      const body = await request.json();
+      const { accessLevel } = body;
 
-    const updatedPage = await prisma.page.update({
-      where: { id: slug[1] },
-      data: {
-        accessLevel,
-      },
-    });
+      const updatedPage = await prisma.page.update({
+        where: { slug: slug[1] },
+        data: {
+          accessLevel,
+        },
+      });
 
-    return NextResponse.json({ data: updatedPage });
-  }
+      return NextResponse.json({ data: updatedPage });
+    }
 
-  if (slug[0] === "users" && slug.length === 2) {
-    const body = await request.json();
-    const { status } = body;
+    if (slug[0] === "users" && slug.length === 2) {
+      const body = await request.json();
+      const { status } = body;
 
-    const updatedUser = await prisma.user.update({
-      where: { id: slug[1] },
-      data: {
-        status,
-      },
-    });
+      const updatedUser = await prisma.user.update({
+        where: { username: slug[1] },
+        data: {
+          status,
+        },
+      });
 
-    return NextResponse.json({ data: updatedUser });
+      return NextResponse.json({ data: updatedUser });
+    }
+  } catch (error) {
+    console.error(error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 
   return NextResponse.json({ data: null });

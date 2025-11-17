@@ -37,40 +37,112 @@ import { Role } from "@prisma/client";
 export default async function DashboardPage() {
   const user = await getUser();
 
-  //   async function getAdminInfo() {
+  async function adminAction(formData: FormData) {
+    "use server";
+    const actionType = formData.get("actionType") as string;
+    const targetUsername = formData.get("targetUsername") as string;
+    const newStatus = parseInt(formData.get("newStatus") as string, 10);
+    const consent = formData.get("consent") as string;
 
-  //     if (!user) {
-  //       return {
-  //         error: "Unauthorized",
-  //       };
-  //     }
+    if (consent !== "on") {
+      safeRedirect(
+        `/wiki/System:Dashboard?error=${"You must confirm to perform this admin action."}`,
+      );
+    }
 
-  //     if (user.role !== Role.ADMIN) {
-  //       return {
-  //         error: "Forbidden",
-  //       };
-  //     }
-  //   const res = await fetch(
-  //     `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin`,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //       cache: "no-store",
-  //     },
-  //   );
+    if (!user || user.role !== Role.ADMIN) {
+      safeRedirect(
+        `/wiki/System:Dashboard?error=${"You must be an admin to perform this action."}`,
+      );
+    }
 
-  //   if (!res.ok) {
-  //     return {
-  //       error: `Error fetching admin info: ${res.statusText}`,
-  //     };
-  //   }
+    if (actionType === "changeUserStatus") {
+      if (!targetUsername) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"Target username is required."}`,
+        );
+      }
 
-  //   const data = await res.json();
-  //   return data;
-  // }
+      if (isNaN(newStatus)) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"New status must be a valid number."}`,
+        );
+      }
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/${targetUsername}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            status: newStatus,
+          }),
+        },
+      );
 
-  // const adminInfo = await getAdminInfo();
+      if (!response.ok) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"Failed to perform admin action"}`,
+        );
+      }
+
+      if (response.ok) {
+        safeRedirect(
+          `/wiki/System:Dashboard?success=${"Admin action completed successfully!"}`,
+        );
+      }
+    } else if (actionType === "changePageAccessLevel") {
+      const targetPageId = formData.get("targetPageId") as string;
+      const newAccessLevel = parseInt(
+        formData.get("newAccessLevel") as string,
+        10,
+      );
+
+      if (!targetPageId) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"Target page ID is required."}`,
+        );
+      }
+
+      if (!newAccessLevel) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"New access level is required."}`,
+        );
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/pages/${targetPageId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            accessLevel: newAccessLevel,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"Failed to perform admin action"}`,
+        );
+      }
+
+      if (response.ok) {
+        safeRedirect(
+          `/wiki/System:Dashboard?success=${"Admin action completed successfully!"}`,
+        );
+      }
+    } else {
+      safeRedirect(
+        `/wiki/System:Dashboard?error=${"Invalid admin action type."}`,
+      );
+    }
+  }
 
   async function changePassword(formData: FormData) {
     "use server";
@@ -199,9 +271,107 @@ export default async function DashboardPage() {
             <summary className="mt-4 mb-2 font-bold select-none">
               Admin Panel
             </summary>
-            <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
-              {JSON.stringify("Admin panel coming soon...", null, 2)}
-            </pre>
+            <form className="flex flex-col gap-4" action={adminAction}>
+              <div>
+                <label htmlFor="actionType" className="mb-2 block font-medium">
+                  Action Type
+                </label>
+                <select
+                  id="actionType"
+                  name="actionType"
+                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  required
+                >
+                  <option value="changeUserStatus">Change User Status</option>
+                  <option value="changePageAccessLevel">
+                    Change Page Edit Level
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="targetUsername"
+                  className="mb-2 block font-medium"
+                >
+                  Target Username
+                </label>
+                <input
+                  id="targetUsername"
+                  type="text"
+                  name="targetUsername"
+                  placeholder="Target Username"
+                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                />
+              </div>
+              <div>
+                <label htmlFor="newStatus" className="block">
+                  <p className="font-medium">New User Status</p>
+                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    (e.g., 0 for active, 1 for banned)
+                  </p>
+                </label>
+                <input
+                  id="newStatus"
+                  type="number"
+                  min="0"
+                  max="1"
+                  name="newStatus"
+                  placeholder="New Status"
+                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="targetPageId"
+                  className="mb-2 block font-medium"
+                >
+                  Target Page Slug
+                </label>
+                <input
+                  id="targetPageId"
+                  type="text"
+                  name="targetPageId"
+                  placeholder="Target Page Slug"
+                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                />
+              </div>
+              <div>
+                <label htmlFor="newAccessLevel" className="block">
+                  <p className="font-medium">New Access (Edit) Level</p>
+                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    (e.g., 0 for registered users, 1 for moderators, 9 for
+                    admins only)
+                  </p>
+                </label>
+                <input
+                  id="newAccessLevel"
+                  type="text"
+                  min="0"
+                  max="9"
+                  name="newAccessLevel"
+                  placeholder="New Access (Edit) Level"
+                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="consent"
+                  name="consent"
+                  required
+                  className={`h-4 w-4 ${getThemeColor.etc.accent}`}
+                />
+                <label htmlFor="consent" className="select-none">
+                  I confirm that I want to perform this admin action.
+                </label>
+              </div>
+              <TransitionFormButton
+                useButtonWithoutForm
+                className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+              >
+                Perform Admin Action
+              </TransitionFormButton>
+            </form>
           </details>
         )}
         <details>
@@ -210,8 +380,14 @@ export default async function DashboardPage() {
           </summary>
           <form className="flex flex-col gap-4" action={changePassword}>
             <div>
-              <label className="mb-2 block font-medium">Current Password</label>
+              <label
+                htmlFor="currentPassword"
+                className="mb-2 block font-medium"
+              >
+                Current Password
+              </label>
               <input
+                id="currentPassword"
                 type="password"
                 name="currentPassword"
                 placeholder="Current Password"
@@ -220,8 +396,11 @@ export default async function DashboardPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block font-medium">New Password</label>
+              <label htmlFor="newPassword" className="mb-2 block font-medium">
+                New Password
+              </label>
               <input
+                id="newPassword"
                 type="password"
                 name="newPassword"
                 placeholder="New Password"
@@ -230,10 +409,14 @@ export default async function DashboardPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block font-medium">
+              <label
+                htmlFor="newPasswordConfirm"
+                className="mb-2 block font-medium"
+              >
                 Confirm New Password
               </label>
               <input
+                id="newPasswordConfirm"
                 type="password"
                 name="newPasswordConfirm"
                 placeholder="Confirm New Password"
