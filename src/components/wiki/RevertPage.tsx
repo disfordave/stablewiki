@@ -30,18 +30,21 @@ import {
 } from "../ui";
 import StableDiffViewer from "./DiffViewer";
 import { getUser } from "@/lib";
-import { safeRedirect } from "@/utils";
+import { safeRedirect, slugify } from "@/utils";
+import { Page } from "@/types";
 
 export default async function StableRevert({
   currentContent,
   newTargetContent,
   slug,
   targetVersion,
+  page,
 }: {
   currentContent: string;
   newTargetContent: string;
   slug: string;
   targetVersion: string;
+  page: Page;
 }) {
   const user = await getUser();
 
@@ -66,7 +69,7 @@ export default async function StableRevert({
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          title: decodeURIComponent(slug),
+          title: page.title,
           content,
           author: user,
           summary: `Reverted to version ${targetVersion}`,
@@ -80,7 +83,7 @@ export default async function StableRevert({
 
     const data = await res.json();
     console.log("Edit response data:", data);
-    safeRedirect(`/wiki/${slug}`);
+    safeRedirect(`/wiki/${slugify(data.title)}`);
   }
 
   if (
@@ -107,7 +110,8 @@ export default async function StableRevert({
       <form className="flex flex-col gap-4" action={editPage}>
         <input type="hidden" name="content" value={newTargetContent} />
         <div className="mt-4 animate-pulse font-bold">
-          You&apos;re about to revert to version {targetVersion}.
+          You&apos;re about to revert to version {targetVersion}. (Reverting
+          will also change the title if it was changed in that version.)
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <TransitionLinkButton

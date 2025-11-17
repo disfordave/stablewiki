@@ -271,6 +271,7 @@ export default async function WikiPage({
             newTargetContent={page.content}
             slug={slug.join("/")}
             targetVersion={ver as string}
+            page={page}
           />
         </div>
       )}
