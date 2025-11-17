@@ -231,6 +231,10 @@ export async function POST(
     return new Response("Unauthorized", { status: 401 });
   }
 
+  if (decodedToken.status > 0) {
+    return Response.json({ error: "Banned user" }, { status: 403 });
+  }
+
   if (title.length > 255) {
     return new Response("Title exceeds maximum length of 255 characters", {
       status: 400,

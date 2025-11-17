@@ -141,7 +141,12 @@ export default async function DashboardPage() {
             {new Date(user.createdAt).toLocaleDateString()}
           </span>
         </p>
-
+        {user.status > 0 && (
+          <p className="mt-2 mb-4 rounded-xl bg-red-100 p-4 text-red-900 dark:bg-red-900/30 dark:text-red-100">
+            Your account is currently banned. Please contact support for more
+            information.
+          </p>
+        )}
         <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
           {user.role === Role.ADMIN && (
             <>
