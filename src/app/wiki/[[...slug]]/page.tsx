@@ -313,8 +313,9 @@ export default async function WikiPage({
                   <div className="mt-3 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
                     <p>
                       Media pages are used to store and display media files such
-                      as images, videos, and audio. Media pages are not under the same license as regular wiki pages. You can embed this media
-                      file in other wiki pages using{" "}
+                      as images, videos, and audio. Media pages are not under
+                      the same license as regular wiki pages. You can embed this
+                      media file in other wiki pages using{" "}
                       <code className="select-all">
                         ![[{page.title.replace("Media:", "")}]]
                       </code>

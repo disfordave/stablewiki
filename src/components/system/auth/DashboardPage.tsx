@@ -25,7 +25,7 @@ import {
 } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
 import { getUser, signOutUser } from "@/lib";
-import { getThemeColor } from "@/utils";
+import { getThemeColor, safeRedirect } from "@/utils";
 import {
   HomeIcon,
   PhotoIcon,
@@ -36,6 +36,57 @@ import { Role } from "@prisma/client";
 
 export default async function DashboardPage() {
   const user = await getUser();
+
+  async function changePassword(formData: FormData) {
+    "use server";
+    const currentPassword = formData.get("currentPassword") as string;
+    const newPassword = formData.get("newPassword") as string;
+    const newPasswordConfirm = formData.get("newPasswordConfirm") as string;
+    // const username = formData.get("username") as string;
+
+    if (!user) {
+      safeRedirect(
+        `/wiki/System:SignIn?error=${"You must be signed in to change your password."}`,
+      );
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+      safeRedirect(
+        `/wiki/System:Dashboard?error=${"New passwords do not match"}`,
+      );
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          username: user.username,
+          currentPassword,
+          newPassword,
+          newPasswordConfirm,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const data = await response.json();
+      safeRedirect(
+        `/wiki/System:Dashboard?error=${data.error || "Failed to change password"}`,
+      );
+    }
+
+    if (response.ok) {
+      console.log("Password changed successfully");
+      safeRedirect(
+        `/wiki/System:Dashboard?success=${"Password changed successfully!"}`,
+      );
+    }
+  }
 
   if (!user) {
     return (
@@ -115,11 +166,7 @@ export default async function DashboardPage() {
           <summary className="mt-4 mb-2 font-bold select-none">
             Change Password
           </summary>
-          <form
-            className="flex flex-col gap-4"
-            action="/api/system/change-password"
-            method="POST"
-          >
+          <form className="flex flex-col gap-4" action={changePassword}>
             <div>
               <label className="mb-2 block font-medium">Current Password</label>
               <input
@@ -146,7 +193,7 @@ export default async function DashboardPage() {
               </label>
               <input
                 type="password"
-                name="confirmNewPassword"
+                name="newPasswordConfirm"
                 placeholder="Confirm New Password"
                 className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
                 required
@@ -155,7 +202,7 @@ export default async function DashboardPage() {
             <input type="hidden" name="username" value={user.username} />
             <TransitionFormButton
               useButtonWithoutForm
-              className={` text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+              className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
             >
               Change Password
             </TransitionFormButton>

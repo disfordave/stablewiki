@@ -75,11 +75,11 @@ export async function GET(request: NextRequest): Promise<Response> {
 
 export async function PUT(request: NextRequest): Promise<Response> {
   const body = await request.json();
-  const { currentPassword, newPassword, newPasswordConfirm, consent } = body;
+  const { currentPassword, newPassword, newPasswordConfirm, username } = body;
 
-  if (!currentPassword || !newPassword || !newPasswordConfirm || !consent) {
+  if (!currentPassword || !newPassword || !newPasswordConfirm || !username) {
     return Response.json(
-      { error: "Current password, new password, and consent are required" },
+      { error: "Current password, new password, and username are required" },
       { status: 400 },
     );
   }
@@ -95,12 +95,12 @@ export async function PUT(request: NextRequest): Promise<Response> {
     );
   }
 
-  if (!consent) {
-    return Response.json(
-      { error: "You must agree to the terms and conditions" },
-      { status: 400 },
-    );
-  }
+  // if (!consent) {
+  //   return Response.json(
+  //     { error: "You must agree to the terms and conditions" },
+  //     { status: 400 },
+  //   );
+  // }
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
 
@@ -130,6 +130,24 @@ export async function PUT(request: NextRequest): Promise<Response> {
     const decodedToken = await jose
       .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
       .then((result) => result.payload);
+
+    if (!decodedToken || !decodedToken.id) {
+      return Response.json(
+        { error: "Invalid or expired token." },
+        { status: 403 },
+      );
+    }
+
+    if (decodedToken.username !== username) {
+      return Response.json(
+        { error: "Changing username is not allowed at this time." },
+        { status: 400 },
+      );
+      // await prisma.user.update({
+      //   where: { id: decodedToken.id as string },
+      //   data: { username },
+      // });
+    }
 
     const user = await prisma.user.findUnique({
       where: { id: decodedToken.id as string },
