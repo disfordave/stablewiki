@@ -112,6 +112,42 @@ export default async function StableUpload() {
         <p>
           Allowed file types: PNG, JPG, JPEG, SVG, WEBP, GIF (max size: 1MB).
         </p>
+        {/* <div>
+          <label className="mb-2 block font-medium">Description (optional)</label>
+          <textarea
+            name="description"
+            rows={5}
+            placeholder="Description of the media"
+            className="w-full rounded-xl bg-gray-100 p-2 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+          ></textarea>
+        </div>
+        <div>
+          <label className="mb-2 block font-medium">Alt Text (optional)</label>
+          <input
+            type="text"
+            name="alt"
+            placeholder="Alt text for the media"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block font-medium">Source (optional)</label>
+          <input
+            type="text"
+            name="source"
+            placeholder="Source of the media"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block font-medium">License (optional)</label>
+          <input
+            type="text"
+            name="license"
+            placeholder="License of the media"
+            className="w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 focus:ring-violet-500 focus:outline-none dark:bg-gray-900"
+          />
+        </div> */}
         <TransitionFormButton
           useButtonWithoutForm={true}
           className="bg-green-500 text-white hover:bg-green-600"
