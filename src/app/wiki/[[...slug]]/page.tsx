@@ -461,7 +461,7 @@ export async function generateMetadata({
         : "";
 
     const data = await getPageData(joinedSlug, queryParams);
-    const page = showHistoryList ? null : data.page;
+    const page = showHistoryList ? data.page : data.page;
     const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
     if (slug[0].startsWith(encodeURIComponent("System:"))) {
       switch (systemPage) {
@@ -503,13 +503,12 @@ export async function generateMetadata({
       slug &&
       slug.length > 0 &&
       slug[0].startsWith(encodeURIComponent("User:"));
-    const isUserPagePostPage =
-      isUserPage && slug[1] === "post" && slug.length > 2;
+    const isUserPagePostPage = isUserPage && slug.length >= 2;
     if (showEdit) {
       if (page && page.title) {
         if (isUserPagePostPage) {
           return {
-            title: `Edit Post: ${page.title.split("/")[2]} | ${WIKI_NAME}`,
+            title: `Edit Post: ${page.title.split("/")[1]} | ${WIKI_NAME}`,
             description: `Editing the user post titled "${page.title.split("/")[2]}".`,
           };
         }
@@ -547,7 +546,7 @@ export async function generateMetadata({
 
     if (isUserPagePostPage) {
       return {
-        title: `${page.title.split("/")[2]} | ${WIKI_NAME}`,
+        title: `${page.title.split("/")[1]} by ${page.author.username} | ${WIKI_NAME}`,
         description: `User post titled "${page.title.split("/")[2]}".`,
       };
     }
