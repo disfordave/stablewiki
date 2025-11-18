@@ -25,7 +25,7 @@ export default async function PublicUserInfo({
   }
 
   return (
-    <div className="flex items-center rounded-xl mt-4 bg-gray-100 p-4 dark:bg-gray-900">
+    <div className="mt-4 flex items-center rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <div>
         <h2 className="text-lg font-semibold">{user.username}</h2>
         <p className="text-sm text-gray-500">Role: {user.role}</p>

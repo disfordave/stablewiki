@@ -229,7 +229,6 @@ export default async function WikiPage({
         {showHistoryList && handledHPage && ` (Page ${handledHPage})`}
         {showHistoryVersion && <>{` (ver. ${ver})`}</>}
         {showRevert && <>{` to (ver. ${ver})`}</>}
-        {showDiff && <>{` from (ver. ${ver})`}</>}
       </h1>
       {showHistoryVersion && page && (
         <p className="my-2 text-gray-600">
@@ -261,12 +260,28 @@ export default async function WikiPage({
         ))}
       {showDiff && page && (
         <div>
-          <PageDate page={page} isOld={false} />
+          <PageDate page={page} isOld={true} />
           <DiffViewer
             oldContent={page.content}
-            newContent={(await getLatestPageRevision(joinedSlug)).page.content}
+            newContent={
+              (
+                await getPageData(
+                  joinedSlug,
+                  `?action=history&ver=${Number(ver) + 1}`,
+                )
+              ).page.content || page.content
+            }
             oldVer={Number(ver)}
-            newVer={"latest"}
+            newVer={
+              (
+                await getPageData(
+                  joinedSlug,
+                  `?action=history&ver=${Number(ver) + 1}`,
+                )
+              ).page.content
+                ? Number(ver) + 1
+                : "latest"
+            }
           />
           <TransitionLinkButton
             href={`/wiki/${decodeURIComponent(joinedSlug)}?action=history`}

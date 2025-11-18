@@ -37,6 +37,11 @@ export default function StableDiffViewer({
   return (
     <div>
       <div>
+        <p className="mt-3">
+          {oldContent === newContent
+            ? "No differences found."
+            : `Differences between versions ${oldVer} and ${newVer}:`}
+        </p>
         <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
           {diffs.map((part, index) => {
             const color = part.added
@@ -52,39 +57,45 @@ export default function StableDiffViewer({
           })}
         </pre>
       </div>
-      <details>
-        <summary className="mt-4 mb-2 font-bold select-none">
-          View Raw Versions
-        </summary>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <h3 className="mb-2 font-semibold">
-              Old Content{" "}
-              {oldVer && (
-                <span className="text-gray-500">
-                  ({oldVer === "latest" ? "latest" : `ver. ${oldVer}`})
-                </span>
-              )}
-            </h3>
-            <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
-              {oldContent ? oldContent : "No previous content available."}
-            </pre>
+      {oldContent === newContent ? (
+        <p className="mt-4 text-sm text-gray-500">
+          No differences between the selected versions.
+        </p>
+      ) : (
+        <details>
+          <summary className="mt-4 mb-2 font-bold select-none">
+            View Raw Versions
+          </summary>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <h3 className="mb-2 font-semibold">
+                Old Content{" "}
+                {oldVer && (
+                  <span className="text-gray-500">
+                    ({oldVer === "latest" ? "latest" : `ver. ${oldVer}`})
+                  </span>
+                )}
+              </h3>
+              <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+                {oldContent ? oldContent : "No previous content available."}
+              </pre>
+            </div>
+            <div>
+              <h3 className="mb-2 font-semibold">
+                New Content{" "}
+                {newVer && (
+                  <span className="text-gray-500">
+                    ({newVer === "latest" ? "latest" : `ver. ${newVer}`})
+                  </span>
+                )}
+              </h3>
+              <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+                {newContent ? newContent : "No new content available."}
+              </pre>
+            </div>
           </div>
-          <div>
-            <h3 className="mb-2 font-semibold">
-              New Content{" "}
-              {newVer && (
-                <span className="text-gray-500">
-                  ({newVer === "latest" ? "latest" : `ver. ${newVer}`})
-                </span>
-              )}
-            </h3>
-            <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
-              {newContent ? newContent : "No new content available."}
-            </pre>
-          </div>
-        </div>
-      </details>
+        </details>
+      )}
     </div>
   );
 }
