@@ -18,11 +18,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from "./api/authorization";
-export * from "./api/checkRedirect";
-export * from "./api/getPages";
-export * from "./api/getLoungeComments";
-export * from "./api/pagination";
-export * from "./slugify";
-export * from "./safeRedirect";
-export * from "./themeColor";
+export async function fetchComments({
+  pageId,
+  commentId,
+  hPage,
+  sortBy,
+}: {
+  pageId: string;
+  commentId: string;
+  hPage: number;
+  sortBy: string;
+}) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${pageId}/${commentId}?hPage=${hPage}&sortBy=${sortBy}`,
+  );
+  if (!response.ok) {
+    return null;
+  }
+  return await response.json();
+}

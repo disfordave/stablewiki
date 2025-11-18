@@ -46,6 +46,7 @@ import {
   getLatestPageRevision,
   safeRedirect,
   getThemeColor,
+  fetchComments,
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
@@ -445,6 +446,13 @@ export async function generateMetadata({
   const showHistoryList = historyList && !ver;
   const showHistoryVersion = historyList && ver;
 
+  const loungeId =
+    isLoungeView && baseSlug
+      ? baseSlug
+          .slice(baseSlug.indexOf(encodeURIComponent("_lounge")) + 1)
+          .join("/")
+      : null;
+
   try {
     const queryParams = showHistoryVersion
       ? `?action=history&ver=${ver}`
@@ -545,6 +553,23 @@ export async function generateMetadata({
     }
 
     if (isLoungeView) {
+      const commentId = loungeId;
+
+      if (commentId) {
+        const comments = await fetchComments({
+          pageId: page.id,
+          commentId: commentId,
+          hPage: 1,
+          sortBy: "createdAt",
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const comment = comments?.data.find((c: any) => c.id === commentId);
+        return {
+          title: `${comment ? comment.title : "Unknown"} on ${page.title} Lounge | ${WIKI_NAME}`,
+          description: `Discussion lounge comment on the wiki page titled "${page.title}".`,
+        };
+      }
+
       return {
         title: `Lounge for ${page.title} | ${WIKI_NAME}`,
         description: `Discussion lounge for the wiki page titled "${page.title}".`,
