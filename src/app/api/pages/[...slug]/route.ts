@@ -379,6 +379,13 @@ export async function DELETE(
     );
   }
 
+  if (decodedToken.role !== "ADMIN" && decodedToken.role !== "EDITOR") {
+    return Response.json(
+      { error: "Only admins and editors can delete pages" },
+      { status: 403 },
+    );
+  }
+
   if (
     "/wiki/" + slug.join("/") === WIKI_HOMEPAGE_LINK &&
     decodedToken.role !== "ADMIN" &&
