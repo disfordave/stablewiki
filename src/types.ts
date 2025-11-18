@@ -66,6 +66,15 @@ export interface User {
   status: number;
 }
 
+export interface PublicUser {
+  id: string;
+  username: string;
+  avatarUrl: string;
+  role: Role;
+  createdAt: Date;
+  status: number;
+}
+
 export interface Comment {
   id: string;
   title: string;

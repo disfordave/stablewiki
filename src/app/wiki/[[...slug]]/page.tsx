@@ -29,6 +29,7 @@ import {
   TransitionLinkButton,
 } from "@/components/ui";
 import { UserPostPage } from "@/components/user";
+import PublicUserInfo from "@/components/user/PublicUserInfo";
 import {
   DiffViewer,
   MarkdownPage,
@@ -48,6 +49,7 @@ import {
 } from "@/utils";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
+import Link from "next/link";
 
 function Chip({ text }: { text: string }) {
   return (
@@ -198,9 +200,21 @@ export default async function WikiPage({
         {showDiff ? "Differences of " : ""}
         {page ? (
           isUserPagePostPage ? (
-            <>{`${page.title.split("/")[1]} `}</>
+            <Link
+              href={`/wiki/${page.slug.join("/")}`}
+              className="hover:underline"
+              title="View Post"
+            >
+              {`${page.title.split("/")[1]} `}
+            </Link>
           ) : (
-            page.title
+            <Link
+              href={`/wiki/${page.slug.join("/")}`}
+              className="hover:underline"
+              title={"View Page: " + page.title}
+            >
+              {page.title}
+            </Link>
           )
         ) : pageRevisions.revisions.length > 0 ? (
           isUserPagePostPage ? (
@@ -303,13 +317,18 @@ export default async function WikiPage({
             ) : (
               <>
                 {isUserPage && (
-                  <TransitionLinkButton
-                    href={`/wiki/User:${pageOwner}#posts`}
-                    className={`mt-3 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
-                  >
-                    <DocumentTextIcon className="inline size-5" />
-                    Posts by User:{pageOwner}
-                  </TransitionLinkButton>
+                  <>
+                    <TransitionLinkButton
+                      href={`/wiki/User:${pageOwner}#posts`}
+                      className={`mt-3 mb-4 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
+                    >
+                      <DocumentTextIcon className="inline size-5" />
+                      Posts by User:{pageOwner}
+                    </TransitionLinkButton>
+                    {pageOwner && slug.length === 1 && (
+                      <PublicUserInfo username={pageOwner} />
+                    )}
+                  </>
                 )}
                 {isMediaPage && (
                   <div className="mt-3 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">

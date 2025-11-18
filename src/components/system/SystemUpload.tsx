@@ -85,7 +85,7 @@ export default async function StableUpload() {
     return <MustSignInMessage />;
   }
 
-    if (user.status > 0) {
+  if (user.status > 0) {
     return <DisabledMessage message="Your account has been banned" />;
   }
   //   const error = searchParams.error as string | undefined;
