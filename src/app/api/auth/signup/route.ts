@@ -22,6 +22,7 @@ import { prisma } from "@/lib/prisma";
 // import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
+import { slugify } from "@/utils";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -45,11 +46,11 @@ export async function POST(request: Request) {
     return Response.json({ error: "Passwords do not match" }, { status: 400 });
   }
 
-  if (!username.match(/^[a-zA-Z0-9_]{3,20}$/)) {
+  if (!username.match(/^[a-z0-9_]{3,20}$/)) {
     return Response.json(
       {
         error:
-          "Username must be 3-20 characters long and can only contain letters, numbers, and underscores",
+          "Username must be 3-20 characters long and can only contain lower case letters, numbers, and underscores",
       },
       { status: 400 },
     );
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
 
   try {
     const existingUser = await prisma.user.findUnique({
-      where: { username: username },
+      where: { username: username.toLowerCase() },
     });
 
     if (existingUser) {
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
-        username: username,
+        username: username.toLowerCase(),
         password: hashedPassword,
         role: isFirstUser ? "ADMIN" : "USER",
       },
@@ -99,6 +100,30 @@ export async function POST(request: Request) {
     }
 
     let token;
+
+    if (newUser) {
+      const data = { user: newUser };
+      // Add user page creation automatically.
+      await prisma.page.create({
+        data: {
+          title: `User:${data.user.username}`,
+          content: "",
+          slug: slugify(`User:${data.user.username}`),
+          author: { connect: { id: data.user.id as string } },
+          revisions: {
+            create: {
+              content: `Hello, ${data.user.username}!`,
+              author: { connect: { id: data.user.id as string } },
+              summary: `User page for ${data.user.username}`,
+              isRedirect: false,
+              redirectTargetSlug: null,
+              title: `User:${data.user.username}`,
+            },
+          },
+          isRedirect: false,
+        },
+      });
+    }
 
     const response = Response.json({
       message: "Signup successful! Welcome aboard!",
