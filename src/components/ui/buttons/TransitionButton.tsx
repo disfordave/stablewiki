@@ -49,12 +49,14 @@ function TransitionFormButton({
   children,
   useButtonWithoutForm = false,
   title,
+  disabled,
 }: {
   className?: string;
   action?: (formData: FormData) => Promise<void>;
   children: React.ReactNode;
   useButtonWithoutForm?: boolean;
   title?: string;
+  disabled?: boolean;
 }) {
   if (useButtonWithoutForm) {
     return (
@@ -63,6 +65,7 @@ function TransitionFormButton({
         title={title}
         aria-label={title}
         className={`flex w-fit cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 ${className || ""}`}
+        disabled={disabled}
       >
         {children}
       </button>
@@ -74,6 +77,9 @@ function TransitionFormButton({
       <button
         type="submit"
         className={`flex w-fit cursor-pointer items-center justify-center gap-1 rounded-full px-2 py-1 font-medium transition-colors duration-300 ${className || ""}`}
+        title={title}
+        aria-label={title}
+        disabled={disabled}
       >
         {children}
       </button>

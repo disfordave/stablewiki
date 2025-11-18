@@ -173,6 +173,10 @@ export default async function StableEditor({
     );
   }
 
+  if (user.status > 0) {
+    return <DisabledMessage message="Your account has been banned" />;
+  }
+
   if (!page?.id) {
     return (
       <form action={createPage} className="flex flex-col gap-3">

@@ -99,6 +99,10 @@ export default async function StableRevert({
     );
   }
 
+    if (user.status > 0) {
+    return <DisabledMessage message="Your account has been banned" />;
+  }
+
   return (
     <>
       <StableDiffViewer

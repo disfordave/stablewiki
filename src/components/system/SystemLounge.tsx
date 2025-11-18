@@ -105,6 +105,7 @@ function commentReactionButton({
           ? "bg-blue-500 text-white hover:bg-blue-600"
           : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
       }`}
+      disabled={!user || user.status > 0}
     >
       👍{" "}
       <span className="tabular-nums">
@@ -248,7 +249,7 @@ function Comment({
             </div>
 
             <span className="flex gap-2">
-              {user && comment.rootCommentId && (
+              {user && user.status === 0 && comment.rootCommentId && (
                 <Link
                   href={`?hPage=${hPage}&sortBy=${sortBy}&replyTo=${comment.id}#writer`}
                   className="hover:underline"
@@ -256,7 +257,7 @@ function Comment({
                   Reply
                 </Link>
               )}
-              {user && comment.authorId === user.id && (
+              {user && user.status === 0 && comment.authorId === user.id && (
                 <Link
                   href={`?hPage=${hPage}&sortBy=${sortBy}&targetLoungeCommentId=${comment.id}#writer`}
                   className="hover:underline"
@@ -462,7 +463,7 @@ export default async function SystemLounge({
       ) : (
         <p className="mt-2">No Lounge threads found.</p>
       )}
-      {user && (
+      {user && user.status === 0 && (
         <form
           action={targetLoungeCommentId ? editComment : createComment}
           id="writer"
@@ -567,7 +568,7 @@ export default async function SystemLounge({
           </TransitionFormButton>
         </form>
       )}
-      {user && targetLoungeCommentId && (
+      {user && targetLoungeCommentId && user.status === 0 && (
         <button
           onClick={async () => {
             "use server";
