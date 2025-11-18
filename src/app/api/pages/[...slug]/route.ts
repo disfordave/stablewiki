@@ -159,7 +159,7 @@ export async function GET(
           },
         },
         revisions: {
-          orderBy: [{ createdAt: "desc" }, { id: "desc" }], // secondary key
+          orderBy: [{ version: "desc" }, { createdAt: "desc" }, { id: "desc" }], // secondary key
           take: 1,
           include: { author: { select: { id: true, username: true } } },
         },
