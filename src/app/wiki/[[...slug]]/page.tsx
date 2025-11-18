@@ -321,7 +321,7 @@ export default async function WikiPage({
                   <>
                     <TransitionLinkButton
                       href={`/wiki/User:${pageOwner}#posts`}
-                      className={`mt-3 mb-4 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
+                      className={`mt-3 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
                     >
                       <DocumentTextIcon className="inline size-5" />
                       Posts by User:{pageOwner}
