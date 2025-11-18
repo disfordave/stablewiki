@@ -4,7 +4,7 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=500' next dev --turbopack",
     "build": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=500' next build --turbopack",
     "start": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=500' next start",
     "lint": "eslint",

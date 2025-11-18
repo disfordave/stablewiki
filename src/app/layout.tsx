@@ -23,7 +23,7 @@ import {
   IBM_Plex_Mono,
   // IBM_Plex_Sans,
   // IBM_Plex_Sans_KR,
-  Noto_Sans_KR,
+  // Noto_Sans_KR,
   Inter,
 } from "next/font/google";
 import "./globals.css";
@@ -46,11 +46,11 @@ const inter = Inter({
   ],
 });
 
-const notoSansKR = Noto_Sans_KR({
-  variable: "--font-noto-sans-kr",
-  subsets: ["latin", "latin-ext"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
+// const notoSansKR = Noto_Sans_KR({
+//   variable: "--font-noto-sans-kr",
+//   subsets: ["latin", "latin-ext"],
+//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+// });
 
 // const ibmPlexSans = IBM_Plex_Sans({
 //   variable: "--font-ibm-plex-sans",
@@ -99,7 +99,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SidWiki" />
       </Head>
       <body
-        className={`${inter.variable} ${notoSansKR.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        className={`${inter.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
