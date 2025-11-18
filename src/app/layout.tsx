@@ -19,13 +19,7 @@
 */
 
 import type { Metadata, Viewport } from "next";
-import {
-  IBM_Plex_Mono,
-  // IBM_Plex_Sans,
-  // IBM_Plex_Sans_KR,
-  // Noto_Sans_KR,
-  Inter,
-} from "next/font/google";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
@@ -45,30 +39,6 @@ const inter = Inter({
     "vietnamese",
   ],
 });
-
-// const notoSansKR = Noto_Sans_KR({
-//   variable: "--font-noto-sans-kr",
-//   subsets: ["latin", "latin-ext"],
-//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-// });
-
-// const ibmPlexSans = IBM_Plex_Sans({
-//   variable: "--font-ibm-plex-sans",
-//   subsets: [
-//     "latin",
-//     "latin-ext",
-//     "cyrillic",
-//     "cyrillic-ext",
-//     "greek",
-//     "vietnamese",
-//   ],
-// });
-
-// const ibmPlexSansKR = IBM_Plex_Sans_KR({
-//   variable: "--font-ibm-plex-sans-kr",
-//   subsets: ["latin", "latin-ext"],
-//   weight: ["100", "200", "300", "400", "500", "600", "700"],
-// });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
