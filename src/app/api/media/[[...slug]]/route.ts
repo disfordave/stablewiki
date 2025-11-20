@@ -22,14 +22,67 @@ import { WIKI_DISABLE_MEDIA } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { getDecodedToken, slugify } from "@/utils";
 import { writeFile, mkdir } from "fs/promises";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
+import fs from "fs/promises";
 
-export async function POST(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
+  const { slug } = await params;
+
+  if (!slug || slug.length === 0) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  const filename = slug?.join("/") || "";
+  const filePath = path.join(process.cwd(), "public", "media", filename);
+
+  if (!filename) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  try {
+    const file = await fs.readFile(filePath);
+    const ext = path.extname(filePath).toLowerCase();
+    const type =
+      ext === ".svg"
+        ? "image/svg+xml"
+        : ext === ".png"
+          ? "image/png"
+          : ext === ".jpg" || ext === ".jpeg"
+            ? "image/jpeg"
+            : ext === ".gif"
+              ? "image/gif"
+              : ext === ".webp"
+                ? "image/webp"
+                : "application/octet-stream";
+
+    return new NextResponse(new Uint8Array(file), {
+      headers: { "Content-Type": type },
+    });
+  } catch {
+    return new NextResponse("Not found", { status: 404 });
+  }
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
+  const { slug } = await params;
   if (WIKI_DISABLE_MEDIA) {
     return Response.json(
       { error: "Media uploads are disabled" },
       { status: 403 },
+    );
+  }
+
+  if (slug && slug.length > 0) {
+    return Response.json(
+      { error: "Invalid media upload URL" },
+      { status: 400 },
     );
   }
 
@@ -87,7 +140,7 @@ export async function POST(request: NextRequest) {
   const extension = media.name.split(".").pop();
   const buffer = Buffer.from(await media.arrayBuffer());
 
-  const fullTitle = extension ? `${title}.${extension}` : title;
+  const fullTitle = extension ? `${title}.${extension.toLowerCase()}` : title;
   console.log({ fullTitle });
 
   const uploadDir = path.join(process.cwd(), "public", "media");
