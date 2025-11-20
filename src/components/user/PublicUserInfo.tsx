@@ -2,6 +2,7 @@ import { PublicUser } from "@/types";
 import { TransitionLinkButton } from "../ui";
 import { DocumentTextIcon, ClockIcon } from "@heroicons/react/24/solid";
 import { getThemeColor } from "@/utils";
+import Link from "next/link";
 
 export default async function PublicUserInfo({
   username,
@@ -30,8 +31,14 @@ export default async function PublicUserInfo({
   return (
     <div className="mt-3 flex items-center rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <div>
-        <h2 className="text-xl font-semibold">{user.username}</h2>
-
+        <h2 className="text-xl font-semibold">
+          <Link
+            href={`/wiki/User:${user.username}`}
+            className="hover:underline"
+          >
+            {user.username}
+          </Link>
+        </h2>
         <p className="text-sm text-gray-500">Role: {user.role}</p>
         <p className="text-sm text-gray-500">
           Status: {user.status === 0 ? "Active" : "Banned"}
