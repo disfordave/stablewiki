@@ -18,10 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import {
-  DocumentTextIcon,
-  ArrowUturnLeftIcon,
-} from "@heroicons/react/24/solid";
+import { ClockIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 import {
   DisabledMessage,
   MustSignInMessage,
@@ -122,7 +119,7 @@ export default async function StableRevert({
             href={`/wiki/${decodeURIComponent(slug)}?action=history`}
             className="bg-blue-500 text-white hover:bg-blue-600"
           >
-            <DocumentTextIcon className="inline size-5" />
+            <ClockIcon className="inline size-5" />
             History
           </TransitionLinkButton>
           <TransitionFormButton

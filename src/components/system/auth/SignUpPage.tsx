@@ -46,7 +46,7 @@ export default async function SignupPage() {
     }
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/signup`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
       {
         method: "POST",
         headers: {

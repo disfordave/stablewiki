@@ -48,7 +48,7 @@ import {
   getThemeColor,
   fetchComments,
 } from "@/utils";
-import { DocumentTextIcon } from "@heroicons/react/24/solid";
+import { ClockIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -288,7 +288,7 @@ export default async function WikiPage({
             href={`/wiki/${decodeURIComponent(joinedSlug)}?action=history`}
             className="mt-4 bg-blue-500 text-white hover:bg-blue-600"
           >
-            <DocumentTextIcon className="inline size-5" />
+            <ClockIcon className="inline size-5" />
             History
           </TransitionLinkButton>
         </div>
@@ -334,18 +334,7 @@ export default async function WikiPage({
             ) : (
               <>
                 {isUserPage && (
-                  <>
-                    <TransitionLinkButton
-                      href={`/wiki/User:${pageOwner}#posts`}
-                      className={`mt-3 text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
-                    >
-                      <DocumentTextIcon className="inline size-5" />
-                      Posts by User:{pageOwner}
-                    </TransitionLinkButton>
-                    {pageOwner && slug.length === 1 && (
-                      <PublicUserInfo username={pageOwner} />
-                    )}
-                  </>
+                  <>{pageOwner && <PublicUserInfo username={pageOwner} />}</>
                 )}
                 {isMediaPage && (
                   <div className="mt-3 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
@@ -512,6 +501,11 @@ export async function generateMetadata({
           return {
             title: `Create New Page | ${WIKI_NAME}`,
             description: `Create a new wiki page on ${WIKI_NAME}.`,
+          };
+        case "Revisions":
+          return {
+            title: `Revision History | ${WIKI_NAME}`,
+            description: `View recent revisions on ${WIKI_NAME}.`,
           };
         default:
           return {

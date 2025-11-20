@@ -31,6 +31,7 @@ import {
   PhotoIcon,
   ArrowLeftStartOnRectangleIcon,
   UserIcon,
+  ClockIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
@@ -279,10 +280,17 @@ export default async function DashboardPage() {
                 My Page
               </TransitionLinkButton>
               <TransitionLinkButton
+                href={`/wiki/User:${user.username}#posts`}
+                className={`text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
+              >
+                <DocumentTextIcon className="inline size-5" />
+                My Posts
+              </TransitionLinkButton>
+              <TransitionLinkButton
                 href={`/wiki/System:Revisions?username=${user.username}`}
                 className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
               >
-                <DocumentTextIcon className="inline size-5" />
+                <ClockIcon className="inline size-5" />
                 My Revisions
               </TransitionLinkButton>
             </div>
@@ -318,10 +326,10 @@ export default async function DashboardPage() {
         </div>
         {user.role === Role.ADMIN && (
           <details>
-            <summary className="mt-4 mb-2 font-semibold select-none">
+            <summary className="mt-4 font-semibold select-none">
               Admin Panel
             </summary>
-            <form className="flex flex-col gap-4" action={adminAction}>
+            <form className="mt-2 flex flex-col gap-4" action={adminAction}>
               <div>
                 <label htmlFor="actionType" className="mb-2 block font-medium">
                   Action Type
@@ -425,10 +433,10 @@ export default async function DashboardPage() {
           </details>
         )}
         <details>
-          <summary className="mt-2 mb-2 font-semibold select-none">
+          <summary className="mt-4 font-semibold select-none">
             Change Password
           </summary>
-          <form className="flex flex-col gap-4" action={changePassword}>
+          <form className="mt-2 flex flex-col gap-4" action={changePassword}>
             <div>
               <label
                 htmlFor="currentPassword"
@@ -484,10 +492,10 @@ export default async function DashboardPage() {
           </form>
         </details>
         <details>
-          <summary className="mt-2 mb-2 font-semibold select-none">
+          <summary className="mt-4 font-semibold select-none">
             Debug Info
           </summary>
-          <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+          <pre className="mt-2 overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
             {JSON.stringify(user, null, 2)}
           </pre>
         </details>

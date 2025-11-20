@@ -24,7 +24,7 @@ import { TransitionLinkButton } from "../ui/buttons/TransitionButton";
 import {
   ArrowPathIcon,
   PencilSquareIcon,
-  DocumentTextIcon,
+  ClockIcon,
   ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
 
@@ -70,7 +70,7 @@ function MdPageButtons({
           href={`/wiki/${decodedSlug}?action=history`}
           className="bg-blue-500 text-white hover:bg-blue-600"
         >
-          <DocumentTextIcon className="inline size-5" />
+          <ClockIcon className="inline size-5" />
           History
         </TransitionLinkButton>
         <div className="flex-1"></div>
