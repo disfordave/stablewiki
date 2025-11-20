@@ -1,5 +1,7 @@
 import { PublicUser } from "@/types";
-import Link from "next/link";
+import { TransitionLinkButton } from "../ui";
+import { DocumentTextIcon } from "@heroicons/react/24/solid";
+import { getThemeColor } from "@/utils";
 
 export default async function PublicUserInfo({
   username,
@@ -28,7 +30,7 @@ export default async function PublicUserInfo({
   return (
     <div className="mt-4 flex items-center rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <div>
-        <h2 className="text-lg font-semibold">{user.username}</h2>
+        <h2 className="text-xl font-semibold">{user.username}</h2>
 
         <p className="text-sm text-gray-500">Role: {user.role}</p>
         <p className="text-sm text-gray-500">
@@ -37,12 +39,13 @@ export default async function PublicUserInfo({
         <p className="text-sm text-gray-500">
           Joined on {new Date(user.createdAt).toLocaleDateString()}
         </p>
-        <Link
-          href={`/wiki/System:Revisions?username=${encodeURIComponent(user.username)}`}
-          className="text-blue-500 hover:underline"
+        <TransitionLinkButton
+          href={`/wiki/System:Revisions?username=${user.username}`}
+          className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover} mt-2`}
         >
+          <DocumentTextIcon className="inline size-5" />
           {user.username}&apos;s Revision History
-        </Link>
+        </TransitionLinkButton>
       </div>
     </div>
   );

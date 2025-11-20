@@ -24,7 +24,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
 import { getUser } from "@/lib";
 import Pagination from "../ui/Pagination";
-import { safeRedirect } from "@/utils";
+import { getThemeColor, safeRedirect } from "@/utils";
 
 export default async function UserPostPage({
   username,
@@ -79,11 +79,11 @@ export default async function UserPostPage({
             type="text"
             name="title"
             placeholder="Create a title for your new post (You can edit it later)"
-            className="mt-2 w-full rounded-xl border border-gray-300 p-2 dark:border-gray-700"
+            className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           />
           <TransitionFormButton
             useButtonWithoutForm
-            className="bg-blue-500 text-white hover:bg-blue-600"
+            className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
           >
             <PencilSquareIcon className="inline size-5" />
             Create New Post

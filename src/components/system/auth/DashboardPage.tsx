@@ -223,7 +223,7 @@ export default async function DashboardPage() {
         <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
           {user.role === Role.ADMIN && (
             <>
-              <p className={`font-bold ${getThemeColor.text.base}`}>
+              <p className={`font-semibold ${getThemeColor.text.base}`}>
                 You have administrative privileges.
               </p>
               <ul className="list-inside list-disc">
@@ -241,7 +241,7 @@ export default async function DashboardPage() {
           )}
           {user.role === Role.EDITOR && (
             <>
-              <p className="font-bold text-blue-500">
+              <p className="font-semibold text-blue-500">
                 You have editor privileges.
               </p>
               <ul className="list-inside list-disc">
@@ -255,7 +255,7 @@ export default async function DashboardPage() {
           )}
           {user.role === Role.USER && (
             <>
-              <p className="font-bold text-green-500">
+              <p className="font-semibold text-green-500">
                 You have standard user privileges.
               </p>
               <ul className="list-inside list-disc">
@@ -267,7 +267,7 @@ export default async function DashboardPage() {
             </>
           )}
         </div>
-        <div className="mt-2 mb-2 flex flex-wrap items-center justify-between gap-2">
+        <div className="mt-2 mb-2 flex flex-col flex-wrap items-start justify-start gap-2">
           <div>
             <p className="mb-1 font-semibold">User Links</p>
             <div className="flex flex-wrap items-center gap-2">
@@ -318,7 +318,7 @@ export default async function DashboardPage() {
         </div>
         {user.role === Role.ADMIN && (
           <details>
-            <summary className="mt-4 mb-2 font-bold select-none">
+            <summary className="mt-4 mb-2 font-semibold select-none">
               Admin Panel
             </summary>
             <form className="flex flex-col gap-4" action={adminAction}>
@@ -417,7 +417,7 @@ export default async function DashboardPage() {
               </div>
               <TransitionFormButton
                 useButtonWithoutForm
-                className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+                className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover} mb-2`}
               >
                 Perform Admin Action
               </TransitionFormButton>
@@ -425,7 +425,7 @@ export default async function DashboardPage() {
           </details>
         )}
         <details>
-          <summary className="mt-2 mb-2 font-bold select-none">
+          <summary className="mt-2 mb-2 font-semibold select-none">
             Change Password
           </summary>
           <form className="flex flex-col gap-4" action={changePassword}>
@@ -477,14 +477,14 @@ export default async function DashboardPage() {
             <input type="hidden" name="username" value={user.username} />
             <TransitionFormButton
               useButtonWithoutForm
-              className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+              className={`text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover} mb-2`}
             >
               Change Password
             </TransitionFormButton>
           </form>
         </details>
         <details>
-          <summary className="mt-2 mb-2 font-bold select-none">
+          <summary className="mt-2 mb-2 font-semibold select-none">
             Debug Info
           </summary>
           <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
