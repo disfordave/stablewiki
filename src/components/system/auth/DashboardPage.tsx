@@ -31,6 +31,7 @@ import {
   PhotoIcon,
   ArrowLeftStartOnRectangleIcon,
   UserIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
 
@@ -266,6 +267,55 @@ export default async function DashboardPage() {
             </>
           )}
         </div>
+        <div className="mt-2 mb-2 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="mb-1 font-semibold">User Links</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <TransitionLinkButton
+                href={`/wiki/User:${user.username}`}
+                className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
+              >
+                <UserIcon className="inline size-5" />
+                My Page
+              </TransitionLinkButton>
+              <TransitionLinkButton
+                href={`/wiki/System:Revisions?username=${user.username}`}
+                className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
+              >
+                <DocumentTextIcon className="inline size-5" />
+                My Revisions
+              </TransitionLinkButton>
+            </div>
+          </div>
+          <div>
+            <p className="mb-1 font-semibold">General Actions</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <TransitionLinkButton
+                href={`/wiki/System:CreatePage`}
+                className="bg-blue-500 text-white hover:bg-blue-600"
+              >
+                <PencilSquareIcon className="inline size-5" />
+                Add New Page
+              </TransitionLinkButton>
+              {WIKI_DISABLE_MEDIA ? null : (
+                <TransitionLinkButton
+                  href="/wiki/System:Upload"
+                  className="bg-green-500 text-white hover:bg-green-600"
+                >
+                  <PhotoIcon className="inline size-5" />
+                  Upload
+                </TransitionLinkButton>
+              )}
+              <TransitionFormButton
+                action={signOutUser}
+                className="bg-red-500 text-white hover:bg-red-600"
+              >
+                <ArrowLeftStartOnRectangleIcon className="inline size-5" />
+                Sign Out
+              </TransitionFormButton>
+            </div>
+          </div>
+        </div>
         {user.role === Role.ADMIN && (
           <details>
             <summary className="mt-4 mb-2 font-bold select-none">
@@ -375,7 +425,7 @@ export default async function DashboardPage() {
           </details>
         )}
         <details>
-          <summary className="mt-4 mb-2 font-bold select-none">
+          <summary className="mt-2 mb-2 font-bold select-none">
             Change Password
           </summary>
           <form className="flex flex-col gap-4" action={changePassword}>
@@ -434,47 +484,13 @@ export default async function DashboardPage() {
           </form>
         </details>
         <details>
-          <summary className="mt-4 mb-2 font-bold select-none">
+          <summary className="mt-2 mb-2 font-bold select-none">
             Debug Info
           </summary>
           <pre className="overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
             {JSON.stringify(user, null, 2)}
           </pre>
         </details>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <TransitionLinkButton
-              href={`/wiki/User:${user.username}`}
-              className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
-            >
-              <UserIcon className="inline size-5" />
-              User Page
-            </TransitionLinkButton>
-            <TransitionLinkButton
-              href={`/wiki/System:CreatePage`}
-              className="bg-blue-500 text-white hover:bg-blue-600"
-            >
-              <PencilSquareIcon className="inline size-5" />
-              Add New Page
-            </TransitionLinkButton>
-            {WIKI_DISABLE_MEDIA ? null : (
-              <TransitionLinkButton
-                href="/wiki/System:Upload"
-                className="bg-green-500 text-white hover:bg-green-600"
-              >
-                <PhotoIcon className="inline size-5" />
-                Upload
-              </TransitionLinkButton>
-            )}
-            <TransitionFormButton
-              action={signOutUser}
-              className="bg-red-500 text-white hover:bg-red-600"
-            >
-              <ArrowLeftStartOnRectangleIcon className="inline size-5" />
-              Sign Out
-            </TransitionFormButton>
-          </div>
-        </div>
       </>
     );
   }
