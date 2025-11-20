@@ -25,6 +25,7 @@ import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
 import { SearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
+import { StableEditor } from "../wiki";
 
 export default function SystemPages({
   slug,
@@ -61,6 +62,23 @@ export default function SystemPages({
       return <DashboardPage />;
     case "SignUp":
       return <SignupPage />;
+    case "CreatePage":
+      return (
+        <>
+          <h1 className="text-3xl font-bold">Create New Page</h1>
+          <p>
+            Make sure not to create a page that already exists! Use the search
+            feature to check first or it will throw an error.
+          </p>
+          <div className="mt-2">
+            <StableEditor
+              page={undefined}
+              slug={"System:CreatePage"}
+              isSystemNewPage={true}
+            />
+          </div>
+        </>
+      );
     case "Upload":
       return <StableUpload />;
     default:

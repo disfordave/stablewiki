@@ -32,9 +32,11 @@ import { getThemeColor, safeRedirect, slugify } from "@/utils";
 export default async function StableEditor({
   page,
   slug,
+  isSystemNewPage = false,
 }: {
   page?: Page;
   slug: string;
+  isSystemNewPage?: boolean;
 }) {
   const user = await getUser();
 
@@ -46,6 +48,12 @@ export default async function StableEditor({
 
     if (!user) {
       throw new Error("User not found");
+    }
+
+    if (!title || !content) {
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${"Title and content are required"}`,
+      );
     }
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pages`, {
@@ -63,7 +71,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to create page: " + (await res.json()).error}`,
+        `/wiki/${slug}?action=edit&error=${"Failed to create page"}`,
       );
     }
 
@@ -103,9 +111,7 @@ export default async function StableEditor({
     );
 
     if (!res.ok) {
-      safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to edit page: " + (await res.json()).error}`,
-      );
+      safeRedirect(`/wiki/${slug}?action=edit&error=${"Failed to edit page"}`);
     }
 
     const data = await res.json();
@@ -136,7 +142,7 @@ export default async function StableEditor({
 
     if (!res.ok) {
       safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to delete page: " + (await res.json()).error}`,
+        `/wiki/${slug}?action=edit&error=${"Failed to delete page"}`,
       );
     }
 
@@ -183,7 +189,7 @@ export default async function StableEditor({
         <input
           type="text"
           name="title"
-          defaultValue={decodeURIComponent(slug)}
+          defaultValue={isSystemNewPage ? "" : decodeURIComponent(slug)}
           placeholder="Edit title"
           className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
           required

@@ -23,11 +23,11 @@ import {
   TransitionFormButton,
   TransitionLinkButton,
 } from "@/components/ui";
-import { WIKI_DISABLE_MEDIA, WIKI_HOMEPAGE_LINK } from "@/config";
+import { WIKI_DISABLE_MEDIA } from "@/config";
 import { getUser, signOutUser } from "@/lib";
 import { getThemeColor, safeRedirect } from "@/utils";
 import {
-  HomeIcon,
+  PencilSquareIcon,
   PhotoIcon,
   ArrowLeftStartOnRectangleIcon,
   UserIcon,
@@ -444,18 +444,18 @@ export default async function DashboardPage() {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <TransitionLinkButton
-              href={WIKI_HOMEPAGE_LINK}
-              className="bg-blue-500 text-white hover:bg-blue-600"
-            >
-              <HomeIcon className="inline size-5" />
-              Go to Home
-            </TransitionLinkButton>
-            <TransitionLinkButton
               href={`/wiki/User:${user.username}`}
               className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
             >
               <UserIcon className="inline size-5" />
               User Page
+            </TransitionLinkButton>
+            <TransitionLinkButton
+              href={`/wiki/System:CreatePage`}
+              className="bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <PencilSquareIcon className="inline size-5" />
+              Add New Page
             </TransitionLinkButton>
             {WIKI_DISABLE_MEDIA ? null : (
               <TransitionLinkButton

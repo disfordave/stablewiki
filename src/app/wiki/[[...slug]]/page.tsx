@@ -507,6 +507,11 @@ export async function generateMetadata({
             title: `Upload Media | ${WIKI_NAME}`,
             description: `Upload media files to ${WIKI_NAME}.`,
           };
+        case "CreatePage":
+          return {
+            title: `Create New Page | ${WIKI_NAME}`,
+            description: `Create a new wiki page on ${WIKI_NAME}.`,
+          };
         default:
           return {
             title: `System Page: ${slug[0]} | ${WIKI_NAME}`,
