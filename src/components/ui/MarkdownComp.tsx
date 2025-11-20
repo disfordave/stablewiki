@@ -24,7 +24,7 @@ import { slugify } from "@/utils";
 import rehypeSlug from "rehype-slug";
 // import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import toc from "rehype-toc";
-import React from "react";
+import Image from "next/image";
 
 export function WikiMarkdown({
   content,
@@ -64,15 +64,22 @@ export function WikiMarkdown({
       components={{
         img(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { alt, className, node, ...rest } = props;
+          const { alt, className, node, src, height, width, ...rest } = props;
           return (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               className={
                 (className ? className + " " : "") +
                 "my-[2em] w-full rounded-xl"
               }
-              alt={alt}
+              width={0}
+              height={0}
+              sizes="100vw"
+              fetchPriority="high"
+              loading="eager"
+              src={
+                typeof src === "string" ? src : "https://placehold.co/600x400"
+              }
+              alt={alt || ""}
               {...rest}
             />
           );
