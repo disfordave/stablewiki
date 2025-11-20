@@ -466,14 +466,14 @@ export default async function DashboardPage() {
                 Upload
               </TransitionLinkButton>
             )}
+            <TransitionFormButton
+              action={signOutUser}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              <ArrowLeftStartOnRectangleIcon className="inline size-5" />
+              Sign Out
+            </TransitionFormButton>
           </div>
-          <TransitionFormButton
-            action={signOutUser}
-            className="bg-red-500 text-white hover:bg-red-600"
-          >
-            <ArrowLeftStartOnRectangleIcon className="inline size-5" />
-            Sign Out
-          </TransitionFormButton>
         </div>
       </>
     );
