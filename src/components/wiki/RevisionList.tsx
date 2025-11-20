@@ -64,11 +64,23 @@ export default function RevisionList({
                     </span>
                   )}
                 </p>
-                <p className="text-sm text-gray-500">
-                  Edited by {rev.author?.username ?? "Unknown (No User)"} on{" "}
-                  {new Date(rev.createdAt).toLocaleString()}
-                </p>
               </Link>
+              <p className="text-sm text-gray-500">
+                Edited by{" "}
+                {rev.author?.username ? (
+                  <>
+                    <Link
+                      href={`/wiki/User:${encodeURIComponent(rev.author.username)}`}
+                      className="font-semibold hover:underline"
+                    >
+                      {rev.author.username}
+                    </Link>
+                  </>
+                ) : (
+                  <>Unknown (No User)</>
+                )}{" "}
+                on {new Date(rev.createdAt).toLocaleString()}
+              </p>
 
               <div className="flex flex-wrap gap-2">
                 <Link

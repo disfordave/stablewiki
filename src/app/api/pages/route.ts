@@ -19,7 +19,7 @@
 */
 
 import { prisma } from "@/lib/prisma";
-import { Page } from "@/types";
+import { Page, PageRevisionData } from "@/types";
 import { getDecodedToken, checkRedirect, handleHPage } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
@@ -32,10 +32,60 @@ export async function GET(request: NextRequest) {
   const itemsPerPage = 10;
   const hPage = searchParams.get("hPage") || "1";
   const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
+  const action = searchParams.get("action") || "";
+  const username = searchParams.get("username") || "";
+  const handledHPage = handleHPage(hPage) - 1;
+
+  if (action === "revisions") {
+    const pagesCount = await prisma.revision.count({
+      where: {
+        author: {
+          username: username || undefined,
+        },
+      },
+    });
+
+    const revisions = await prisma.revision.findMany({
+      where: {
+        author: {
+          username: username || undefined,
+        },
+      },
+      include: {
+        page: {
+          select: {
+            title: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: handledHPage * itemsPerPage,
+      take: itemsPerPage,
+    });
+    return Response.json({
+      totalPages: Math.ceil(pagesCount / itemsPerPage),
+      revisions: revisions.map((rev) => ({
+        id: rev.id,
+        version: rev.version,
+        title: rev.title,
+        content: rev.content,
+        createdAt: rev.createdAt.toISOString(),
+        author: rev.author
+          ? { id: rev.author.id, username: rev.author.username }
+          : undefined,
+        summary: rev.summary,
+        page: rev.page ? { title: rev.page.title } : undefined,
+      })),
+    } as PageRevisionData);
+  }
 
   try {
-    const handledHPage = handleHPage(hPage) - 1;
-
     const pagesCount = await prisma.page.count({
       where: {
         title: {

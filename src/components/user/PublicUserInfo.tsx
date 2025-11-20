@@ -1,4 +1,5 @@
 import { PublicUser } from "@/types";
+import Link from "next/link";
 
 export default async function PublicUserInfo({
   username,
@@ -28,6 +29,7 @@ export default async function PublicUserInfo({
     <div className="mt-4 flex items-center rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
       <div>
         <h2 className="text-lg font-semibold">{user.username}</h2>
+
         <p className="text-sm text-gray-500">Role: {user.role}</p>
         <p className="text-sm text-gray-500">
           Status: {user.status === 0 ? "Active" : "Banned"}
@@ -35,6 +37,12 @@ export default async function PublicUserInfo({
         <p className="text-sm text-gray-500">
           Joined on {new Date(user.createdAt).toLocaleDateString()}
         </p>
+        <Link
+          href={`/wiki/System:Revisions?username=${encodeURIComponent(user.username)}`}
+          className="text-blue-500 hover:underline"
+        >
+          {user.username}&apos;s Revision History
+        </Link>
       </div>
     </div>
   );

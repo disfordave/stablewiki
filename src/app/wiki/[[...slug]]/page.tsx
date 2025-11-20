@@ -80,6 +80,7 @@ export default async function WikiPage({
     replyTo,
     targetLoungeCommentId,
     sortBy,
+    username,
   } = await searchParams;
   // Determine if viewing lounge
   const loungeIndex = baseSlug?.findIndex(
@@ -128,7 +129,7 @@ export default async function WikiPage({
 
   // Handle special System: pages
   if (slug[0].startsWith(encodeURIComponent("System:"))) {
-    return <SystemPages slug={slug} q={q} hPage={hPage} />;
+    return <SystemPages slug={slug} q={q} hPage={hPage} username={username} />;
   }
 
   const isUserPage =

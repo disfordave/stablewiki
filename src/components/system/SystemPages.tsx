@@ -26,15 +26,18 @@ import StableUpload from "./SystemUpload";
 import { SearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
 import { StableEditor } from "../wiki";
+import SystemRevisions from "./SystemRevisions";
 
 export default function SystemPages({
   slug,
   q,
   hPage,
+  username,
 }: {
   slug: string[];
   q: string | string[] | undefined;
   hPage?: string | string[] | undefined;
+  username?: string | string[] | undefined;
 }) {
   const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
   switch (systemPage) {
@@ -81,6 +84,12 @@ export default function SystemPages({
       );
     case "Upload":
       return <StableUpload />;
+    case "Revisions":
+      return (
+        <>
+          <SystemRevisions hPage={hPage} username={username} />
+        </>
+      );
     default:
       return (
         <div>

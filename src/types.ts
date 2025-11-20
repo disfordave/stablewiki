@@ -54,6 +54,9 @@ export interface Revision {
   createdAt: string;
   author?: { id: string; username: string };
   summary: string;
+  page?: {
+    title: string;
+  };
 }
 
 export interface User {
