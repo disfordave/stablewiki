@@ -97,7 +97,7 @@ export default async function SignupPage() {
           />
           <p className="mt-1 text-sm text-gray-500">
             Username must be 3-20 characters long and can only contain letters,
-            numbers, and underscores
+            numbers, and underscores. You cannot change your username later.
           </p>
         </div>
         <div>
@@ -138,7 +138,7 @@ export default async function SignupPage() {
           <label htmlFor="consent" className="select-none">
             I agree to the{" "}
             <Link
-              href="/wiki/System:Terms"
+              href="/wiki/Wiki:Terms_and_Conditions"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:no-underline"
@@ -155,6 +155,10 @@ export default async function SignupPage() {
           <UserPlusIcon className="inline size-5" />
           Sign Up
         </TransitionFormButton>
+        <p className="animate-pulse text-center text-sm text-gray-500">
+          Currently, you cannot recover your password if you forget it. Please
+          make sure to remember your password.
+        </p>
       </form>
       <div className="text-center">
         <Link href="/wiki/System:SignIn" className="mt-4 inline-block">
