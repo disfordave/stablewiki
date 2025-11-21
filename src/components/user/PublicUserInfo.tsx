@@ -70,7 +70,7 @@ export default async function PublicUserInfo({
             className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} text-white`}
           >
             <ChatBubbleBottomCenterTextIcon className="inline size-5" />
-            Lounge
+            Comments
           </TransitionLinkButton>
         </div>
       </div>
