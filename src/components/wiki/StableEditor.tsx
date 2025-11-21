@@ -183,6 +183,12 @@ export default async function StableEditor({
     return <DisabledMessage message="Your account has been banned" />;
   }
 
+  if (page && page.accessLevel > 0 && user.role !== "ADMIN") {
+    return (
+      <DisabledMessage message="You cannot edit this page since you do not have the required access/edit level." />
+    );
+  }
+
   if (!page?.id) {
     return (
       <form action={createPage} className="flex flex-col gap-3">
@@ -225,21 +231,24 @@ export default async function StableEditor({
             Save Changes
           </TransitionFormButton>
         </form>
-        <details className="mt-3">
-          <summary className="cursor-pointer font-semibold text-red-500">
-            Delete this page
-          </summary>
-          <p className="mt-2 animate-pulse font-bold">
-            Warning: This action is irreversible. All page history will be lost.
-          </p>
-          <TransitionFormButton
-            action={deletePage}
-            className="mt-4 bg-red-500 text-white hover:bg-red-600"
-          >
-            <TrashIcon className="inline size-5" />
-            Delete Page
-          </TransitionFormButton>
-        </details>
+        {user.role === "ADMIN" && (
+          <details className="mt-3">
+            <summary className="cursor-pointer font-semibold text-red-500">
+              Delete this page
+            </summary>
+            <p className="mt-2 animate-pulse font-bold">
+              Warning: This action is irreversible. All page history will be
+              lost.
+            </p>
+            <TransitionFormButton
+              action={deletePage}
+              className="mt-4 bg-red-500 text-white hover:bg-red-600"
+            >
+              <TrashIcon className="inline size-5" />
+              Delete Page
+            </TransitionFormButton>
+          </details>
+        )}
       </>
     );
   }

@@ -100,6 +100,12 @@ export default async function StableRevert({
     return <DisabledMessage message="Your account has been banned" />;
   }
 
+  if (page && page.accessLevel > 0 && user.role !== "ADMIN") {
+    return (
+      <DisabledMessage message="You cannot edit this page since you do not have the required access/edit level." />
+    );
+  }
+
   return (
     <>
       <StableDiffViewer

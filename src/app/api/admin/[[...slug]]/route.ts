@@ -38,12 +38,12 @@ export async function PUT(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    if (slug[0] === "pages" && slug.length === 2) {
+    if (slug[0] === "pages" && slug.length === 1) {
       const body = await request.json();
-      const { accessLevel } = body;
+      const { accessLevel, slug: pageSlug } = body;
 
       const updatedPage = await prisma.page.update({
-        where: { slug: slug[1] },
+        where: { slug: pageSlug },
         data: {
           accessLevel,
         },

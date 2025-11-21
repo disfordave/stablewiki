@@ -314,6 +314,26 @@ export async function POST(
     );
   }
 
+  const accessLevelOfPost = await prisma.page.findUnique({
+    where: { slug: slug.join("/") },
+    select: { accessLevel: true },
+  });
+
+  if (!accessLevelOfPost) {
+    return Response.json({ error: "Page not found" }, { status: 400 });
+  }
+
+  if (
+    accessLevelOfPost.accessLevel > 0 &&
+    decodedToken.role !== "ADMIN" &&
+    decodedToken.role !== "EDITOR"
+  ) {
+    return Response.json(
+      { error: "You do not have permission to modify this page" },
+      { status: 403 },
+    );
+  }
+
   try {
     const revisionsCount = await prisma.revision.count({
       where: { page: { slug: slug.join("/") } },

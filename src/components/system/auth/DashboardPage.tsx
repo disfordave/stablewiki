@@ -116,7 +116,7 @@ export default async function DashboardPage() {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/pages/${targetPageId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/pages`,
         {
           method: "PUT",
           headers: {
@@ -125,6 +125,7 @@ export default async function DashboardPage() {
           },
           body: JSON.stringify({
             accessLevel: newAccessLevel,
+            slug: targetPageId,
           }),
         },
       );

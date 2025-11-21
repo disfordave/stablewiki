@@ -354,7 +354,14 @@ export default async function WikiPage({
                   slug={decodeURIComponent(slug.join("/"))}
                   content={page.content}
                 />
-
+                <div className="mt-4 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
+                  <p>
+                    Access/Edit Level of &apos;{page.title}&apos;:{" "}
+                    <span className="font-semibold tabular-nums">
+                      {page.accessLevel}
+                    </span>
+                  </p>
+                </div>
                 {!showHistoryVersion && (
                   <LoungePreview
                     pageTitle={page.title}
