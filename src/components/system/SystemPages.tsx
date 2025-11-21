@@ -27,6 +27,7 @@ import { SearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
 import { StableEditor } from "../wiki";
 import SystemRevisions from "./SystemRevisions";
+import SystemComments from "./SystemComments";
 
 export default function SystemPages({
   slug,
@@ -90,6 +91,8 @@ export default function SystemPages({
           <SystemRevisions hPage={hPage} username={username} />
         </>
       );
+    case "Comments":
+      return <SystemComments hPage={hPage} username={username} />;
     default:
       return (
         <div>

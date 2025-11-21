@@ -24,3 +24,5 @@ export { default as SystemUpload } from "./SystemUpload";
 export { default as DashboardPage } from "./auth/DashboardPage";
 export { default as SignInPage } from "./auth/SignInPage";
 export { default as SignUpPage } from "./auth/SignUpPage";
+export { default as SystemRevisions } from "./SystemRevisions";
+export { default as SystemComments } from "./SystemComments";

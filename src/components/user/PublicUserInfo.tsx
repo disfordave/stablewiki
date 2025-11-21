@@ -1,6 +1,10 @@
 import { PublicUser } from "@/types";
 import { TransitionLinkButton } from "../ui";
-import { DocumentTextIcon, ClockIcon } from "@heroicons/react/24/solid";
+import {
+  DocumentTextIcon,
+  ClockIcon,
+  ChatBubbleBottomCenterTextIcon,
+} from "@heroicons/react/24/solid";
 import { getThemeColor } from "@/utils";
 import Link from "next/link";
 
@@ -52,14 +56,21 @@ export default async function PublicUserInfo({
             className={`text-white ${getThemeColor.bg.hover} ${getThemeColor.bg.base}`}
           >
             <DocumentTextIcon className="inline size-5" />
-            {user.username}&apos;s Posts
+            Posts
           </TransitionLinkButton>
           <TransitionLinkButton
             href={`/wiki/System:Revisions?username=${user.username}`}
             className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
           >
             <ClockIcon className="inline size-5" />
-            {user.username}&apos;s Revision History
+            Revisions
+          </TransitionLinkButton>
+          <TransitionLinkButton
+            href={`/wiki/System:Comments?username=${user.username}`}
+            className={`${getThemeColor.bg.base} ${getThemeColor.bg.hover} text-white`}
+          >
+            <ChatBubbleBottomCenterTextIcon className="inline size-5" />
+            Lounge
           </TransitionLinkButton>
         </div>
       </div>

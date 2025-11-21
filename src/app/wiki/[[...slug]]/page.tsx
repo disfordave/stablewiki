@@ -507,6 +507,11 @@ export async function generateMetadata({
             title: `Revision History | ${WIKI_NAME}`,
             description: `View recent revisions on ${WIKI_NAME}.`,
           };
+        case "Comments":
+          return {
+            title: `Comments System | ${WIKI_NAME}`,
+            description: `View and manage comments on ${WIKI_NAME}.`,
+          };
         default:
           return {
             title: `System Page: ${slug[0]} | ${WIKI_NAME}`,

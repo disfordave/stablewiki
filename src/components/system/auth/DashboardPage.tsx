@@ -33,6 +33,7 @@ import {
   UserIcon,
   ClockIcon,
   DocumentTextIcon,
+  ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@prisma/client";
 
@@ -292,6 +293,13 @@ export default async function DashboardPage() {
               >
                 <ClockIcon className="inline size-5" />
                 My Revisions
+              </TransitionLinkButton>
+              <TransitionLinkButton
+                href={`/wiki/System:Comments?username=${user.username}`}
+                className={`${getThemeColor.bg.base} text-white ${getThemeColor.bg.hover}`}
+              >
+                <ChatBubbleBottomCenterTextIcon className="inline size-5" />
+                My Comments
               </TransitionLinkButton>
             </div>
           </div>

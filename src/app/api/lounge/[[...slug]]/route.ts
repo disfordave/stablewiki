@@ -32,8 +32,40 @@ export async function GET(
   const sortBy = searchParams.get("sortBy") || "createdAt";
   const validSortBy = sortBy === "likes" ? "likes" : "createdAt";
   const itemsPerPage = 10;
+  const username = searchParams.get("username") || null;
+
   if (!slug || slug.length === 0) {
-    return new Response("Bad Request", { status: 400 });
+    const count = await prisma.comment.count({
+      where: {
+        author: { username: username || undefined },
+      },
+    });
+    const allComments = await prisma.comment.findMany({
+      where: {
+        author: { username: username || undefined },
+      },
+      orderBy:
+        validSortBy === "likes"
+          ? [{ reactions: { _count: "desc" } }, { createdAt: "asc" }]
+          : { createdAt: "desc" },
+      include: {
+        author: { select: { username: true } },
+        reactions: {
+          where: { type: 1 },
+          select: { id: true, userId: true, type: true },
+        },
+        page: { select: { slug: true, title: true } },
+        root: { select: { id: true, title: true, deleted: true } },
+      },
+      skip: (Number(hPage) - 1) * itemsPerPage,
+      take: itemsPerPage,
+    });
+    return NextResponse.json({
+      data: allComments,
+      totalPaginationPages: Math.ceil(count / itemsPerPage),
+    });
+
+    // return new Response("Bad Request", { status: 400 });
   }
 
   if (slug.length === 1) {

@@ -179,23 +179,23 @@ function RootCommentForList({
       <div
         className={`mt-4 scale-100 overflow-hidden rounded-xl border-2 transition-all hover:scale-[99%] ${!comment.rootCommentId ? `${getThemeColor.border.base}` : "border-gray-100 dark:border-gray-900"} shadow-xs`}
       >
-        {comment.deleted ? (
-          <div className="p-4 text-center text-sm text-gray-500">
-            [This lounge has been deleted.]
-          </div>
-        ) : comment.isHidden ? (
-          <div className="p-4 text-center text-sm text-gray-500">
-            [This lounge is hidden.]
-          </div>
-        ) : (
-          <>
-            <div
-              className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
-            >
-              <span className="font-semibold">{comment.author.username}</span>
+        <>
+          <div
+            className={`px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+          >
+            <span className="font-semibold">{comment.author.username}</span>
 
-              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+            {` on ${new Date(comment.createdAt).toLocaleString()}`}
+          </div>
+          {comment.deleted ? (
+            <div className="p-4 text-center text-sm text-gray-500">
+              [This lounge has been deleted.]
             </div>
+          ) : comment.isHidden ? (
+            <div className="p-4 text-center text-sm text-gray-500">
+              [This lounge is hidden.]
+            </div>
+          ) : (
             <div className="p-4">
               {!comment.rootCommentId && (
                 <h4 className="line-clamp-2 text-lg font-semibold">
@@ -214,14 +214,14 @@ function RootCommentForList({
                 <span className="tabular-nums">{comment.reactions.length}</span>
               </div>
             </div>
-          </>
-        )}
+          )}
+        </>
       </div>
     </Link>
   );
 }
 
-function Comment({
+export function Comment({
   comment,
   user,
   hPage,
@@ -238,37 +238,28 @@ function Comment({
       id={comment.id}
       className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor.border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
     >
-      {comment.deleted ? (
-        <div className="p-4 text-center text-sm text-gray-500">
-          [This {comment.rootCommentId ? "reply" : "lounge"} has been deleted.]
-        </div>
-      ) : comment.isHidden ? (
-        <div className="p-4 text-center text-sm text-gray-500">
-          [This {comment.rootCommentId ? "reply" : "lounge"} is hidden.]
-        </div>
-      ) : (
-        <>
-          <div
-            className={`flex items-center justify-between gap-2 px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
-          >
-            <div className="flex flex-col items-start">
-              <span>
-                <Link
-                  className="font-semibold no-underline hover:underline"
-                  href={`/wiki/User:${comment.author.username}`}
-                >
-                  {comment.author.username}
-                </Link>
-                {` on ${new Date(comment.createdAt).toLocaleString()}`}
-                {comment.rootCommentId && ` (#${comment.index})`}
+      <>
+        <div
+          className={`flex items-center justify-between gap-2 px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+        >
+          <div className="flex flex-col items-start">
+            <span>
+              <Link
+                className="font-semibold no-underline hover:underline"
+                href={`/wiki/User:${comment.author.username}`}
+              >
+                {comment.author.username}
+              </Link>
+              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+              {comment.rootCommentId && ` (#${comment.index})`}
+            </span>
+            {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
+              <span className="text-xs opacity-75">
+                Edited on {new Date(comment.updatedAt).toLocaleString()}
               </span>
-              {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
-                <span className="text-xs opacity-75">
-                  Edited on {new Date(comment.updatedAt).toLocaleString()}
-                </span>
-              )}
-            </div>
-
+            )}
+          </div>
+          {!comment.deleted && (
             <span className="flex gap-2">
               {user && user.status === 0 && comment.rootCommentId && (
                 <Link
@@ -287,7 +278,18 @@ function Comment({
                 </Link>
               )}
             </span>
+          )}
+        </div>
+        {comment.deleted ? (
+          <div className="p-4 text-center text-sm text-gray-500">
+            [This {comment.rootCommentId ? "reply" : "lounge"} has been
+            deleted.]
           </div>
+        ) : comment.isHidden ? (
+          <div className="p-4 text-center text-sm text-gray-500">
+            [This {comment.rootCommentId ? "reply" : "lounge"} is hidden.]
+          </div>
+        ) : (
           <div className="px-4 pt-0 pb-4">
             {!comment.rootCommentId && (
               <h4 className="mt-4 text-lg font-semibold">{comment.title}</h4>
@@ -308,8 +310,8 @@ function Comment({
             <MarkdownComp content={comment.content} isComment={true} />
             <div>{commentReactionButton({ comment, user, hPage, sortBy })}</div>
           </div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 }
