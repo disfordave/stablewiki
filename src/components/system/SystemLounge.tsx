@@ -47,6 +47,10 @@ function commentReactionButton({
   hPage: number;
   sortBy: "likes" | "createdAt";
 }) {
+
+  const isReacted = comment.reactions.some((r: any) => r.userId === user?.id);
+  const isDisabled = !user || user.status > 0;
+
   return (
     <TransitionFormButton
       action={async () => {
@@ -122,11 +126,15 @@ function commentReactionButton({
         );
       }}
       className={`mt-4 shadow-xs ${
-        comment.reactions.some((r: any) => r.userId === user?.id)
-          ? "bg-blue-500 text-white hover:bg-blue-600"
-          : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
+        isReacted
+        ? isDisabled
+          ? "bg-blue-500 text-white"
+          : "bg-blue-500 text-white hover:bg-blue-600"
+        : isDisabled
+          ? "bg-gray-100 dark:bg-gray-900"
+          : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700"
       }`}
-      disabled={!user || user.status > 0}
+      disabled={isDisabled}
     >
       👍{" "}
       <span className="tabular-nums">
