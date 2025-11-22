@@ -120,12 +120,12 @@ export default async function SystemRevisions({
                 >
                   Differences
                 </Link>
-<Link
-                    href={`/wiki/${slugify(rev.title || rev.page?.title || "")}?action=revert&ver=${rev.version}`}
-                    className="inline-block text-sm text-red-500 hover:underline"
-                  >
-                    Revert to ver. {rev.version}
-                  </Link>
+                <Link
+                  href={`/wiki/${slugify(rev.title || rev.page?.title || "")}?action=revert&ver=${rev.version}`}
+                  className="inline-block text-sm text-red-500 hover:underline"
+                >
+                  Revert to ver. {rev.version}
+                </Link>
               </div>
             </li>
           ))

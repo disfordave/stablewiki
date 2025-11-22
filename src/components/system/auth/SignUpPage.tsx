@@ -82,7 +82,7 @@ export default async function SignupPage() {
       <h1 className="mb-4 text-center text-4xl font-bold">Sign Up</h1>
       <form
         action={handleSignup}
-        className="mx-auto mt-4 flex max-w-sm flex-col gap-4"
+        className="mx-auto mt-4 flex max-w-md flex-col gap-4"
       >
         <div>
           <label htmlFor="username" className="block">
@@ -144,6 +144,15 @@ export default async function SignupPage() {
               className="underline hover:no-underline"
             >
               terms and conditions
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/wiki/Wiki:Privacy_Policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:no-underline"
+            >
+              privacy policy
             </Link>
             .
           </label>
@@ -161,7 +170,7 @@ export default async function SignupPage() {
         </p>
       </form>
       <div className="text-center">
-        <Link href="/wiki/System:SignIn" className="mt-4 inline-block">
+        <Link href="/wiki/System:SignIn" className="mt-3 inline-block">
           Already have an account?{" "}
           <span className="underline hover:no-underline">Sign In</span>
         </Link>

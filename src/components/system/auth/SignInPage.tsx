@@ -84,7 +84,7 @@ export default async function SignIn() {
       <h1 className="mb-4 text-center text-4xl font-bold">Sign In</h1>
       <form
         action={signIn}
-        className="mx-auto mt-4 flex max-w-sm flex-col gap-4"
+        className="mx-auto mt-4 flex max-w-md flex-col gap-4"
       >
         <div>
           <label htmlFor="username" className="block">
