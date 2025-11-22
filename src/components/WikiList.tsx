@@ -50,9 +50,9 @@ export default async function WikiList({
         {pagesList.map((page) => (
           <li key={page.id}>
             <a href={`/wiki/${page.slug}`} className="">
-              <div className="rounded-xl bg-gray-100 p-4 transition-colors duration-300 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800">
+              <div className="rounded-xl bg-gray-100 p-4 hover:underline">
                 <h2
-                  className={`text-lg font-semibold ${page.isRedirect ? "text-gray-500" : ""}`}
+                  className={`line-clamp-3 text-lg font-semibold break-words ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
                   {isPostList ? (
                     `${page.title.split("/")[1]} `

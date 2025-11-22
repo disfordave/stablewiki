@@ -47,7 +47,9 @@ export function LoungePreview({
                   </p>
                 ) : (
                   <>
-                    <p className="line-clamp-2 font-medium">{comment.title}</p>
+                    <p className="line-clamp-2 font-medium break-words">
+                      {comment.title}
+                    </p>
                     <p className="text-sm text-gray-500">
                       By {comment.author.username} on{" "}
                       {new Date(comment.createdAt).toLocaleDateString()}

@@ -47,6 +47,7 @@ import {
   safeRedirect,
   getThemeColor,
   fetchComments,
+  getAccessEditLevelString,
 } from "@/utils";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
@@ -354,12 +355,12 @@ export default async function WikiPage({
                   slug={decodeURIComponent(slug.join("/"))}
                   content={page.content}
                 />
-                <div className="mt-4 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
-                  <p>
-                    Access/Edit Level of &apos;{page.title}&apos;:{" "}
-                    <span className="font-semibold tabular-nums">
-                      {page.accessLevel}
-                    </span>
+                <div className="mt-4 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+                  <p className="text-xs">
+                    Access/Edit Level of &apos;{page.title}&apos;{" "}
+                  </p>
+                  <p className="text-sm font-semibold tabular-nums">
+                    {getAccessEditLevelString(page.accessLevel, page.title)}
                   </p>
                 </div>
                 {!showHistoryVersion && (
