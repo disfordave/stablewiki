@@ -52,7 +52,7 @@ export default async function WikiList({
             <a href={`/wiki/${page.slug}`} className="">
               <div className="rounded-xl bg-gray-100 p-4 transition-colors duration-300 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800">
                 <h2
-                  className={`text-lg font-bold ${page.isRedirect ? "text-gray-500" : ""}`}
+                  className={`text-lg font-semibold ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
                   {isPostList ? (
                     `${page.title.split("/")[1]} `
