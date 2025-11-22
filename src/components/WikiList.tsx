@@ -50,7 +50,7 @@ export default async function WikiList({
         {pagesList.map((page) => (
           <li key={page.id}>
             <a href={`/wiki/${page.slug}`} className="">
-              <div className="rounded-xl bg-gray-100 p-4 hover:underline">
+              <div className="rounded-xl bg-gray-100 p-4 dark:bg-gray-900 hover:underline">
                 <h2
                   className={`line-clamp-3 text-lg font-semibold break-words ${page.isRedirect ? "text-gray-500" : ""}`}
                 >
