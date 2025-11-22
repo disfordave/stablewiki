@@ -95,7 +95,7 @@ export default async function UserPostPage({
       <Pagination
         currentPage={hPage ? parseInt(hPage as string, 10) : 1}
         totalPages={totalPaginationPages}
-        slug={`User:${username}/#posts?hPage=`}
+        slug={`User:${username}/?hPage=`}
       />
       {/* <TransitionLinkButton
         href={`/wiki/User:${username}`}
