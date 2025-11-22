@@ -357,7 +357,7 @@ export default async function WikiPage({
                 />
                 <div className="mt-4 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
                   <p className="text-xs">
-                    Access/Edit Level of &apos;{page.title}&apos;{" "}
+                    Edit Level of &apos;{page.title}&apos;{" "}
                   </p>
                   <p className="text-sm font-semibold tabular-nums">
                     {getAccessEditLevelString(page.accessLevel, page.title)}
