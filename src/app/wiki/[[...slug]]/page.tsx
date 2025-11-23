@@ -406,16 +406,6 @@ export default async function WikiPage({
           same terms as regular wiki pages. All rights reserved.
         </p>
       )}
-      {/* {!showEdit &&
-        !historyList &&
-        !showDiff &&
-        !showRevert &&
-        !showHistoryVersion && (
-          <div className="my-8 h-px w-full bg-gray-200 dark:bg-gray-700">
-            Comments Section Coming Soon!
-            <pre>{JSON.stringify(page?.comments, null, 2)}</pre>
-          </div>
-        )} */}
     </div>
   );
 }

@@ -131,7 +131,7 @@ function commentReactionButton({
             : "bg-blue-500 text-white hover:bg-blue-600"
           : isDisabled
             ? "bg-gray-100 dark:bg-gray-900"
-            : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700"
+            : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-950"
       }`}
       disabled={isDisabled}
     >
