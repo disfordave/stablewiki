@@ -30,23 +30,25 @@ export default function Pagination({
   currentPage,
   totalPages,
   slug,
+  trailingHash = "",
 }: {
   currentPage: number;
   totalPages: number;
   slug: string;
+  trailingHash?: string;
 }) {
   return (
     <>
       <div className="mt-4 flex items-center justify-center gap-2">
         <TransitionLinkButton
-          href={`/wiki/${slug}${1}`}
+          href={`/wiki/${slug}${1}${trailingHash}`}
           className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage === 1 || currentPage === 2) && "invisible"}`}
           title="First Page"
         >
           <ChevronDoubleLeftIcon className="inline size-5" />
         </TransitionLinkButton>
         <TransitionLinkButton
-          href={`/wiki/${slug}${currentPage - 1}`}
+          href={`/wiki/${slug}${currentPage - 1}${trailingHash}`}
           className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${currentPage <= 1 && "invisible"}`}
           title="Previous Page"
         >
@@ -54,14 +56,14 @@ export default function Pagination({
         </TransitionLinkButton>
         <p className="tabular-nums">{currentPage + " / " + totalPages}</p>
         <TransitionLinkButton
-          href={`/wiki/${slug}${currentPage + 1}`}
+          href={`/wiki/${slug}${currentPage + 1}${trailingHash}`}
           className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${currentPage >= totalPages && "invisible"}`}
           title="Next Page"
         >
           <ChevronRightIcon className="inline size-5" />
         </TransitionLinkButton>
         <TransitionLinkButton
-          href={`/wiki/${slug}${totalPages}`}
+          href={`/wiki/${slug}${totalPages}${trailingHash}`}
           className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage >= totalPages || currentPage === totalPages - 1) && "invisible"}`}
           title="Last Page"
         >
