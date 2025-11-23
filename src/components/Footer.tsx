@@ -24,6 +24,7 @@ import {
   WIKI_LICENSE_NAME,
   WIKI_LICENSE_URL,
 } from "@/config";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -54,7 +55,14 @@ export default function Footer() {
         . All rights reserved.
       </p>
       <p className="text-xs text-gray-500" id="down">
-        StableWiki Engine v0.0.1
+        <Link
+          href="https://sidwiki.com/wiki/Wiki:StableWiki_Engine"
+          className="no-underline hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          StableWiki Engine v0.0.1
+        </Link>
       </p>
     </footer>
   );
