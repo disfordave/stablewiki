@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { WIKI_DISABLE_MEDIA } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { getDecodedToken, slugify } from "@/utils";
 import { writeFile, mkdir } from "fs/promises";
@@ -77,6 +77,16 @@ export async function POST(
       { error: "Media uploads are disabled" },
       { status: 403 },
     );
+  }
+
+  if (WIKI_MEDIA_ADMIN_ONLY) {
+    const decodedToken = await getDecodedToken(request);
+    if (!decodedToken || decodedToken.role !== "ADMIN") {
+      return Response.json(
+        { error: "Only admins can upload media" },
+        { status: 403 },
+      );
+    }
   }
 
   if (slug && slug.length > 0) {

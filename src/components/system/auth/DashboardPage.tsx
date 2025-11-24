@@ -23,7 +23,7 @@ import {
   TransitionFormButton,
   TransitionLinkButton,
 } from "@/components/ui";
-import { WIKI_DISABLE_MEDIA } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY } from "@/config";
 import { getUser, signOutUser } from "@/lib";
 import { getThemeColor, safeRedirect } from "@/utils";
 import {
@@ -315,13 +315,15 @@ export default async function DashboardPage() {
                 Add New Page
               </TransitionLinkButton>
               {WIKI_DISABLE_MEDIA ? null : (
-                <TransitionLinkButton
-                  href="/wiki/System:Upload"
-                  className="bg-green-500 text-white hover:bg-green-600"
-                >
-                  <PhotoIcon className="inline size-5" />
-                  Upload
-                </TransitionLinkButton>
+                WIKI_MEDIA_ADMIN_ONLY && user.role !== Role.ADMIN ? null : (
+                  <TransitionLinkButton
+                    href={`/wiki/System:UploadMedia`}
+                    className="bg-green-500 text-white hover:bg-green-600"
+                  >
+                    <PhotoIcon className="inline size-5" />
+                    Upload Media
+                  </TransitionLinkButton>
+                )
               )}
               <TransitionFormButton
                 action={signOutUser}

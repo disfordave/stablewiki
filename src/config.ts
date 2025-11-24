@@ -41,6 +41,7 @@ const WIKI_LICENSE_NAME = process.env.WIKI_LICENSE_NAME || "CC BY-SA 4.0";
 const WIKI_LICENSE_URL =
   process.env.WIKI_LICENSE_URL ||
   "https://creativecommons.org/licenses/by-sa/4.0/";
+const WIKI_MEDIA_ADMIN_ONLY = process.env.WIKI_MEDIA_ADMIN_ONLY === "true";
 
 export {
   WIKI_NAME,
@@ -56,4 +57,5 @@ export {
   WIKI_DISABLE_SIGNUP,
   WIKI_LICENSE_NAME,
   WIKI_LICENSE_URL,
+  WIKI_MEDIA_ADMIN_ONLY,
 };

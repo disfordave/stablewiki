@@ -19,7 +19,7 @@
 */
 
 import { getUser } from "@/lib";
-import { WIKI_DISABLE_MEDIA, WIKI_NAME } from "@/config";
+import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY, WIKI_NAME } from "@/config";
 import {
   DisabledMessage,
   MustSignInMessage,
@@ -39,6 +39,15 @@ export default async function StableUpload() {
   }
 
   const user = await getUser();
+
+  if (WIKI_MEDIA_ADMIN_ONLY) {
+    if (!user || user.role !== "ADMIN") {
+      return (
+        <DisabledMessage message="Media uploads are restricted to admin users only." />
+      );
+    }
+  }
+
   async function uploadMedia(formData: FormData) {
     "use server";
 
