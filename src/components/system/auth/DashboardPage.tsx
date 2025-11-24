@@ -317,7 +317,7 @@ export default async function DashboardPage() {
               {WIKI_DISABLE_MEDIA ? null : WIKI_MEDIA_ADMIN_ONLY &&
                 user.role !== Role.ADMIN ? null : (
                 <TransitionLinkButton
-                  href={`/wiki/System:UploadMedia`}
+                  href={`/wiki/System:Upload`}
                   className="bg-green-500 text-white hover:bg-green-600"
                 >
                   <PhotoIcon className="inline size-5" />
