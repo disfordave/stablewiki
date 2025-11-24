@@ -56,10 +56,42 @@ export async function PUT(
       const body = await request.json();
       const { status } = body;
 
+      // - 0 for active, 1 for banned
+      // - 101 for normal user, 102 for moderators, 103 for editors, 109 for admins
+
+      const userCounter = await prisma.user.count();
+      if (userCounter <= 1) {
+        return new Response(
+          "Cannot change status of the only user in the system",
+          { status: 400 },
+        );
+      }
+
+      if (status < 0 || status < 101 || status > 109) {
+        return new Response("Invalid status value", { status: 400 });
+      }
+
+      if (status < 2) {
+        const updatedUser = await prisma.user.update({
+          where: { username: slug[1] },
+          data: {
+            status,
+          },
+        });
+        return NextResponse.json({ data: updatedUser });
+      }
+
       const updatedUser = await prisma.user.update({
         where: { username: slug[1] },
         data: {
-          status,
+          role:
+            status === 101
+              ? "USER"
+              : status === 102
+                ? "MODERATOR"
+                : status === 103
+                  ? "EDITOR"
+                  : "ADMIN",
         },
       });
 

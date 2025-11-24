@@ -314,16 +314,15 @@ export default async function DashboardPage() {
                 <PencilSquareIcon className="inline size-5" />
                 Add New Page
               </TransitionLinkButton>
-              {WIKI_DISABLE_MEDIA ? null : (
-                WIKI_MEDIA_ADMIN_ONLY && user.role !== Role.ADMIN ? null : (
-                  <TransitionLinkButton
-                    href={`/wiki/System:UploadMedia`}
-                    className="bg-green-500 text-white hover:bg-green-600"
-                  >
-                    <PhotoIcon className="inline size-5" />
-                    Upload Media
-                  </TransitionLinkButton>
-                )
+              {WIKI_DISABLE_MEDIA ? null : WIKI_MEDIA_ADMIN_ONLY &&
+                user.role !== Role.ADMIN ? null : (
+                <TransitionLinkButton
+                  href={`/wiki/System:UploadMedia`}
+                  className="bg-green-500 text-white hover:bg-green-600"
+                >
+                  <PhotoIcon className="inline size-5" />
+                  Upload Media
+                </TransitionLinkButton>
               )}
               <TransitionFormButton
                 action={signOutUser}
@@ -375,15 +374,19 @@ export default async function DashboardPage() {
               <div>
                 <label htmlFor="newStatus" className="block">
                   <p className="font-medium">New User Status</p>
+                  <p className="mb-0 text-sm text-gray-500 dark:text-gray-400">
+                    - 0 for active, 1 for banned
+                  </p>
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    (e.g., 0 for active, 1 for banned)
+                    - 101 for normal user, 102 for moderators, 103 for editors,
+                    109 for admins
                   </p>
                 </label>
                 <input
                   id="newStatus"
                   type="number"
                   min="0"
-                  max="1"
+                  max="109"
                   name="newStatus"
                   placeholder="New Status"
                   className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
