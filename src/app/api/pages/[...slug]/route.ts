@@ -21,7 +21,13 @@
 import { WIKI_HOMEPAGE_LINK } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { Page } from "@/types";
-import { checkRedirect, handleHPage, getDecodedToken, slugify } from "@/utils";
+import {
+  checkRedirect,
+  handleHPage,
+  getDecodedToken,
+  slugify,
+  isUsersPage,
+} from "@/utils";
 import { unlink } from "fs/promises";
 import path from "path";
 
@@ -399,9 +405,16 @@ export async function DELETE(
     );
   }
 
-  if (decodedToken.role !== "ADMIN" && decodedToken.role !== "EDITOR") {
+  if (
+    decodedToken.role !== "ADMIN" &&
+    decodedToken.role !== "EDITOR" &&
+    !isUsersPage(slug.join("/"), decodedToken.username, true)
+  ) {
     return Response.json(
-      { error: "Only admins and editors can delete pages" },
+      {
+        error:
+          "Only admins and editors can delete pages, or the user page owner",
+      },
       { status: 403 },
     );
   }

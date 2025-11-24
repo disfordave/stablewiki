@@ -27,7 +27,7 @@ import {
 } from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
-import { getThemeColor, safeRedirect, slugify } from "@/utils";
+import { getThemeColor, isUsersPage, safeRedirect, slugify } from "@/utils";
 
 export default async function StableEditor({
   page,
@@ -231,7 +231,9 @@ export default async function StableEditor({
             Save Changes
           </TransitionFormButton>
         </form>
-        {(user.role === "ADMIN" || user.role === "EDITOR") && (
+        {(user.role === "ADMIN" ||
+          user.role === "EDITOR" ||
+          isUsersPage(page.title, user.username, true)) && (
           <details className="mt-3">
             <summary className="cursor-pointer font-semibold text-red-500">
               Delete this page

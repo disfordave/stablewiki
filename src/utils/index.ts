@@ -27,3 +27,4 @@ export * from "./slugify";
 export * from "./safeRedirect";
 export * from "./themeColor";
 export * from "./getEditLevelString";
+export * from "./isUsersPost";
