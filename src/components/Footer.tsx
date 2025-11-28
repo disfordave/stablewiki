@@ -57,7 +57,7 @@ export default function Footer() {
       <p className="text-xs text-gray-500" id="down">
         <Link
           href="https://sidwiki.com/wiki/Wiki:StableWiki_Engine"
-          className="no-underline hover:underline"
+          className="hover:no-underline underline"
           target="_blank"
           rel="noopener noreferrer"
         >
