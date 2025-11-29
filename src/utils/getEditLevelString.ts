@@ -6,7 +6,7 @@ export function getAccessEditLevelString(
 ): string {
   if (title && editLevel === 0) {
     if (title.startsWith("User:")) {
-      return "User's own page (themselves and admins only)";
+      return `User's own page (${title.split("/")[0]} and admins only)`;
     } else if (title.startsWith("Wiki:")) {
       return "Editors and above";
     } else if (title.startsWith("System:")) {
