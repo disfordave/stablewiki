@@ -73,12 +73,18 @@ export default function RootLayout({
         id="up"
       >
         <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
-          <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4">
-            <Header />
-            <main className="flex-grow overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
-              {children}
-            </main>
-            <Footer />
+          <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4 lg:max-w-6xl">
+            <div className="lg:col-span-3">
+              <Header />
+            </div>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+              <main className="min-h-[calc(100vh-64px)] overflow-auto rounded-2xl bg-white p-4 lg:col-span-2 dark:bg-gray-800">
+                {children}
+              </main>
+            </div>
+            <div className="">
+              <Footer />
+            </div>
           </div>
           <BackToTopButton />
         </div>

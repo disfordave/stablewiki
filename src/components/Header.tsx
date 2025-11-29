@@ -75,7 +75,7 @@ export default async function Header() {
                 className={` ${getThemeColor.bg.base} ${getThemeColor.bg.hover} text-white`}
               >
                 <UserIcon className="inline size-5" />
-                <span className="font-bold">{user.username}</span>
+                <span className="">{user.username}</span>
               </TransitionLinkButton>
             </div>
           ) : (
@@ -90,9 +90,10 @@ export default async function Header() {
           <TransitionLinkButton
             title="Search"
             href="/wiki/System:Search"
-            className={`aspect-square h-full rounded-full text-white ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
+            className={`aspect-square h-full rounded-full text-white lg:aspect-auto ${getThemeColor.bg.base} ${getThemeColor.bg.hover}`}
           >
             <MagnifyingGlassIcon className="inline size-4" />
+            <span className="hidden lg:inline">Search</span>
           </TransitionLinkButton>
         </div>
       </div>
