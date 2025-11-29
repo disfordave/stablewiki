@@ -223,7 +223,7 @@ export default async function DashboardPage() {
             information.
           </p>
         )}
-        <div className="mt-2 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+        <div className="mt-2 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
           {user.role === Role.ADMIN && (
             <>
               <p className={`font-semibold ${getThemeColor.text.base}`}>
@@ -347,7 +347,7 @@ export default async function DashboardPage() {
                 <select
                   id="actionType"
                   name="actionType"
-                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                   required
                 >
                   <option value="changeUserStatus">Change User Status</option>
@@ -368,16 +368,16 @@ export default async function DashboardPage() {
                   type="text"
                   name="targetUsername"
                   placeholder="Target Username"
-                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 />
               </div>
               <div>
                 <label htmlFor="newStatus" className="block">
                   <p className="font-medium">New User Status</p>
-                  <p className="mb-0 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mb-0 text-sm text-zinc-500 dark:text-zinc-400">
                     - 0 for active, 1 for banned
                   </p>
-                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
                     - 101 for normal user, 102 for moderators, 103 for editors,
                     109 for admins
                   </p>
@@ -389,7 +389,7 @@ export default async function DashboardPage() {
                   max="109"
                   name="newStatus"
                   placeholder="New Status"
-                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 />
               </div>
               <div>
@@ -404,13 +404,13 @@ export default async function DashboardPage() {
                   type="text"
                   name="targetPageId"
                   placeholder="Target Page Slug"
-                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 />
               </div>
               <div>
                 <label htmlFor="newAccessLevel" className="block">
                   <p className="font-medium">New Access (Edit) Level</p>
-                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
                     (e.g., 0 for registered users, 1 for moderators, 9 for
                     admins only)
                   </p>
@@ -422,7 +422,7 @@ export default async function DashboardPage() {
                   max="9"
                   name="newAccessLevel"
                   placeholder="New Access (Edit) Level"
-                  className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                  className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -463,7 +463,7 @@ export default async function DashboardPage() {
                 type="password"
                 name="currentPassword"
                 placeholder="Current Password"
-                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 required
               />
             </div>
@@ -476,7 +476,7 @@ export default async function DashboardPage() {
                 type="password"
                 name="newPassword"
                 placeholder="New Password"
-                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 required
               />
             </div>
@@ -492,7 +492,7 @@ export default async function DashboardPage() {
                 type="password"
                 name="newPasswordConfirm"
                 placeholder="Confirm New Password"
-                className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+                className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 required
               />
             </div>
@@ -509,7 +509,7 @@ export default async function DashboardPage() {
           <summary className="mt-4 font-semibold select-none">
             Debug Info
           </summary>
-          <pre className="mt-2 overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+          <pre className="mt-2 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
             {JSON.stringify(user, null, 2)}
           </pre>
         </details>

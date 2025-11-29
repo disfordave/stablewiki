@@ -12,7 +12,7 @@ export function LoungePreview({
   comments?: any[];
 }) {
   return (
-    <div className="mt-4 flex flex-col gap-2 overflow-auto rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+    <div className="mt-4 flex flex-col gap-2 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
       <Link href={`/wiki/${slug}/_lounge`}>
         <div className="flex w-full flex-wrap items-center justify-between gap-2 no-underline hover:underline">
           <div>
@@ -20,7 +20,7 @@ export function LoungePreview({
               <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-5" />
               <span>Latest on Lounge</span>
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Join the conversation about the &apos;{pageTitle}&apos; article →
             </p>
           </div>
@@ -33,16 +33,16 @@ export function LoungePreview({
       </Link>
       <ul className="flex flex-col gap-2">
         {comments.length === 0 && (
-          <p className="rounded-lg bg-white p-4 text-sm text-gray-500 dark:bg-gray-800">
+          <p className="rounded-lg bg-white p-4 text-sm text-zinc-500 dark:bg-zinc-800">
             No comments yet. Be the first to comment!
           </p>
         )}
         {comments.slice(0, 2).map((comment: any) => (
           <li key={comment.id}>
             <Link href={`/wiki/${slug}/_lounge/${comment.id}`}>
-              <div className="rounded-lg bg-white p-4 hover:underline dark:bg-gray-800">
+              <div className="rounded-lg bg-white p-4 hover:underline dark:bg-zinc-800">
                 {comment.deleted ? (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-zinc-500">
                     Deleted Lounge by {comment.author.username}
                   </p>
                 ) : (
@@ -50,7 +50,7 @@ export function LoungePreview({
                     <p className="line-clamp-2 font-medium break-words">
                       {comment.title}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-500">
                       By {comment.author.username} on{" "}
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </p>

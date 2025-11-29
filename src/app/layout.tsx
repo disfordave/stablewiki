@@ -69,13 +69,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="SidWiki" />
       </Head>
       <body
-        className={`${inter.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-gray-100 dark:bg-gray-800 sm:dark:bg-gray-900`}
+        className={`${inter.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-zinc-100 dark:bg-zinc-800 sm:dark:bg-zinc-900`}
         id="up"
       >
-        <div className="h-full min-h-screen w-full bg-gray-100 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
+        <div className="h-full min-h-screen w-full bg-zinc-100 text-zinc-900 transition-colors duration-300 dark:bg-zinc-900 dark:text-zinc-100">
           <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-0 sm:p-4">
             <Header />
-            <main className="flex-grow overflow-auto rounded-2xl bg-white p-4 dark:bg-gray-800">
+            <main className="min-h-[calc(100vh-12rem)] overflow-auto rounded-2xl bg-white p-4 dark:bg-zinc-800">
               {children}
             </main>
             <Footer />

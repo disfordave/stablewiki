@@ -39,7 +39,7 @@ export default async function Header() {
   const user = await getUser();
 
   return (
-    <header className="rounded-b-2xl bg-white p-4 sm:rounded-2xl dark:bg-gray-800">
+    <header className="rounded-b-2xl bg-white p-4 sm:rounded-2xl dark:bg-zinc-800">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xl font-bold">
           <Link href={WIKI_HOMEPAGE_LINK} className="flex items-center gap-1">

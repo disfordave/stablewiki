@@ -22,16 +22,16 @@ export default function Comments() {
   return (
     <>
       <div>
-        <div className="mt-6 mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
+        <div className="mt-6 mb-4 h-1 w-full rounded-full bg-zinc-100 dark:bg-zinc-900"></div>
         <h3 className="mb-4 text-2xl font-bold">Comments (14)</h3>
         <ul>
           <li>
-            <div className="rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+            <div className="rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
               <p className="font-medium">
                 Hello, this is a placeholder for comments functionality.
               </p>
-              <p className="text-sm text-gray-500">By Commenter123</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-zinc-500">By Commenter123</p>
+              <p className="text-sm text-zinc-500">
                 {new Date().toLocaleDateString(undefined, {
                   year: "numeric",
                   month: "long",

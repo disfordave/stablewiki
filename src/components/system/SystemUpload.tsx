@@ -108,7 +108,7 @@ export default async function StableUpload() {
             type="text"
             name="title"
             placeholder="Title of image"
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
             required
           />
         </div>
@@ -118,7 +118,7 @@ export default async function StableUpload() {
             type="file"
             name="media"
             accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml,image/webp,image/gif"
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
             required
           />
         </div>
@@ -131,7 +131,7 @@ export default async function StableUpload() {
             name="description"
             rows={5}
             placeholder="Description of the media"
-            className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-xl bg-zinc-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           ></textarea>
         </div>
         <div>
@@ -140,7 +140,7 @@ export default async function StableUpload() {
             type="text"
             name="alt"
             placeholder="Alt text for the media"
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
         </div>
         <div>
@@ -149,7 +149,7 @@ export default async function StableUpload() {
             type="text"
             name="source"
             placeholder="Source of the media"
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
         </div>
         <div>
@@ -158,7 +158,7 @@ export default async function StableUpload() {
             type="text"
             name="license"
             placeholder="License of the media"
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
         </div> */}
         <TransitionFormButton

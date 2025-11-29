@@ -26,7 +26,7 @@ import Link from "next/link";
 
 export function BackToTopButton() {
   return (
-    <div className="fixed end-6 bottom-6 flex flex-col gap-1 rounded-full bg-gray-300/50 p-1 dark:bg-gray-700/50">
+    <div className="fixed end-6 bottom-6 flex flex-col gap-1 rounded-full bg-zinc-300/50 p-1 dark:bg-zinc-700/50">
       <Link
         className={`flex w-fit cursor-pointer rounded-full font-medium text-nowrap opacity-50 transition-opacity duration-300 hover:opacity-75`}
         href="#up"

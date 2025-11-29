@@ -28,8 +28,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-2xl bg-white px-4 py-8 text-start sm:rounded-2xl dark:bg-gray-800">
-      <p className="max-w-lg text-sm text-gray-500">
+    <footer className="rounded-t-2xl bg-white px-4 py-8 text-start sm:rounded-2xl dark:bg-zinc-800">
+      <p className="max-w-lg text-sm text-zinc-500">
         All wiki text — except for content on User:, System:, and Media: pages —
         is licensed under{" "}
         <a
@@ -42,7 +42,7 @@ export default function Footer() {
         </a>
       </p>
 
-      <p className="mt-4 text-sm text-gray-500">
+      <p className="mt-4 text-sm text-zinc-500">
         &copy; {new Date().getFullYear()}{" "}
         <a
           href={WIKI_COPYRIGHT_HOLDER_URL}
@@ -54,7 +54,7 @@ export default function Footer() {
         </a>
         . All rights reserved.
       </p>
-      <p className="text-xs text-gray-500" id="down">
+      <p className="text-xs text-zinc-500" id="down">
         <Link
           href="https://sidwiki.com/wiki/Wiki:StableWiki_Engine"
           className="underline hover:no-underline"

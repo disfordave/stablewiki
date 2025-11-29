@@ -50,15 +50,15 @@ export default async function WikiList({
         {pagesList.map((page) => (
           <li key={page.id}>
             <a href={`/wiki/${page.slug}`} className="">
-              <div className="rounded-xl bg-gray-100 p-4 transition-colors duration-300 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-950">
+              <div className="rounded-xl bg-zinc-100 p-4 transition-colors duration-300 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-950">
                 <h2
-                  className={`line-clamp-3 text-lg font-semibold break-words ${page.isRedirect ? "text-gray-500" : ""}`}
+                  className={`line-clamp-3 text-lg font-semibold break-words ${page.isRedirect ? "text-zinc-500" : ""}`}
                 >
                   {isPostList ? (
                     `${page.title.split("/")[1]} `
                   ) : isUserPostPage(page) ? (
                     <>
-                      <span className="text-gray-500">
+                      <span className="text-zinc-500">
                         ({page.title.split("/")[0]})
                       </span>
                       {` ${page.title.split("/")[1]}`}
@@ -68,7 +68,7 @@ export default async function WikiList({
                   )}{" "}
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-zinc-500">
                   By {page.author ? page.author.username : "Unknown"} on{" "}
                   {new Date(page.createdAt).toLocaleDateString()}
                 </p>

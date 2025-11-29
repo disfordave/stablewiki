@@ -69,7 +69,7 @@ export function WikiMarkdown({
             <Image
               className={
                 (className ? className + " " : "") +
-                "mt-4 mb-4 max-h-[61vh] w-full rounded-xl bg-gray-100 object-contain dark:bg-gray-900"
+                "mt-4 mb-4 max-h-[61vh] w-full rounded-xl bg-zinc-100 object-contain dark:bg-zinc-900"
               }
               width={0}
               height={0}
@@ -89,7 +89,7 @@ export function WikiMarkdown({
           const { children, className, node, ...rest } = props;
           if (className === "toc" && !isComment) {
             return (
-              <details className="rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+              <details className="rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
                 <summary className="-m-4 p-4 font-bold select-none">
                   Contents
                 </summary>

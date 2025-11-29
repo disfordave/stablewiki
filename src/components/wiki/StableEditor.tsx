@@ -197,7 +197,7 @@ export default async function StableEditor({
           name="title"
           defaultValue={isSystemNewPage ? "" : decodeURIComponent(slug)}
           placeholder="Edit title"
-          className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+          className={`w-full rounded-full bg-zinc-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           required
         />
         <WikiEditor />
@@ -219,7 +219,7 @@ export default async function StableEditor({
             name="title"
             defaultValue={page.title}
             placeholder="Edit title"
-            className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
             required
           />
           <WikiEditor defaultValue={page.content} />

@@ -93,9 +93,9 @@ export default async function SignupPage() {
             id="username"
             name="username"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-zinc-500">
             Username must be 3-20 characters long and can only contain letters,
             numbers, and underscores. You cannot change your username later.
           </p>
@@ -109,9 +109,9 @@ export default async function SignupPage() {
             id="password"
             name="password"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-zinc-500">
             Password must be at least 8 characters long
           </p>
         </div>
@@ -124,7 +124,7 @@ export default async function SignupPage() {
             id="passwordConfirm"
             name="passwordConfirm"
             required
-            className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+            className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export default async function SignupPage() {
           <UserPlusIcon className="inline size-5" />
           Sign Up
         </TransitionFormButton>
-        <p className="animate-pulse text-center text-sm text-gray-500">
+        <p className="animate-pulse text-center text-sm text-zinc-500">
           Currently, you cannot recover your password if you forget it. Please
           make sure to remember your password.
         </p>

@@ -77,7 +77,7 @@ export default async function SystemRevisions({
           revisionsData.revisions.map((rev: Revision) => (
             <li
               key={rev.id}
-              className="flex flex-col items-start justify-between border-b border-gray-300 pb-2 dark:border-gray-700"
+              className="flex flex-col items-start justify-between border-b border-zinc-300 pb-2 dark:border-zinc-700"
             >
               <Link
                 className="hover:underline"
@@ -85,19 +85,19 @@ export default async function SystemRevisions({
               >
                 <h2 className="font-bold">
                   {rev.title || rev.page?.title || "Untitled Page"}{" "}
-                  <span className="text-gray-500">(ver. {rev.version})</span>
+                  <span className="text-zinc-500">(ver. {rev.version})</span>
                 </h2>
-                <p className="border-s-4 border-gray-300 ps-2 text-sm dark:border-gray-700">
+                <p className="border-s-4 border-zinc-300 ps-2 text-sm dark:border-zinc-700">
                   {rev.summary && rev.summary.length > 0 ? (
                     <span className="font-medium">{rev.summary}</span>
                   ) : (
-                    <span className="text-gray-500 italic">
+                    <span className="text-zinc-500 italic">
                       No summary provided.
                     </span>
                   )}
                 </p>
               </Link>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-zinc-500">
                 Edited by{" "}
                 {rev.author?.username ? (
                   <>

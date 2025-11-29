@@ -35,7 +35,7 @@ export async function SearchBox() {
       <input
         type="text"
         name="search"
-        className={`w-full rounded-full bg-gray-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+        className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
         placeholder="Search..."
         required
       />

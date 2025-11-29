@@ -28,14 +28,14 @@ export function WikiEditor({ defaultValue }: { defaultValue?: string }) {
         defaultValue={defaultValue}
         rows={20}
         placeholder="Page content in Markdown"
-        className={`w-full rounded-xl bg-gray-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+        className={`w-full rounded-xl bg-zinc-100 p-4 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
         required
       ></textarea>
       <input
         type="text"
         name="summary"
         placeholder="Edit summary (optional)"
-        className={`w-full rounded-full bg-gray-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-gray-900`}
+        className={`w-full rounded-full bg-zinc-100 px-4 py-2 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
       />
     </>
   );

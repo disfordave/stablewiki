@@ -79,7 +79,7 @@ export default async function SystemComments({
           <div
             key={comment.id}
             id={comment.id}
-            className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor.border.base : "border-gray-100 dark:border-gray-900"} shadow-xs`}
+            className={`mt-4 overflow-hidden rounded-xl border-2 ${!comment.rootCommentId ? getThemeColor.border.base : "border-zinc-100 dark:border-zinc-900"} shadow-xs`}
           >
             <Link
               href={`/wiki/${comment.page.slug}/_lounge/${comment.rootCommentId ? comment.rootCommentId : comment.id}`}
@@ -91,19 +91,19 @@ export default async function SystemComments({
                     {comment.root.deleted ? "[Deleted]" : comment.root.title}
                   </span>{" "}
                   in <span className="font-semibold">{comment.page.title}</span>{" "}
-                  <span className="font-normal text-gray-500">Lounge</span>
+                  <span className="font-normal text-zinc-500">Lounge</span>
                 </>
               ) : (
                 <>
                   <span className="font-semibold">{comment.page.title}</span>{" "}
-                  <span className="font-normal text-gray-500">Lounge</span>
+                  <span className="font-normal text-zinc-500">Lounge</span>
                 </>
               )}{" "}
             </Link>
 
             <>
               <div
-                className={`flex items-center justify-between gap-2 px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-gray-100 dark:bg-gray-900"} text-sm`}
+                className={`flex items-center justify-between gap-2 px-4 py-2 ${!comment.rootCommentId ? `${getThemeColor.bg.base} text-white` : "bg-zinc-100 dark:bg-zinc-900"} text-sm`}
               >
                 <div className="flex flex-col items-start">
                   <span>
@@ -124,12 +124,12 @@ export default async function SystemComments({
                 </div>
               </div>
               {comment.deleted ? (
-                <div className="p-4 text-center text-sm text-gray-500">
+                <div className="p-4 text-center text-sm text-zinc-500">
                   [This {comment.rootCommentId ? "reply" : "lounge"} has been
                   deleted.]
                 </div>
               ) : comment.isHidden ? (
-                <div className="p-4 text-center text-sm text-gray-500">
+                <div className="p-4 text-center text-sm text-zinc-500">
                   [This {comment.rootCommentId ? "reply" : "lounge"} is hidden.]
                 </div>
               ) : (
@@ -141,7 +141,7 @@ export default async function SystemComments({
                   )}
                   <MarkdownComp content={comment.content} isComment={true} />
                   <div
-                    className={`mt-4 max-w-fit rounded-full bg-gray-100 px-2 py-1 shadow-xs dark:bg-gray-900`}
+                    className={`mt-4 max-w-fit rounded-full bg-zinc-100 px-2 py-1 shadow-xs dark:bg-zinc-900`}
                   >
                     👍{" "}
                     <span className="tabular-nums">

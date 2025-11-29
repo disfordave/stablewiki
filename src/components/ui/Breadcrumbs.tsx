@@ -40,7 +40,7 @@ export function Breadcrumbs({
               }`}
               className={`${
                 index === slug.length - 1 ? "font-semibold" : "font-medium"
-              } ${slug.length - 1 === index ? "text-gray-500" : "text-blue-600 hover:underline dark:text-blue-500"}`}
+              } ${slug.length - 1 === index ? "text-zinc-500" : "text-blue-600 hover:underline dark:text-blue-500"}`}
             >
               {titles[index]}
             </Link>

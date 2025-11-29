@@ -23,7 +23,7 @@ import Link from "next/link";
 
 function PageDate({ page, isOld }: { page: Page; isOld: boolean }) {
   return (
-    <p className="text-sm text-gray-500">
+    <p className="text-sm text-zinc-500">
       {isOld ? "Edited by " : "Last edited by "}{" "}
       {page.author ? (
         <Link

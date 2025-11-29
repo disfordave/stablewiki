@@ -42,14 +42,14 @@ export default function Pagination({
       <div className="mt-4 flex items-center justify-center gap-2">
         <TransitionLinkButton
           href={`/wiki/${slug}${1}${trailingHash}`}
-          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage === 1 || currentPage === 2) && "invisible"}`}
+          className={`w-fit bg-zinc-500 text-white hover:bg-zinc-600 ${(currentPage === 1 || currentPage === 2) && "invisible"}`}
           title="First Page"
         >
           <ChevronDoubleLeftIcon className="inline size-5" />
         </TransitionLinkButton>
         <TransitionLinkButton
           href={`/wiki/${slug}${currentPage - 1}${trailingHash}`}
-          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${currentPage <= 1 && "invisible"}`}
+          className={`w-fit bg-zinc-500 text-white hover:bg-zinc-600 ${currentPage <= 1 && "invisible"}`}
           title="Previous Page"
         >
           <ChevronLeftIcon className="inline size-5" />
@@ -57,14 +57,14 @@ export default function Pagination({
         <p className="tabular-nums">{currentPage + " / " + totalPages}</p>
         <TransitionLinkButton
           href={`/wiki/${slug}${currentPage + 1}${trailingHash}`}
-          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${currentPage >= totalPages && "invisible"}`}
+          className={`w-fit bg-zinc-500 text-white hover:bg-zinc-600 ${currentPage >= totalPages && "invisible"}`}
           title="Next Page"
         >
           <ChevronRightIcon className="inline size-5" />
         </TransitionLinkButton>
         <TransitionLinkButton
           href={`/wiki/${slug}${totalPages}${trailingHash}`}
-          className={`w-fit bg-gray-500 text-white hover:bg-gray-600 ${(currentPage >= totalPages || currentPage === totalPages - 1) && "invisible"}`}
+          className={`w-fit bg-zinc-500 text-white hover:bg-zinc-600 ${(currentPage >= totalPages || currentPage === totalPages - 1) && "invisible"}`}
           title="Last Page"
         >
           <ChevronDoubleRightIcon className="inline size-5" />

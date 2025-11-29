@@ -33,7 +33,7 @@ export default async function PublicUserInfo({
   }
 
   return (
-    <div className="mt-3 flex items-center rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+    <div className="mt-3 flex items-center rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
       <div>
         <h2 className="text-xl font-semibold">
           <Link
@@ -43,11 +43,11 @@ export default async function PublicUserInfo({
             {user.username}
           </Link>
         </h2>
-        <p className="text-sm text-gray-500">Role: {user.role}</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-zinc-500">Role: {user.role}</p>
+        <p className="text-sm text-zinc-500">
           Status: {user.status === 0 ? "Active" : "Banned"}
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-zinc-500">
           Joined on {new Date(user.createdAt).toLocaleDateString()}
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-start gap-2">

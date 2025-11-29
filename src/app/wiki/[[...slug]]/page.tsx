@@ -233,7 +233,7 @@ export default async function WikiPage({
         {showRevert && <>{` to (ver. ${ver})`}</>}
       </h1>
       {showHistoryVersion && page && (
-        <p className="my-2 text-gray-600">
+        <p className="my-2 text-zinc-600">
           {`Page title was "${page.title}" at version ${ver}.`}
         </p>
       )}
@@ -338,7 +338,7 @@ export default async function WikiPage({
                   <>{pageOwner && <PublicUserInfo username={pageOwner} />}</>
                 )}
                 {isMediaPage && (
-                  <div className="mt-3 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
+                  <div className="mt-3 rounded-xl bg-zinc-100 p-4 text-sm font-medium dark:bg-zinc-900">
                     <p>
                       Media pages are used to store and display media files such
                       as images, videos, and audio. Media pages are not under
@@ -355,7 +355,7 @@ export default async function WikiPage({
                   slug={decodeURIComponent(slug.join("/"))}
                   content={page.content}
                 />
-                <div className="mt-4 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
+                <div className="mt-4 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
                   <p className="text-xs">
                     Edit Level of &apos;{page.title}&apos;{" "}
                   </p>
@@ -393,7 +393,7 @@ export default async function WikiPage({
         !showRevert &&
         !isLoungeView && (
           <div id="posts" className="mt-8">
-            <div className="mb-4 h-1 w-full rounded-full bg-gray-100 dark:bg-gray-900"></div>
+            <div className="mb-4 h-1 w-full rounded-full bg-zinc-100 dark:bg-zinc-900"></div>
             <UserPostPage
               username={decodeURIComponent(slug[0]).split(":")[1]}
               hPage={hPage}
@@ -401,7 +401,7 @@ export default async function WikiPage({
           </div>
         )}
       {isUserPage && (
-        <p className="mt-4 rounded-xl bg-gray-100 p-4 text-sm font-medium dark:bg-gray-900">
+        <p className="mt-4 rounded-xl bg-zinc-100 p-4 text-sm font-medium dark:bg-zinc-900">
           Text content on User: pages and its subpages is not licensed under the
           same terms as regular wiki pages. All rights reserved.
         </p>

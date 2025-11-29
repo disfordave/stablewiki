@@ -42,7 +42,7 @@ export default function StableDiffViewer({
             ? "No differences found."
             : `Differences between versions ${oldVer} and ${newVer}:`}
         </p>
-        <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+        <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-zinc-100 p-4 whitespace-pre-wrap dark:bg-zinc-900">
           {diffs.map((part, index) => {
             const color = part.added
               ? "bg-green-200 dark:bg-green-800"
@@ -58,7 +58,7 @@ export default function StableDiffViewer({
         </pre>
       </div>
       {oldContent === newContent ? (
-        <p className="mt-4 text-sm text-gray-500">
+        <p className="mt-4 text-sm text-zinc-500">
           No differences between the selected versions.
         </p>
       ) : (
@@ -71,12 +71,12 @@ export default function StableDiffViewer({
               <h3 className="mb-2 font-semibold">
                 Old Content{" "}
                 {oldVer && (
-                  <span className="text-gray-500">
+                  <span className="text-zinc-500">
                     ({oldVer === "latest" ? "latest" : `ver. ${oldVer}`})
                   </span>
                 )}
               </h3>
-              <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+              <pre className="max-h-96 overflow-auto rounded-xl bg-zinc-100 p-4 whitespace-pre-wrap dark:bg-zinc-900">
                 {oldContent ? oldContent : "No previous content available."}
               </pre>
             </div>
@@ -84,12 +84,12 @@ export default function StableDiffViewer({
               <h3 className="mb-2 font-semibold">
                 New Content{" "}
                 {newVer && (
-                  <span className="text-gray-500">
+                  <span className="text-zinc-500">
                     ({newVer === "latest" ? "latest" : `ver. ${newVer}`})
                   </span>
                 )}
               </h3>
-              <pre className="max-h-96 overflow-auto rounded-xl bg-gray-100 p-4 whitespace-pre-wrap dark:bg-gray-900">
+              <pre className="max-h-96 overflow-auto rounded-xl bg-zinc-100 p-4 whitespace-pre-wrap dark:bg-zinc-900">
                 {newContent ? newContent : "No new content available."}
               </pre>
             </div>
