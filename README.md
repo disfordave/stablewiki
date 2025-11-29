@@ -34,6 +34,12 @@ To install StableWiki Engine, follow these steps:
 
 `.env` contains various configuration options for StableWiki. such as...
 
+### App Configuration
+
+- `NEXT_PUBLIC_BASE_URL`: The base URL of your StableWiki instance, change this to match your deployment URL. (Default: http://localhost:3000)
+- `DATABASE_URL`: The connection string for your PostgreSQL database. (Default: your_database_connection_string_here)
+- `JWT_SECRET`: Your JWT secret key. (Default: your_jwt_secret_key_here)
+
 ### Wiki Information
 
 - `WIKI_NAME`: The name of your wiki. (Default: StableWiki Engine)
@@ -70,7 +76,7 @@ You can set `WIKI_THEME_COLOR` to any of the following colors:
 
 1. **StableWiki is a still in the very, very early stages of development.**
 
-2. The persistent storage of StableWiki relies on Node.js fs modules that require a full Node.js environment with file system access to run properly. **Although you can run StableWiki on Serverless platforms, persistent file storage will not be working properly. If you don't need media uploads, I recommend `const WIKI_DISABLE_MEDIA = true` in `src/config.ts` to disable media uploads.**
+2. The persistent storage of StableWiki relies on Node.js fs modules that require a full Node.js environment with file system access to run properly. **Although you can run StableWiki on Serverless platforms, persistent file storage will not be working properly. If you don't need media uploads, I recommend `WIKI_DISABLE_MEDIA=true` in `.env` to disable media uploads.**
 
 ## Features
 
@@ -80,6 +86,10 @@ You can set `WIKI_THEME_COLOR` to any of the following colors:
 - Search functionality
 - Responsive design for mobile and desktop
 - API integration for external data sources
+
+## Roadmap
+
+> Check my post [here](https://sidwiki.com/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine) for the latest roadmap and plans for StableWiki Engine!
 
 ## Contributing
 
@@ -104,4 +114,4 @@ Please follow these steps to contribute:
 
 ## License
 
-This project is licensed under the **GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)** - see the [LICENSE](LICENSE) file for details. (TL;DR: You can use and modify this project freely, but if you deploy it or provide it as a service, you must also share your modifications under the same license.)
