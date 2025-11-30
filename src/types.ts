@@ -39,6 +39,7 @@ export interface Page {
   redirectTargetSlug?: string;
   comments?: Comment[];
   accessLevel: number;
+  backlinks: Array<{ title: string; slug: string }>;
 }
 
 export interface PageRevisionData {

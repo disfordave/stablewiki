@@ -27,6 +27,7 @@ import {
   getDecodedToken,
   slugify,
   isUsersPage,
+  extractWikiLinkSlugs,
 } from "@/utils";
 import { unlink } from "fs/promises";
 import path from "path";
@@ -41,6 +42,7 @@ export async function GET(
   const ver = searchParams.get("ver");
   const hPage = searchParams.get("hPage");
 
+  // Handle history version requests
   if (action === "history" && ver) {
     try {
       const page = await prisma.page.findUnique({
@@ -88,12 +90,14 @@ export async function GET(
               : page.updatedAt,
           tags: [], // Tags can be fetched via a separate endpoint if needed
           comments: [], // Comments can be fetched via a separate endpoint if needed
+          backlinks: [],
         } as Page,
       });
     } catch (error) {
       console.error(error);
       return Response.json({ error: "Failed to fetch page" }, { status: 500 });
     }
+    // Handle history list requests
   } else if (action === "history" && !ver && hPage) {
     try {
       const itemsPerPage = 10;
@@ -178,6 +182,16 @@ export async function GET(
       });
     }
 
+    const backlinks = await prisma.wikiLink.findMany({
+      where: { targetSlug: slug.join("/") },
+      include: {
+        sourcePage: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
     return Response.json({
       page: {
         id: page.id,
@@ -218,6 +232,10 @@ export async function GET(
                 username: comment.author.username,
               }
             : null,
+        })),
+        backlinks: backlinks.map((link) => ({
+          title: link.sourcePage.title,
+          slug: link.sourcePage.slug,
         })),
       } as Page,
     });
@@ -358,6 +376,8 @@ export async function POST(
       },
     });
 
+    const targetSlugs = extractWikiLinkSlugs(content);
+
     const updatedPage = await prisma.page.update({
       where: { slug: slug.join("/") },
       data: {
@@ -367,6 +387,20 @@ export async function POST(
         accessLevel,
       },
     });
+
+    await prisma.wikiLink.deleteMany({
+      where: { sourceId: updatedPage.id },
+    });
+
+    if (targetSlugs.length > 0) {
+      console.log("Creating wiki links:", targetSlugs);
+      await prisma.wikiLink.createMany({
+        data: targetSlugs.map((targetSlug) => ({
+          sourceId: updatedPage.id,
+          targetSlug,
+        })),
+      });
+    }
 
     console.log("Updated page redirect status:", updatedPage);
 

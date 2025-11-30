@@ -20,7 +20,12 @@
 
 import { prisma } from "@/lib/prisma";
 import { Page, PageRevisionData } from "@/types";
-import { getDecodedToken, checkRedirect, handleHPage } from "@/utils";
+import {
+  getDecodedToken,
+  checkRedirect,
+  handleHPage,
+  extractWikiLinkSlugs,
+} from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
 import { WIKI_HOMEPAGE_LINK } from "@/config";
@@ -149,6 +154,7 @@ export async function GET(request: NextRequest) {
                 exactMatch.revisions.length > 0
                   ? exactMatch.revisions[0].redirectTargetSlug
                   : undefined,
+              backlinks: [],
             } as Page,
           ],
         });
@@ -217,6 +223,7 @@ export async function GET(request: NextRequest) {
             page.revisions.length > 0
               ? page.revisions[0].redirectTargetSlug
               : undefined,
+          backlinks: [],
         })) as Page[],
     });
   } catch (error) {
@@ -307,6 +314,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const targetSlugs = extractWikiLinkSlugs(content);
+
     const page = await prisma.page.create({
       data: {
         title,
@@ -326,6 +335,20 @@ export async function POST(request: Request) {
         isRedirect: checkRedirect(content, title).isRedirect,
       },
     });
+
+    await prisma.wikiLink.deleteMany({
+      where: { sourceId: page.id },
+    });
+
+    if (targetSlugs.length > 0) {
+      console.log("Creating wiki links:", targetSlugs);
+      await prisma.wikiLink.createMany({
+        data: targetSlugs.map((targetSlug) => ({
+          sourceId: page.id,
+          targetSlug,
+        })),
+      });
+    }
 
     return Response.json(page, { status: 201 });
   } catch (error) {

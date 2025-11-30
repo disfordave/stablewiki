@@ -355,11 +355,31 @@ export default async function WikiPage({
                   slug={decodeURIComponent(slug.join("/"))}
                   content={page.content}
                 />
+                <div>
+                  {page.backlinks.length > 0 ? (
+                    <div className="mt-4 mb-4 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
+                      <p className="mb-2 text-sm font-semibold">Backlinks</p>
+                      <ul className="flex flex-wrap gap-2">
+                        {page.backlinks.map((backlink) => (
+                          <li key={backlink.slug}>
+                            <Link
+                              href={`/wiki/${backlink.slug}`}
+                              className="rounded-full bg-white px-2 py-1 text-sm hover:underline dark:bg-zinc-800"
+                            >
+                              {backlink.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
                 <div className="mt-4 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
-                  <p className="text-xs">
+                  <p className="line-clamp-1 text-sm font-semibold">
                     Edit Level of &apos;{page.title}&apos;{" "}
                   </p>
-                  <p className="text-sm font-semibold tabular-nums">
+                  <p className="text-sm">
+                    {">"}{" "}
                     {getAccessEditLevelString(page.accessLevel, page.title)}
                   </p>
                 </div>

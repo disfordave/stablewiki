@@ -23,6 +23,7 @@ export * from "./api/checkRedirect";
 export * from "./api/getPages";
 export * from "./api/getLoungeComments";
 export * from "./api/pagination";
+export * from "./api/wikiLinks";
 export * from "./slugify";
 export * from "./safeRedirect";
 export * from "./themeColor";

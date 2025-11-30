@@ -57,7 +57,7 @@ model Page {
   isTemplate  Boolean    @default(false)
   ageRating   Int        @default(0) // 0, 13, 18 
   outboundLinks WikiLink[] @relation("PageOutboundLinks") // this page links to others
-  inboundLinks  WikiLink[] @relation("PageInboundLinks")  // other pages link to this one
+  // inboundLinks  WikiLink[] @relation("PageInboundLinks")  // other pages link to this one
 
   @@index([authorId])
 }
@@ -111,7 +111,7 @@ model WikiLink {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   sourcePage Page     @relation("PageOutboundLinks", fields: [sourceId], references: [id], onDelete: Cascade)
-  targetPage Page?    @relation("PageInboundLinks", fields: [targetSlug], references: [slug], onDelete: SetNull)
+  // targetPage Page?    @relation("PageInboundLinks", fields: [targetSlug], references: [slug], onDelete: SetNull)
   @@index([sourceId])
   @@index([targetSlug])
 }
