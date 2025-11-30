@@ -23,8 +23,9 @@
 const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";
 const WIKI_HOMEPAGE_LINK =
   "/wiki/" + process.env.WIKI_HOMEPAGE_LINK || "WelcomePage";
-const WIKI_DISABLE_LOGO = process.env.WIKI_DISABLE_LOGO === "true";
-const WIKI_ROUND_LOGO = process.env.WIKI_ROUND_LOGO === "true";
+const WIKI_DISABLE_LOGO =
+  process.env.WIKI_DISABLE_LOGO?.toLowerCase() === "true";
+const WIKI_ROUND_LOGO = process.env.WIKI_ROUND_LOGO?.toLowerCase() === "true";
 const WIKI_LOGO_URL = process.env.WIKI_LOGO_URL || "";
 const WIKI_THEME_COLOR = process.env.WIKI_THEME_COLOR || "violet";
 const WIKI_DESCRIPTION =
@@ -35,13 +36,16 @@ const WIKI_COPYRIGHT_HOLDER =
 const WIKI_COPYRIGHT_HOLDER_URL =
   process.env.WIKI_COPYRIGHT_HOLDER_URL ||
   "https://github.com/disfordave/stablewiki";
-const WIKI_DISABLE_MEDIA = process.env.WIKI_DISABLE_MEDIA === "true";
-const WIKI_DISABLE_SIGNUP = process.env.WIKI_DISABLE_SIGNUP === "true";
+const WIKI_DISABLE_MEDIA =
+  process.env.WIKI_DISABLE_MEDIA?.toLowerCase() === "true";
+const WIKI_DISABLE_SIGNUP =
+  process.env.WIKI_DISABLE_SIGNUP?.toLowerCase() === "true";
 const WIKI_LICENSE_NAME = process.env.WIKI_LICENSE_NAME || "CC BY-SA 4.0";
 const WIKI_LICENSE_URL =
   process.env.WIKI_LICENSE_URL ||
   "https://creativecommons.org/licenses/by-sa/4.0/";
-const WIKI_MEDIA_ADMIN_ONLY = process.env.WIKI_MEDIA_ADMIN_ONLY === "true";
+const WIKI_MEDIA_ADMIN_ONLY =
+  process.env.WIKI_MEDIA_ADMIN_ONLY?.toLowerCase() === "true";
 
 export {
   WIKI_NAME,
