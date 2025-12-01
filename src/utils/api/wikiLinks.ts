@@ -11,7 +11,9 @@ export function extractWikiLinkSlugs(content: string): string[] {
     const pageName = match[2]?.trim();
     if (!pageName) continue;
 
-    const slug = pageName
+    const pageNameWithoutHash = pageName.split("#")[0].trim();
+
+    const slug = pageNameWithoutHash
       .split("/")
       .map((part) => slugify(part))
       .join("/");
