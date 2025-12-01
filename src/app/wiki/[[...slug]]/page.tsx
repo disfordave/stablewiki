@@ -413,7 +413,7 @@ export default async function WikiPage({
                           (categorySlug) => (
                             <li key={categorySlug}>
                               <Link
-                                href={`/wiki/Category:${categorySlug}`}
+                                href={`/wiki/Category:${slugify(categorySlug)}`}
                                 className="line-clamp-1 rounded-full bg-white px-2 py-1 text-sm hover:underline dark:bg-zinc-800"
                               >
                                 {categorySlug}
