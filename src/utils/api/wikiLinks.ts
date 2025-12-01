@@ -33,11 +33,7 @@ export function extractWikiCategorySlugs(content: string): string[] {
 
     if (pageName.startsWith("Category:") && !isMedia) {
       const categoryName = pageName.slice("Category:".length).trim();
-      const slug = categoryName
-        .split("/")
-        .map((part) => slugify(part))
-        .join("/");
-      categories.add(slug);
+      categories.add(categoryName);
     }
   }
 
