@@ -11,7 +11,9 @@ export function extractWikiLinkSlugs(content: string): string[] {
     const pageName = match[2]?.trim();
     if (!pageName) continue;
 
-    const slug = pageName
+    const pageNameWithoutHash = pageName.split("#")[0].trim();
+
+    const slug = pageNameWithoutHash
       .split("/")
       .map((part) => slugify(part))
       .join("/");
@@ -33,11 +35,7 @@ export function extractWikiCategorySlugs(content: string): string[] {
 
     if (pageName.startsWith("Category:") && !isMedia) {
       const categoryName = pageName.slice("Category:".length).trim();
-      const slug = categoryName
-        .split("/")
-        .map((part) => slugify(part))
-        .join("/");
-      categories.add(slug);
+      categories.add(categoryName);
     }
   }
 
