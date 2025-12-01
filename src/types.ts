@@ -39,7 +39,19 @@ export interface Page {
   redirectTargetSlug?: string;
   comments?: Comment[];
   accessLevel: number;
-  backlinks: Array<{ title: string; slug: string }>;
+  backlinks: {
+    general: SimplePageData[];
+    user: SimplePageData[];
+    redirects: SimplePageData[];
+    media: SimplePageData[];
+    categories: SimplePageData[];
+  };
+}
+
+interface SimplePageData {
+  title: string;
+  slug: string;
+  isRedirect: boolean;
 }
 
 export interface PageRevisionData {

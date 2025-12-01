@@ -139,6 +139,8 @@ export function WikiMarkdown({
                 allowFullScreen
               ></iframe>
             );
+          } else if (href && href.startsWith("/wiki/Category:")) {
+            return <></>;
           } else {
             return (
               <a

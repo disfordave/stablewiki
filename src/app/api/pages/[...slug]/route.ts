@@ -90,7 +90,13 @@ export async function GET(
               : page.updatedAt,
           tags: [], // Tags can be fetched via a separate endpoint if needed
           comments: [], // Comments can be fetched via a separate endpoint if needed
-          backlinks: [],
+          backlinks: {
+            general: [],
+            user: [],
+            redirects: [],
+            media: [],
+            categories: [],
+          },
         } as Page,
       });
     } catch (error) {
@@ -188,7 +194,9 @@ export async function GET(
         sourcePage: true,
       },
       orderBy: {
-        createdAt: "desc",
+        sourcePage: {
+          title: "asc",
+        },
       },
     });
 
@@ -233,10 +241,49 @@ export async function GET(
               }
             : null,
         })),
-        backlinks: backlinks.map((link) => ({
-          title: link.sourcePage.title,
-          slug: link.sourcePage.slug,
-        })),
+        backlinks: {
+          general: backlinks
+            .filter(
+              (l) =>
+                !l.sourcePage.slug.startsWith("User:") &&
+                !l.sourcePage.slug.startsWith("Media:") &&
+                !l.sourcePage.slug.startsWith("Category:") &&
+                !l.sourcePage.isRedirect,
+            )
+            .map((link) => ({
+              title: link.sourcePage.title,
+              slug: link.sourcePage.slug,
+              isRedirect: link.sourcePage.isRedirect,
+            })),
+          user: backlinks
+            .filter((l) => l.sourcePage.slug.startsWith("User:"))
+            .map((link) => ({
+              title: link.sourcePage.title,
+              slug: link.sourcePage.slug,
+              isRedirect: link.sourcePage.isRedirect,
+            })),
+          redirects: backlinks
+            .filter((l) => l.sourcePage.isRedirect)
+            .map((link) => ({
+              title: link.sourcePage.title,
+              slug: link.sourcePage.slug,
+              isRedirect: link.sourcePage.isRedirect,
+            })),
+          media: backlinks
+            .filter((l) => l.sourcePage.slug.startsWith("Media:"))
+            .map((link) => ({
+              title: link.sourcePage.title,
+              slug: link.sourcePage.slug,
+              isRedirect: link.sourcePage.isRedirect,
+            })),
+          categories: backlinks
+            .filter((l) => l.sourcePage.slug.startsWith("Category:"))
+            .map((link) => ({
+              title: link.sourcePage.title,
+              slug: link.sourcePage.slug,
+              isRedirect: link.sourcePage.isRedirect,
+            })),
+        },
       } as Page,
     });
   } catch (error) {

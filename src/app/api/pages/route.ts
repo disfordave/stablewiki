@@ -154,7 +154,13 @@ export async function GET(request: NextRequest) {
                 exactMatch.revisions.length > 0
                   ? exactMatch.revisions[0].redirectTargetSlug
                   : undefined,
-              backlinks: [],
+              backlinks: {
+                general: [],
+                user: [],
+                redirects: [],
+                media: [],
+                categories: [],
+              },
             } as Page,
           ],
         });
@@ -223,7 +229,13 @@ export async function GET(request: NextRequest) {
             page.revisions.length > 0
               ? page.revisions[0].redirectTargetSlug
               : undefined,
-          backlinks: [],
+          backlinks: {
+            general: [],
+            user: [],
+            redirects: [],
+            media: [],
+            categories: [],
+          },
         })) as Page[],
     });
   } catch (error) {

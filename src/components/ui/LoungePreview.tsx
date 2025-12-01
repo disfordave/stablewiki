@@ -16,11 +16,11 @@ export function LoungePreview({
       <Link href={`/wiki/${slug}/_lounge`}>
         <div className="flex w-full flex-wrap items-center justify-between gap-2 no-underline hover:underline">
           <div>
-            <h2 className="text-lg font-semibold">
+            <h2 className="font-bold">
               <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-5" />
               <span>Latest on Lounge</span>
             </h2>
-            <p className="text-sm text-zinc-500">
+            <p className="text-xs text-zinc-500">
               Join the conversation about the &apos;{pageTitle}&apos; article →
             </p>
           </div>
@@ -40,7 +40,7 @@ export function LoungePreview({
         {comments.slice(0, 2).map((comment: any) => (
           <li key={comment.id}>
             <Link href={`/wiki/${slug}/_lounge/${comment.id}`}>
-              <div className="rounded-lg bg-white p-4 hover:underline dark:bg-zinc-800">
+              <div className="rounded-lg bg-white p-4 text-sm hover:underline dark:bg-zinc-800">
                 {comment.deleted ? (
                   <p className="text-sm text-zinc-500">
                     Deleted Lounge by {comment.author.username}

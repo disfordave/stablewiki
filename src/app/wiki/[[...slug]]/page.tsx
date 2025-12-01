@@ -48,6 +48,7 @@ import {
   getThemeColor,
   fetchComments,
   getAccessEditLevelString,
+  extractWikiCategorySlugs,
 } from "@/utils";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
@@ -356,33 +357,88 @@ export default async function WikiPage({
                   content={page.content}
                 />
                 <div>
-                  {page.backlinks.length > 0 ? (
-                    <div className="mt-4 mb-4 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
-                      <p className="mb-2 text-sm font-semibold">Backlinks</p>
-                      <ul className="flex flex-wrap gap-2">
-                        {page.backlinks.map((backlink) => (
-                          <li key={backlink.slug}>
-                            <Link
-                              href={`/wiki/${backlink.slug}`}
-                              className="rounded-full bg-white px-2 py-1 text-sm hover:underline dark:bg-zinc-800"
-                            >
-                              {backlink.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
+                  <details
+                    open={page.title.startsWith("Category:")}
+                    className="mt-4 mb-4 overflow-auto rounded-xl bg-zinc-100 p-4 select-none dark:bg-zinc-900"
+                  >
+                    <summary className="-m-4 p-4 font-bold select-none">
+                      {page.title.startsWith("Category:")
+                        ? "Pages in this Category"
+                        : "Backlinks"}
+                    </summary>
+                    <ul className="mt-2 flex flex-col gap-2">
+                      {Object.keys(page.backlinks).map((backlink) => (
+                        <li key={backlink}>
+                          <span className="text-sm font-semibold">
+                            {backlink.charAt(0).toUpperCase() +
+                              backlink.slice(1)}
+                          </span>
+                          <ul className="mt-1 flex flex-wrap gap-2">
+                            {page.backlinks[
+                              backlink as keyof typeof page.backlinks
+                            ].length === 0 && (
+                              <p className="text-sm italic">
+                                {page.title.startsWith("Category:")
+                                  ? "No pages in this category yet."
+                                  : "No backlinks yet."}
+                              </p>
+                            )}
+                            {page.backlinks[
+                              backlink as keyof typeof page.backlinks
+                            ].map((b) => (
+                              <li key={b.slug}>
+                                <Link
+                                  href={`/wiki/${b.slug}${b.isRedirect ? `?preventRedirect=true` : ""}`}
+                                  className="line-clamp-1 rounded-full bg-white px-2 py-1 text-sm hover:underline dark:bg-zinc-800"
+                                >
+                                  {b.title}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                  <details
+                    open={page.title.startsWith("Category:")}
+                    className="mt-4 mb-4 overflow-auto rounded-xl bg-zinc-100 p-4 select-none dark:bg-zinc-900"
+                  >
+                    <summary className="-m-4 p-4 font-bold select-none">
+                      Categories
+                    </summary>
+                    <ul className="mt-2 flex flex-wrap gap-2">
+                      {extractWikiCategorySlugs(page.content).length > 0 ? (
+                        extractWikiCategorySlugs(page.content).map(
+                          (categorySlug) => (
+                            <li key={categorySlug}>
+                              <Link
+                                href={`/wiki/Category:${categorySlug}`}
+                                className="line-clamp-1 rounded-full bg-white px-2 py-1 text-sm hover:underline dark:bg-zinc-800"
+                              >
+                                {categorySlug}
+                              </Link>
+                            </li>
+                          ),
+                        )
+                      ) : (
+                        <p className="text-sm italic">
+                          No categories assigned to this page.
+                        </p>
+                      )}
+                    </ul>
+                  </details>
+                  <details className="mt-4 mb-4 overflow-auto rounded-xl bg-zinc-100 p-4 select-none dark:bg-zinc-900">
+                    <summary className="-m-4 p-4 font-bold select-none">
+                      Edit Level
+                    </summary>
+                    <p className="mt-2 text-sm">
+                      {">"}{" "}
+                      {getAccessEditLevelString(page.accessLevel, page.title)}
+                    </p>
+                  </details>
                 </div>
-                <div className="mt-4 rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
-                  <p className="line-clamp-1 text-sm font-semibold">
-                    Edit Level of &apos;{page.title}&apos;{" "}
-                  </p>
-                  <p className="text-sm">
-                    {">"}{" "}
-                    {getAccessEditLevelString(page.accessLevel, page.title)}
-                  </p>
-                </div>
+
                 {!showHistoryVersion && (
                   <LoungePreview
                     pageTitle={page.title}
