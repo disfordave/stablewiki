@@ -160,6 +160,7 @@ export async function GET(request: NextRequest) {
                 media: [],
                 categories: [],
               },
+              loungeDisabled: exactMatch.loungeDisabled,
             } as Page,
           ],
         });
@@ -234,6 +235,7 @@ export async function GET(request: NextRequest) {
             media: [],
             categories: [],
           },
+          loungeDisabled: page.loungeDisabled,
         })) as Page[],
     });
   } catch (error) {

@@ -231,6 +231,26 @@ export async function POST(
       return Response.json({ error: "Banned user" }, { status: 403 });
     }
 
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment) {
+      return new Response("Comment not found", { status: 404 });
+    }
+
+    const page = await prisma.page.findUnique({
+      where: { id: comment.pageId },
+    });
+
+    if (!page) {
+      return new Response("Page not found", { status: 404 });
+    }
+
+    if (page.loungeDisabled) {
+      return new Response("Lounge is disabled for this page", { status: 403 });
+    }
+
     // Check if reaction already exists
     const existingReaction = await prisma.reaction.findFirst({
       where: {
@@ -297,6 +317,18 @@ export async function POST(
     });
   }
 
+  const page = await prisma.page.findUnique({
+    where: { id: pageId },
+  });
+
+  if (!page) {
+    return new Response("Page not found", { status: 404 });
+  }
+
+  if (page.loungeDisabled) {
+    return new Response("Lounge is disabled for this page", { status: 403 });
+  }
+
   // Create new lounge post
   const newLoungePost = await prisma.comment.create({
     data: {
@@ -348,6 +380,18 @@ export async function PUT(request: Request) {
     return new Response("Title exceeds maximum length of 255 characters", {
       status: 400,
     });
+  }
+
+  const page = await prisma.page.findUnique({
+    where: { id: existingComment.pageId },
+  });
+
+  if (!page) {
+    return new Response("Page not found", { status: 404 });
+  }
+
+  if (page.loungeDisabled) {
+    return new Response("Lounge is disabled for this page", { status: 403 });
   }
 
   // Update lounge post

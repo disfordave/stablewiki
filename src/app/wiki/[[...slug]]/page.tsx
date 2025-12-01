@@ -324,6 +324,11 @@ export default async function WikiPage({
             {redirectedFrom && <RedirectedFromMessage from={redirectedFrom} />}
             {isLoungeView ? (
               <>
+                {page.loungeDisabled && (
+                  <p className="animate-pulse text-lg font-bold">
+                    Lounge is disabled for this page.
+                  </p>
+                )}
                 <SystemLounge
                   page={page}
                   commentId={loungeId}
@@ -438,13 +443,27 @@ export default async function WikiPage({
                     </p>
                   </details>
                 </div>
-
                 {!showHistoryVersion && (
-                  <LoungePreview
-                    pageTitle={page.title}
-                    slug={page.slug.join("/")}
-                    comments={page.comments}
-                  />
+                  <>
+                    {page.loungeDisabled ? (
+                      <>
+                        <div className="mt-4 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
+                          <p className="text-center italic">
+                            The Lounge discussion feature is disabled for this
+                            page.
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <LoungePreview
+                          pageTitle={page.title}
+                          slug={page.slug.join("/")}
+                          comments={page.comments}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
               </>
             )}

@@ -42,6 +42,7 @@ export interface Page {
     media: SimplePageData[];
     categories: SimplePageData[];
   };
+  loungeDisabled: boolean;
 }
 
 interface SimplePageData {

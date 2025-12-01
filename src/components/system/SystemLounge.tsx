@@ -41,20 +41,26 @@ function commentReactionButton({
   user,
   hPage,
   sortBy,
+  loungeDisabled,
 }: {
   comment: any;
   user: User | null;
   hPage: number;
   sortBy: "likes" | "createdAt";
+  loungeDisabled: boolean;
 }) {
   const isReacted = comment.reactions.some((r: any) => r.userId === user?.id);
-  const isDisabled = !user || user.status > 0;
+  const isDisabled = !user || user.status > 0 || loungeDisabled;
 
   return (
     <TransitionFormButton
       action={async () => {
         "use server";
         const type = "1";
+
+        if (loungeDisabled) {
+          safeRedirect("/wiki/System:Lounge");
+        }
 
         if (!user) {
           safeRedirect("/wiki/System:SignIn");
@@ -229,11 +235,13 @@ function RootCommentForList({
 }
 
 export function Comment({
+  loungeDisabled,
   comment,
   user,
   hPage,
   sortBy,
 }: {
+  loungeDisabled: boolean;
   comment: any;
   user: User | null;
   hPage: number;
@@ -268,22 +276,28 @@ export function Comment({
           </div>
           {!comment.deleted && (
             <span className="flex gap-2">
-              {user && user.status === 0 && comment.rootCommentId && (
-                <Link
-                  href={`?hPage=${hPage}&sortBy=${sortBy}&replyTo=${comment.id}#writer`}
-                  className="hover:underline"
-                >
-                  Reply
-                </Link>
-              )}
-              {user && user.status === 0 && comment.authorId === user.id && (
-                <Link
-                  href={`?hPage=${hPage}&sortBy=${sortBy}&targetLoungeCommentId=${comment.id}#writer`}
-                  className="hover:underline"
-                >
-                  Edit
-                </Link>
-              )}
+              {user &&
+                user.status === 0 &&
+                comment.rootCommentId &&
+                !loungeDisabled && (
+                  <Link
+                    href={`?hPage=${hPage}&sortBy=${sortBy}&replyTo=${comment.id}#writer`}
+                    className="hover:underline"
+                  >
+                    Reply
+                  </Link>
+                )}
+              {user &&
+                user.status === 0 &&
+                comment.authorId === user.id &&
+                !loungeDisabled && (
+                  <Link
+                    href={`?hPage=${hPage}&sortBy=${sortBy}&targetLoungeCommentId=${comment.id}#writer`}
+                    className="hover:underline"
+                  >
+                    Edit
+                  </Link>
+                )}
             </span>
           )}
         </div>
@@ -315,7 +329,15 @@ export function Comment({
               </p>
             )}
             <MarkdownComp content={comment.content} isComment={true} />
-            <div>{commentReactionButton({ comment, user, hPage, sortBy })}</div>
+            <div>
+              {commentReactionButton({
+                comment,
+                user,
+                hPage,
+                sortBy,
+                loungeDisabled,
+              })}
+            </div>
           </div>
         )}
       </>
@@ -353,6 +375,12 @@ export default async function SystemLounge({
     "use server";
     const { title, content } = Object.fromEntries(formData);
 
+    if (page.loungeDisabled) {
+      safeRedirect(
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Lounge is disabled for this page`,
+      );
+    }
+
     if (!user) {
       throw new Error("User not found");
     }
@@ -382,13 +410,19 @@ export default async function SystemLounge({
     const result = await response.json();
     console.log("Lounge post created:", result);
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
+      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages === 0 ? 1 : totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
     );
   }
 
   async function editComment(formData: FormData) {
     "use server";
     const { content, title } = Object.fromEntries(formData);
+
+    if (page.loungeDisabled) {
+      safeRedirect(
+        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Lounge is disabled for this page`,
+      );
+    }
 
     if (!user) {
       safeRedirect("/login");
@@ -469,6 +503,7 @@ export default async function SystemLounge({
               ) : (
                 <>
                   <Comment
+                    loungeDisabled={page.loungeDisabled}
                     key={comment.id}
                     comment={comment}
                     user={user}
@@ -488,7 +523,7 @@ export default async function SystemLounge({
       ) : (
         <p className="mt-2">No Lounge threads found.</p>
       )}
-      {user && user.status === 0 && (
+      {user && user.status === 0 && !page.loungeDisabled && (
         <form
           action={targetLoungeCommentId ? editComment : createComment}
           id="writer"

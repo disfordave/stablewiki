@@ -96,6 +96,7 @@ export async function GET(
             media: [],
             categories: [],
           },
+          loungeDisabled: page.loungeDisabled,
         } as Page,
       });
     } catch (error) {
@@ -239,6 +240,7 @@ export async function GET(
               }
             : null,
         })),
+        loungeDisabled: page.loungeDisabled,
         backlinks: {
           general: backlinks
             .filter(

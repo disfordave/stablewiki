@@ -42,6 +42,28 @@ export async function PUT(
       const body = await request.json();
       const { accessLevel, slug: pageSlug } = body;
 
+      // - 0 for registered users, 1 for moderators, 9 for admins only
+      // - 101 for enabled Lounge access, 102 for disabled Lounge
+
+      if (
+        accessLevel < 0 ||
+        (accessLevel > 9 && accessLevel < 101) ||
+        accessLevel > 102
+      ) {
+        console.log("invalid access level:", accessLevel);
+        return new Response("Invalid status value", { status: 400 });
+      }
+
+      if (accessLevel >= 101) {
+        const updatedPage = await prisma.page.update({
+          where: { slug: pageSlug },
+          data: {
+            loungeDisabled: accessLevel === 102,
+          },
+        });
+        return NextResponse.json({ data: updatedPage });
+      }
+
       const updatedPage = await prisma.page.update({
         where: { slug: pageSlug },
         data: {

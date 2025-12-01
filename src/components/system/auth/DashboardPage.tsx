@@ -410,9 +410,12 @@ export default async function DashboardPage() {
               <div>
                 <label htmlFor="newAccessLevel" className="block">
                   <p className="font-medium">New Page Edit Level</p>
+                  <p className="mb-0 text-sm text-zinc-500 dark:text-zinc-400">
+                    - 0 for registered users, 1 for moderators, 9 for admins
+                    only
+                  </p>
                   <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    (e.g., 0 for registered users, 1 for moderators, 9 for
-                    admins only)
+                    - 101 for enabled Lounge access, 102 for disabled Lounge
                   </p>
                 </label>
                 <input
@@ -421,7 +424,7 @@ export default async function DashboardPage() {
                   min="0"
                   max="9"
                   name="newAccessLevel"
-                  placeholder="New Access (Edit) Level"
+                  placeholder="New Page Edit Level"
                   className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                 />
               </div>
