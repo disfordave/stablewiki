@@ -88,7 +88,6 @@ export async function GET(
             page.revisions.length > 0
               ? page.revisions[0].createdAt
               : page.updatedAt,
-          tags: [], // Tags can be fetched via a separate endpoint if needed
           comments: [], // Comments can be fetched via a separate endpoint if needed
           backlinks: {
             general: [],
@@ -221,7 +220,6 @@ export async function GET(
           page.revisions.length > 0
             ? page.revisions[0].createdAt
             : page.updatedAt,
-        tags: [], // Tags can be fetched via a separate endpoint if needed
         isRedirect: page.isRedirect,
         redirectTargetSlug:
           page.revisions.length > 0

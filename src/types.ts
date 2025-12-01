@@ -31,10 +31,6 @@ export interface Page {
   };
   createdAt: Date;
   updatedAt: Date;
-  tags: {
-    id: string;
-    name: string;
-  }[];
   isRedirect?: boolean;
   redirectTargetSlug?: string;
   comments?: Comment[];

@@ -32,31 +32,35 @@ model User {
 }
 
 model Page {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  content     String
-  authorId    String?
-  parentId    String?
-  isPublished Boolean    @default(false)
-  publishedAt DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  isMedia     Boolean    @default(false)
-  isRedirect  Boolean    @default(false)
-  comments    Comment[]
-  author      User?      @relation("PageAuthors", fields: [authorId], references: [id], onDelete: SetNull)
-  parent      Page?      @relation("SubPages", fields: [parentId], references: [id], onDelete: SetNull)
-  children    Page[]     @relation("SubPages")
-  tags        PageTag[]
-  revisions   Revision[]
-  accessLevel Int        @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
-  license     Int        @default(0) // 0: All Rights Reserved, 1: Creative Commons, etc.
-  licenseText String     @default("")
-  isHidden    Boolean    @default(false) // For hiding pages from search and listings
-  isTemplate  Boolean    @default(false)
-  ageRating   Int        @default(0) // 0, 13, 18 
-  outboundLinks WikiLink[] @relation("PageOutboundLinks") // this page links to others
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  content         String
+  authorId        String?
+  parentId        String?
+  isPublished     Boolean    @default(false)
+  publishedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  isMedia         Boolean    @default(false)
+  isRedirect      Boolean    @default(false)
+  comments        Comment[]
+  author          User?      @relation("PageAuthors", fields: [authorId], references: [id], onDelete: SetNull)
+  parent          Page?      @relation("SubPages", fields: [parentId], references: [id], onDelete: SetNull)
+  children        Page[]     @relation("SubPages")
+  revisions       Revision[]
+  accessLevel     Int        @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
+  pureAccessLevel Int        @default(0) // 0: Public, 1: Registered Users+, 2: Editors+, 9: Admins Only
+  license         Int        @default(0) // 0: All Rights Reserved, 1: Creative Commons, etc.
+  licenseText     String     @default("")
+  isHidden        Boolean    @default(false) // For hiding pages from search and listings
+  isPrivate       Boolean    @default(false) // For private pages
+  isPinned        Boolean    @default(false) // For pinning important pages
+  isSoftDeleted   Boolean    @default(false) // For soft deletion
+  isTemplate      Boolean    @default(false)
+  ageRating       Int        @default(0) // 0, 13, 18 
+  outboundLinks   WikiLink[] @relation("PageOutboundLinks") // this page links to others
+  loungeDisabled  Boolean    @default(false) // Disable lounge for this page
   // inboundLinks  WikiLink[] @relation("PageInboundLinks")  // other pages link to this one
 
   @@index([authorId])
@@ -97,9 +101,11 @@ model Comment {
   replies           Comment[]          @relation("ThreadedComments")
   reactions         Reaction[]
   negativeReactions NegativeReaction[]
-  tags              CommentTag[]
   deleted           Boolean            @default(false)
   isHidden          Boolean            @default(false)
+  isPinned          Boolean            @default(false)
+  isArchived        Boolean            @default(false)
+  isLocked          Boolean            @default(false)
 
   @@index([pageId, authorId])
 }
@@ -111,37 +117,9 @@ model WikiLink {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   sourcePage Page     @relation("PageOutboundLinks", fields: [sourceId], references: [id], onDelete: Cascade)
-  // targetPage Page?    @relation("PageInboundLinks", fields: [targetSlug], references: [slug], onDelete: SetNull)
+
   @@index([sourceId])
   @@index([targetSlug])
-}
-
-
-model Tag {
-  id          String       @id @default(cuid())
-  name        String       @unique
-  description String?
-  createdAt   DateTime     @default(now())
-  pages       PageTag[]
-  comments    CommentTag[]
-}
-
-model PageTag {
-  pageId String
-  tagId  String
-  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([pageId, tagId])
-}
-
-model CommentTag {
-  commentId String
-  tagId     String
-  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([commentId, tagId])
 }
 
 model TrustCredit {

@@ -147,7 +147,6 @@ export async function GET(request: NextRequest) {
                 exactMatch.revisions.length > 0
                   ? exactMatch.revisions[0].createdAt
                   : exactMatch.updatedAt,
-              tags: [],
               isRedirect: exactMatch.isRedirect,
               accessLevel: exactMatch.accessLevel,
               redirectTargetSlug:
@@ -222,7 +221,6 @@ export async function GET(request: NextRequest) {
             page.revisions.length > 0
               ? page.revisions[0].createdAt
               : page.updatedAt,
-          tags: [],
           isRedirect: page.isRedirect,
           accessLevel: page.accessLevel,
           redirectTargetSlug:
