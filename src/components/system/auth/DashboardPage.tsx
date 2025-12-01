@@ -409,7 +409,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <label htmlFor="newAccessLevel" className="block">
-                  <p className="font-medium">New Access (Edit) Level</p>
+                  <p className="font-medium">New Page Edit Level</p>
                   <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
                     (e.g., 0 for registered users, 1 for moderators, 9 for
                     admins only)
