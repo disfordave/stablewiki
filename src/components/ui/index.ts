@@ -34,3 +34,5 @@ export { Breadcrumbs } from "./Breadcrumbs";
 export { SearchBox } from "./SearchBox";
 export { DefaultWikiLogo } from "./DefaultWikiLogo";
 export { LoungePreview } from "./LoungePreview";
+export { AsideRevisions } from "./AsideRevisions";
+export { AsideLounges } from "./AsideLounges";

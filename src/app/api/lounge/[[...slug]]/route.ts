@@ -31,6 +31,8 @@ export async function GET(
   const hPage = searchParams.get("hPage") || "1";
   const sortBy = searchParams.get("sortBy") || "createdAt";
   const validSortBy = sortBy === "likes" ? "likes" : "createdAt";
+  const onlyRoot = searchParams.get("onlyRoot") === "true";
+  const noDeletedLounges = searchParams.get("noDeletedLounges") === "true";
   const itemsPerPage = 10;
   const username = searchParams.get("username") || null;
 
@@ -38,11 +40,15 @@ export async function GET(
     const count = await prisma.comment.count({
       where: {
         author: { username: username || undefined },
+        parentId: onlyRoot ? null : undefined,
+        deleted: noDeletedLounges ? false : undefined,
       },
     });
     const allComments = await prisma.comment.findMany({
       where: {
         author: { username: username || undefined },
+        parentId: onlyRoot ? null : undefined,
+        deleted: noDeletedLounges ? false : undefined,
       },
       orderBy:
         validSortBy === "likes"
@@ -64,8 +70,6 @@ export async function GET(
       data: allComments,
       totalPaginationPages: Math.ceil(count / itemsPerPage),
     });
-
-    // return new Response("Bad Request", { status: 400 });
   }
 
   if (slug.length === 1) {

@@ -382,7 +382,7 @@ export default async function WikiPage({
                             {page.backlinks[
                               backlink as keyof typeof page.backlinks
                             ].length === 0 && (
-                              <p className="text-sm italic text-zinc-500">
+                              <p className="text-sm text-zinc-500 italic">
                                 {page.title.startsWith("Category:")
                                   ? "No pages in this category yet."
                                   : "No backlinks yet."}
@@ -427,7 +427,7 @@ export default async function WikiPage({
                           ),
                         )
                       ) : (
-                        <p className="text-sm italic text-zinc-500">
+                        <p className="text-sm text-zinc-500 italic">
                           No categories assigned to this page.
                         </p>
                       )}
