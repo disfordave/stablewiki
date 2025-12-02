@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { slugify } from "@/utils";
+import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export async function AsideLounges() {
@@ -25,7 +26,10 @@ export async function AsideLounges() {
 
   return (
     <section className="rounded-2xl bg-white p-4 dark:bg-zinc-800">
-      <p className="text-lg font-bold">Latest on Lounge</p>
+      <div className="font-bold">
+        <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-5" />
+        <span className="text-lg">Latest on Lounge</span>
+      </div>
       <p className="text-xs text-zinc-500">
         on{" "}
         {new Date().toLocaleDateString("en-GB", {
