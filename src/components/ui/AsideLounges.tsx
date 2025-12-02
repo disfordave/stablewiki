@@ -54,7 +54,7 @@ export async function AsideLounges() {
                 {
                   <>
                     <p className="me-2 line-clamp-1 font-semibold">{c.title}</p>
-                    <p className="line-clamp-1 text-sm text-zinc-500">
+                    <p className="line-clamp-1 text-xs text-zinc-500">
                       from <span className="font-medium">{c.page.title}</span>{" "}
                       by{" "}
                       <span className="font-medium">
