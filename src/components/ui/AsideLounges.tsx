@@ -28,13 +28,15 @@ export async function AsideLounges() {
       <p className="text-lg font-bold">Latest on Lounge</p>
       <p className="text-xs text-zinc-500">
         on{" "}
-        {new Date().toLocaleString(undefined, {
+        {new Date().toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
           year: "numeric",
-          month: "short",
-          day: "numeric",
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
+          timeZoneName: "short",
+          timeZone: "UTC",
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">

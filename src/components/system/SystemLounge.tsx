@@ -198,7 +198,16 @@ function RootCommentForList({
           >
             <span className="font-semibold">{comment.author.username}</span>
 
-            {` on ${new Date(comment.createdAt).toLocaleString()}`}
+            {` on ${new Date(comment.createdAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              timeZoneName: "short",
+              timeZone: "UTC",
+            })}`}
           </div>
           {comment.deleted ? (
             <div className="p-4 text-center text-sm text-zinc-500">
@@ -265,12 +274,31 @@ export function Comment({
               >
                 {comment.author.username}
               </Link>
-              {` on ${new Date(comment.createdAt).toLocaleString()}`}
+              {` on ${new Date(comment.createdAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                timeZoneName: "short",
+                timeZone: "UTC",
+              })}`}
               {comment.rootCommentId && ` (#${comment.index})`}
             </span>
             {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
               <span className="text-xs opacity-75">
-                Edited on {new Date(comment.updatedAt).toLocaleString()}
+                Edited on{" "}
+                {new Date(comment.updatedAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  timeZoneName: "short",
+                  timeZone: "UTC",
+                })}
               </span>
             )}
           </div>

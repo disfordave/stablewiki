@@ -48,7 +48,14 @@ export default async function PublicUserInfo({
           Status: {user.status === 0 ? "Active" : "Banned"}
         </p>
         <p className="text-sm text-zinc-500">
-          Joined on {new Date(user.createdAt).toLocaleDateString()}
+          Joined on{" "}
+          {new Date(user.createdAt).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            timeZoneName: "short",
+            timeZone: "UTC",
+          })}
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-start gap-2">
           <TransitionLinkButton

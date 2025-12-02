@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
   const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
   const action = searchParams.get("action") || "";
   const username = searchParams.get("username") || "";
+  const sortBy = searchParams.get("sortBy") || "createdAt";
   const handledHPage = handleHPage(hPage) - 1;
 
   if (action === "revisions") {
@@ -181,7 +182,7 @@ export async function GET(request: NextRequest) {
           include: { author: { select: { id: true, username: true } } },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { [sortBy === "updatedAt" ? "updatedAt" : "createdAt"]: "desc" },
       skip: handledHPage * itemsPerPage,
       take: itemsPerPage,
     });

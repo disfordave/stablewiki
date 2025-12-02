@@ -113,12 +113,37 @@ export default async function SystemComments({
                     >
                       {comment.author.username}
                     </Link>
-                    {` on ${new Date(comment.createdAt).toLocaleString()}`}
+                    {` on ${new Date(comment.createdAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        timeZoneName: "short",
+                        timeZone: "UTC",
+                      },
+                    )}`}
                   </span>
                   {comment.updatedAt &&
                     comment.updatedAt !== comment.createdAt && (
                       <span className="text-xs opacity-75">
-                        Edited on {new Date(comment.updatedAt).toLocaleString()}
+                        Edited on{" "}
+                        {new Date(comment.updatedAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            timeZoneName: "short",
+                            timeZone: "UTC",
+                          },
+                        )}
                       </span>
                     )}
                 </div>

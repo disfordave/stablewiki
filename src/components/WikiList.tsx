@@ -70,7 +70,13 @@ export default async function WikiList({
                 </h2>
                 <p className="text-sm text-zinc-500">
                   By {page.author ? page.author.username : "Unknown"} on{" "}
-                  {new Date(page.createdAt).toLocaleDateString()}
+                  {new Date(page.createdAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    timeZoneName: "short",
+                    timeZone: "UTC",
+                  })}
                 </p>
               </div>
             </a>
