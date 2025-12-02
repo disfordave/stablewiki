@@ -42,7 +42,7 @@ export async function AsideRevisions() {
         {revisionsData.revisions.slice(0, 5).map((rev) => (
           <li key={rev.id}>
             <Link
-              href={`/wiki/${slugify(rev.title)}`}
+              href={`/wiki/${slugify(rev.title)}?action=history&ver=${rev.version}`}
               className="hover:underline"
             >
               <div className="flex flex-col text-sm">
