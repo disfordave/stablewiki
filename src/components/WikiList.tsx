@@ -68,16 +68,36 @@ export default async function WikiList({
                   )}{" "}
                   {page.isRedirect && <span className="">[Redirect]</span>}
                 </h2>
-                <p className="text-sm text-zinc-500">
-                  By {page.author ? page.author.username : "Unknown"} on{" "}
-                  {new Date(page.createdAt).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    timeZoneName: "short",
-                    timeZone: "UTC",
-                  })}
-                </p>
+                {isPostList ? (
+                  <>
+                    <p className="text-sm text-zinc-500">
+                      By {page.author ? page.author.username : "Unknown"} on{" "}
+                      {new Date(page.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        timeZoneName: "short",
+                        timeZone: "UTC",
+                      })}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-zinc-500">
+                      Last updated on{" "}
+                      {new Date(page.updatedAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        timeZoneName: "short",
+                        timeZone: "UTC",
+                      })}
+                    </p>
+                  </>
+                )}
               </div>
             </a>
           </li>
