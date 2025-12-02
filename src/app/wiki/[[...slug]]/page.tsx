@@ -448,7 +448,7 @@ export default async function WikiPage({
                     {page.loungeDisabled ? (
                       <>
                         <div className="mt-4 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
-                          <p className="text-center italic">
+                          <p className="text-center">
                             The Lounge discussion feature is disabled for this
                             page.
                           </p>
