@@ -198,7 +198,7 @@ export default async function WikiPage({
         {isMediaPage && <Chip text="Media" />}
       </div>
       <h1 className="text-3xl font-bold wrap-break-word">
-        {showEdit ? (page && page.title ? "Edit: " : "Creating ") : ""}
+        {showEdit ? (page && page.title ? "Editing " : "Creating ") : ""}
         {showHistoryList ? "History of " : ""}
         {showRevert ? "Reverting " : ""}
         {showDiff ? "Differences of " : ""}
@@ -370,6 +370,7 @@ export default async function WikiPage({
                       {page.title.startsWith("Category:")
                         ? "Pages in this Category"
                         : "Backlinks"}
+                      {` (${Object.keys(page.backlinks).reduce((a, b) => a + page.backlinks[b as keyof typeof page.backlinks].length, 0)})`}
                     </summary>
                     <ul className="mt-2 flex flex-col gap-2">
                       {Object.keys(page.backlinks).map((backlink) => (
@@ -411,6 +412,7 @@ export default async function WikiPage({
                   >
                     <summary className="-m-4 p-4 font-bold select-none">
                       Categories
+                      {` (${extractWikiCategorySlugs(page.content).length})`}
                     </summary>
                     <ul className="mt-2 flex flex-wrap gap-2">
                       {extractWikiCategorySlugs(page.content).length > 0 ? (
