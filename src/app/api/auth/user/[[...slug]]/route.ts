@@ -19,51 +19,89 @@
 */
 
 import { prisma } from "@/lib/prisma";
+import { PublicUser } from "@/types";
+import { NextRequest } from "next/server";
 import { User } from "@/types";
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
-import { NextRequest } from "next/server";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { slugify } from "@/utils";
 
-export async function GET(request: NextRequest): Promise<Response> {
-  const authHeader = request.headers.get("Authorization");
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug?: string[] | undefined }> },
+) {
+  const { slug } = await params;
 
-  if (!authHeader) {
-    return Response.json(
-      { error: "Error! Token was not provided." },
-      { status: 401 },
-    );
-  }
+  if (!slug || slug.length === 0) {
+    const authHeader = request.headers.get("Authorization");
 
-  const token = authHeader.split(" ")[1];
-  if (!token) {
-    return Response.json(
-      { error: "Error! Token was not provided." },
-      { status: 401 },
-    );
-  }
+    if (!authHeader) {
+      return Response.json(
+        { error: "Error! Token was not provided." },
+        { status: 401 },
+      );
+    }
 
-  if (!process.env.JWT_SECRET) {
-    console.error("JWT_SECRET is not defined in the environment variables.");
-    return Response.json({ error: "Internal server error" }, { status: 500 });
-  }
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return Response.json(
+        { error: "Error! Token was not provided." },
+        { status: 401 },
+      );
+    }
 
-  try {
-    const decodedToken = await jose
-      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-      .then((result) => result.payload);
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not defined in the environment variables.");
+      return Response.json({ error: "Internal server error" }, { status: 500 });
+    }
 
-    const id = decodedToken.id;
-    if (!decodedToken || !id) {
+    try {
+      const decodedToken = await jose
+        .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+        .then((result) => result.payload);
+
+      const id = decodedToken.id;
+      if (!decodedToken || !id) {
+        return Response.json(
+          { error: "Invalid or expired token." },
+          { status: 403 },
+        );
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: id as string },
+      });
+
+      if (!user) {
+        return Response.json({ error: "User not found." }, { status: 404 });
+      }
+
+      return Response.json(
+        {
+          id: user.id,
+          username: user.username,
+          avatarUrl: user.avatarUrl,
+          role: user.role,
+          token,
+          createdAt: user.createdAt,
+          status: user.status,
+        } as User,
+        { status: 200 },
+      );
+    } catch (error) {
+      console.log(token);
+      console.error(error);
       return Response.json(
         { error: "Invalid or expired token." },
         { status: 403 },
       );
     }
+  }
 
+  try {
     const user = await prisma.user.findUnique({
-      where: { id: id as string },
+      where: { username: slug?.[0] as string },
     });
 
     if (!user) {
@@ -76,14 +114,12 @@ export async function GET(request: NextRequest): Promise<Response> {
         username: user.username,
         avatarUrl: user.avatarUrl,
         role: user.role,
-        token,
         createdAt: user.createdAt,
         status: user.status,
-      } as User,
+      } as PublicUser,
       { status: 200 },
     );
   } catch (error) {
-    console.log(token);
     console.error(error);
     return Response.json(
       { error: "Invalid or expired token." },
