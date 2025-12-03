@@ -48,11 +48,16 @@ export async function AsideRevisions() {
         {(revisionsData.pages as Page[]).slice(0, 5).map((rev) => (
           <li key={rev.id}>
             <Link
-              href={`/wiki/${slugify(rev.title)}`}
+              href={`/wiki/${slugify(rev.title)}${rev.isRedirect ? "?preventRedirect=true" : ""}`}
               className="hover:underline"
             >
               <div className="flex flex-col text-sm">
-                <p className="me-2 line-clamp-1 font-semibold">{rev.title}</p>
+                <p className="me-2 line-clamp-1 font-semibold">
+                  {rev.title}
+                  <span className="text-zinc-500">
+                    {rev.isRedirect ? " (Redirect)" : ""}
+                  </span>
+                </p>
                 <p className="line-clamp-1 text-xs text-zinc-500">
                   Last edited on{" "}
                   <span className="font-medium">
