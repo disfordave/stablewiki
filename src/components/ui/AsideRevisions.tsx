@@ -54,14 +54,16 @@ export async function AsideRevisions() {
               <div className="flex flex-col text-sm">
                 <p className="me-2 line-clamp-1 font-semibold">{rev.title}</p>
                 <p className="line-clamp-1 text-xs text-zinc-500">
-                  Last updated on{" "}
-                  <span className="font-medium">{new Date(rev.updatedAt).toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    timeZoneName: "short",
-                    timeZone: "UTC",
-                  })}</span>
+                  Last edited on{" "}
+                  <span className="font-medium">
+                    {new Date(rev.updatedAt).toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      timeZoneName: "short",
+                      timeZone: "UTC",
+                    })}
+                  </span>
                 </p>
               </div>
             </Link>

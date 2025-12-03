@@ -17,7 +17,7 @@ export function LoungePreview({
         <div className="flex w-full flex-wrap items-center justify-between gap-2 no-underline hover:underline">
           <div>
             <h2 className="font-bold">
-              <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-5" />
+              <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-4" />
               <span>Latest on Lounge</span>
             </h2>
             <p className="text-xs text-zinc-500">

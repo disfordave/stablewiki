@@ -84,7 +84,7 @@ export default async function WikiList({
                 ) : (
                   <>
                     <p className="text-sm text-zinc-500">
-                      Last updated on{" "}
+                      Last edited on{" "}
                       {new Date(page.updatedAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "2-digit",

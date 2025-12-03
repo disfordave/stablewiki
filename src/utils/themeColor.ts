@@ -5,6 +5,7 @@ const themeColors = {
     bg: {
       base: "bg-violet-500",
       hover: "hover:bg-violet-600",
+      hoverSameAsBase: "hover:bg-violet-500",
       groupHover: "group-hover:bg-violet-600",
     },
     text: {
@@ -28,6 +29,7 @@ const themeColors = {
     bg: {
       base: "bg-rose-500",
       hover: "hover:bg-rose-600",
+      hoverSameAsBase: "hover:bg-rose-500",
       groupHover: "group-hover:bg-rose-600",
     },
     text: {
@@ -69,6 +71,7 @@ const themeColors = {
     bg: {
       base: "bg-orange-500",
       hover: "hover:bg-orange-600",
+      hoverSameAsBase: "hover:bg-orange-500",
       groupHover: "group-hover:bg-orange-600",
     },
     text: {
@@ -92,6 +95,7 @@ const themeColors = {
     bg: {
       base: "bg-sky-500",
       hover: "hover:bg-sky-600",
+      hoverSameAsBase: "hover:bg-sky-500",
       groupHover: "group-hover:bg-sky-600",
     },
     text: {
@@ -115,6 +119,7 @@ const themeColors = {
     bg: {
       base: "bg-emerald-500",
       hover: "hover:bg-emerald-600",
+      hoverSameAsBase: "hover:bg-emerald-500",
       groupHover: "group-hover:bg-emerald-600",
     },
     text: {
@@ -174,6 +179,7 @@ const themeColors = {
     bg: {
       base: "bg-yellow-500",
       hover: "hover:bg-yellow-600",
+      hoverSameAsBase: "hover:bg-yellow-500",
       groupHover: "group-hover:bg-yellow-600",
     },
     text: {
@@ -197,6 +203,7 @@ const themeColors = {
     bg: {
       base: "bg-pink-500",
       hover: "hover:bg-pink-600",
+      hoverSameAsBase: "hover:bg-pink-500",
       groupHover: "group-hover:bg-pink-600",
     },
     text: {
@@ -220,6 +227,7 @@ const themeColors = {
     bg: {
       base: "bg-indigo-500",
       hover: "hover:bg-indigo-600",
+      hoverSameAsBase: "hover:bg-indigo-500",
       groupHover: "group-hover:bg-indigo-600",
     },
     text: {
@@ -243,6 +251,7 @@ const themeColors = {
     bg: {
       base: "bg-zinc-500",
       hover: "hover:bg-zinc-600",
+      hoverSameAsBase: "hover:bg-zinc-500",
       groupHover: "group-hover:bg-zinc-600",
     },
     text: {
@@ -265,7 +274,12 @@ const themeColors = {
 };
 
 export function getThemeColorFunc(): {
-  bg: { base: string; hover: string; groupHover: string };
+  bg: {
+    base: string;
+    hover: string;
+    hoverSameAsBase: string;
+    groupHover: string;
+  };
   text: { base: string; hover: string };
   fill: { primary: string; secondary: string };
   border: { base: string };
