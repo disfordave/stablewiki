@@ -59,9 +59,12 @@ export async function AsideRevisions() {
                   </span>
                 </p>
                 <p className="line-clamp-1 text-xs text-zinc-500">
-                  Last edited on{" "}
+                  on{" "}
                   <span className="font-medium">
                     {new Date(rev.updatedAt).toLocaleTimeString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
                       second: "2-digit",
