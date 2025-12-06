@@ -37,7 +37,7 @@ export function LoungePreview({
         <div className="flex w-full flex-wrap items-center justify-between gap-2 no-underline hover:underline">
           <div>
             <h2 className="font-bold">
-              <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-4" />
+              <ChatBubbleBottomCenterTextIcon className="me-1 mb-0.5 inline size-4" />
               <span>Latest on Lounge</span>
             </h2>
             <p className="text-xs text-zinc-500">
@@ -62,7 +62,7 @@ export function LoungePreview({
                   </p>
                 ) : (
                   <>
-                    <p className="line-clamp-2 font-medium break-words">
+                    <p className="line-clamp-2 font-medium wrap-break-word">
                       {comment.title}
                     </p>
                     <p className="text-sm text-zinc-500">
