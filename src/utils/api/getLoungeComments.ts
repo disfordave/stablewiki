@@ -37,3 +37,19 @@ export async function fetchComments({
   }
   return await response.json();
 }
+
+export async function fetchSingleComment({
+  pageId,
+  commentId,
+}: {
+  pageId: string;
+  commentId: string;
+}) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${pageId}/single/${commentId}`,
+  );
+  if (!response.ok) {
+    return null;
+  }
+  return await response.json();
+}

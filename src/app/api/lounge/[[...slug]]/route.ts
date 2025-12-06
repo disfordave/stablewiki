@@ -105,6 +105,34 @@ export async function GET(
     });
   }
 
+  if (slug.length === 3 && slug[1] === "single") {
+    const findSingleComment = await prisma.comment.findUnique({
+      where: { id: slug[2], pageId: slug[0] },
+      include: {
+        author: { select: { username: true } },
+        reactions: true,
+        page: { select: { slug: true } },
+        parent: {
+          select: {
+            id: true,
+            author: { select: { username: true } },
+            content: true,
+            deleted: true,
+            isHidden: true,
+          },
+        },
+      },
+    });
+
+    if (!findSingleComment) {
+      return new Response("Comment not found", { status: 404 });
+    }
+
+    
+
+    return NextResponse.json({ data: findSingleComment, locationUrl: null });
+  }
+
   const findFirstComment = await prisma.comment.findUnique({
     where: { id: slug[1], pageId: slug[0] },
     include: {
