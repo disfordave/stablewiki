@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { LoungeComment } from "@/types";
 import { slugify } from "@/utils";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -44,7 +44,7 @@ export async function AsideLounges() {
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">
-        {comments.data.slice(0, 5).map((c: any) => (
+        {comments.data.slice(0, 5).map((c: LoungeComment) => (
           <li key={c.id}>
             <Link
               href={`/wiki/${slugify(c.page.title)}/_lounge/${c.id}`}

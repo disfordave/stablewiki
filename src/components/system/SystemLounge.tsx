@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /*
     StableWiki is a modern, open-source wiki platform focused on simplicity,
     collaboration, and ease of use.
@@ -9,10 +7,10 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) LoungeComment later version.
 
     This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    but WITHOUT LoungeComment WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
@@ -30,7 +28,7 @@ import {
   DocumentTextIcon,
   ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/solid";
-import { Page, User } from "@/types";
+import { LoungeComment, Page, User } from "@/types";
 // import Pagination from "../ui/Pagination";
 import { getUser } from "@/lib";
 import Link from "next/link";
@@ -43,13 +41,13 @@ function commentReactionButton({
   sortBy,
   loungeDisabled,
 }: {
-  comment: any;
+  comment: LoungeComment;
   user: User | null;
   hPage: number;
   sortBy: "likes" | "createdAt";
   loungeDisabled: boolean;
 }) {
-  const isReacted = comment.reactions.some((r: any) => r.userId === user?.id);
+  const isReacted = comment.reactions.some((r) => r.userId === user?.id);
   const isDisabled = !user || user.status > 0 || loungeDisabled;
 
   return (
@@ -68,7 +66,7 @@ function commentReactionButton({
 
         if (
           comment.reactions.some(
-            (r: any) => r.userId === user?.id && r.type === 1,
+            (r) => r.userId === user?.id && r.type === 1,
           )
         ) {
           const response = await fetch(
@@ -77,8 +75,8 @@ function commentReactionButton({
               method: "DELETE",
               body: JSON.stringify({
                 reactionId: comment.reactions.find(
-                  (r: any) => r.userId === user?.id && r.type === 1,
-                ).id,
+                  (r) => r.userId === user?.id && r.type === 1,
+                )?.id || "",
               }),
               headers: {
                 "Content-Type": "application/json",
@@ -143,7 +141,7 @@ function commentReactionButton({
     >
       👍{" "}
       <span className="tabular-nums">
-        {comment.reactions.filter((r: any) => r.type === 1).length}
+        {comment.reactions.filter((r) => r.type === 1).length}
       </span>
     </TransitionFormButton>
   );
@@ -183,7 +181,7 @@ function RootCommentForList({
   slug,
   user,
 }: {
-  comment: any;
+  comment: LoungeComment;
   slug: string;
   user: User | null;
 }) {
@@ -227,7 +225,7 @@ function RootCommentForList({
               <p className="line-clamp-2">{comment.content}</p>
               <div
                 className={`mt-4 max-w-fit rounded-full px-2 py-1 shadow-xs ${
-                  comment.reactions.some((r: any) => r.userId === user?.id)
+                  comment.reactions.some((r) => r.userId === user?.id)
                     ? "bg-blue-500 text-white"
                     : "bg-zinc-100 dark:bg-zinc-900"
                 }`}
@@ -251,7 +249,7 @@ export function Comment({
   sortBy,
 }: {
   loungeDisabled: boolean;
-  comment: any;
+  comment: LoungeComment;
   user: User | null;
   hPage: number;
   sortBy: "likes" | "createdAt";
@@ -343,7 +341,7 @@ export function Comment({
             {!comment.rootCommentId && (
               <h4 className="mt-4 text-lg font-semibold">{comment.title}</h4>
             )}
-            {comment.parentId && comment.parentId !== comment.rootCommentId && (
+            {comment.parentId && comment.parent && comment.parentId !== comment.rootCommentId && (
               <p className="mt-4 mb-1 line-clamp-1 max-w-md">
                 <Link
                   href={`?hPage=${Math.ceil(comment.parent.index / 10)}&sortBy=${sortBy}#${comment.parent.id}`}
@@ -464,7 +462,7 @@ export default async function SystemLounge({
 
     if (
       user.id !==
-      comments.find((c: any) => c.id === targetLoungeCommentId)?.authorId
+      comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)?.authorId
     ) {
       safeRedirect(
         `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Unauthorized to edit this comment`,
@@ -519,7 +517,7 @@ export default async function SystemLounge({
       </div>
       {comments && comments.length > 0 && !comments[0].rootCommentId ? (
         <div className="mt-4">
-          {comments.map((comment: any) => (
+          {comments.map((comment: LoungeComment) => (
             <div key={comment.id}>
               {!commentId ? (
                 <RootCommentForList
@@ -564,7 +562,7 @@ export default async function SystemLounge({
                     Editing comment:{" "}
                     {targetLoungeCommentId === commentId
                       ? "(root comment)"
-                      : `"${comments.find((c: any) => c.id === targetLoungeCommentId)?.content}" by ${comments.find((c: any) => c.id === targetLoungeCommentId)?.author.username || "Unknown"}` ||
+                      : `"${comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)?.content}" by ${comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)?.author.username || "Unknown"}` ||
                         targetLoungeCommentId}
                   </p>
                   <Link
@@ -586,7 +584,7 @@ export default async function SystemLounge({
                         className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                         defaultValue={
                           comments.find(
-                            (c: any) => c.id === targetLoungeCommentId,
+                            (c: LoungeComment) => c.id === targetLoungeCommentId,
                           )?.title
                         }
                       />
@@ -600,7 +598,7 @@ export default async function SystemLounge({
                     {replyTo
                       ? replyTo === commentId
                         ? "(root comment)"
-                        : `"${comments.find((c: any) => c.id === replyTo)?.content}" by ${comments.find((c: any) => c.id === replyTo)?.author.username || "Unknown"}` ||
+                        : `"${comments.find((c: LoungeComment) => c.id === replyTo)?.content}" by ${comments.find((c: LoungeComment) => c.id === replyTo)?.author.username || "Unknown"}` ||
                           replyTo
                       : "(root comment)"}
                   </p>
@@ -642,7 +640,7 @@ export default async function SystemLounge({
               required
               defaultValue={
                 targetLoungeCommentId
-                  ? comments.find((c: any) => c.id === targetLoungeCommentId)
+                  ? comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
                       ?.content
                   : ""
               }
@@ -676,7 +674,7 @@ export default async function SystemLounge({
 
             if (
               user.id !==
-              comments.find((c: any) => c.id === targetLoungeCommentId)
+              comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
                 ?.authorId
             ) {
               safeRedirect(

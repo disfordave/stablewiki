@@ -33,7 +33,7 @@ export interface Page {
   updatedAt: Date;
   isRedirect?: boolean;
   redirectTargetSlug?: string;
-  comments?: Comment[];
+  comments?: LoungePreviewComment[];
   accessLevel: number;
   backlinks: {
     general: SimplePageData[];
@@ -88,13 +88,53 @@ export interface PublicUser {
   status: number;
 }
 
-export interface Comment {
+export interface LoungePreviewComment {
   id: string;
   title: string;
   content: string;
   createdAt: Date;
+  deleted: boolean;
   author?: {
     id: string;
     username: string;
   };
+}
+
+export interface LoungeComment {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt?: string | null;
+  deleted: boolean;
+  isHidden: boolean;
+  index: number;
+  authorId: string;
+  author: {
+    id: string;
+    username: string;
+  };
+  page: {
+    id: string;
+    slug: string;
+    title: string;
+  };
+  reactions: Array<{
+    id: string;
+    userId: string;
+    type: number;
+  }>;
+  rootCommentId: string | null;
+  parentId: string | null;
+  parent?: {
+    id: string;
+    content: string;
+    index: number;
+    deleted: boolean;
+    author: {
+      id: string;
+      username: string;
+    };
+  };
+  userId: string;
 }

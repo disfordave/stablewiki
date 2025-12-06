@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { LoungePreviewComment } from "@/types";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export function LoungePreview({
 }: {
   pageTitle: string;
   slug: string;
-  comments?: any[];
+  comments?: LoungePreviewComment[];
 }) {
   return (
     <div className="mt-4 flex flex-col gap-2 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
@@ -37,13 +37,13 @@ export function LoungePreview({
             No comments yet. Be the first to comment!
           </p>
         )}
-        {comments.slice(0, 2).map((comment: any) => (
+        {comments.slice(0, 2).map((comment: LoungePreviewComment) => (
           <li key={comment.id}>
             <Link href={`/wiki/${slug}/_lounge/${comment.id}`}>
               <div className="rounded-lg bg-white p-4 text-sm hover:underline dark:bg-zinc-800">
                 {comment.deleted ? (
                   <p className="text-sm text-zinc-500">
-                    Deleted Lounge by {comment.author.username}
+                    Deleted Lounge by {comment.author?.username || "Unknown"}
                   </p>
                 ) : (
                   <>
@@ -51,7 +51,7 @@ export function LoungePreview({
                       {comment.title}
                     </p>
                     <p className="text-sm text-zinc-500">
-                      By {comment.author.username} on{" "}
+                      By {comment.author?.username || "Unknown"} on{" "}
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </p>
                   </>
