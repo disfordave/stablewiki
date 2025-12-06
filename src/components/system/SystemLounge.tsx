@@ -65,18 +65,17 @@ function commentReactionButton({
         }
 
         if (
-          comment.reactions.some(
-            (r) => r.userId === user?.id && r.type === 1,
-          )
+          comment.reactions.some((r) => r.userId === user?.id && r.type === 1)
         ) {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/reactions`,
             {
               method: "DELETE",
               body: JSON.stringify({
-                reactionId: comment.reactions.find(
-                  (r) => r.userId === user?.id && r.type === 1,
-                )?.id || "",
+                reactionId:
+                  comment.reactions.find(
+                    (r) => r.userId === user?.id && r.type === 1,
+                  )?.id || "",
               }),
               headers: {
                 "Content-Type": "application/json",
@@ -341,19 +340,21 @@ export function Comment({
             {!comment.rootCommentId && (
               <h4 className="mt-4 text-lg font-semibold">{comment.title}</h4>
             )}
-            {comment.parentId && comment.parent && comment.parentId !== comment.rootCommentId && (
-              <p className="mt-4 mb-1 line-clamp-1 max-w-md">
-                <Link
-                  href={`?hPage=${Math.ceil(comment.parent.index / 10)}&sortBy=${sortBy}#${comment.parent.id}`}
-                  className="line-clamp-1 text-blue-500 no-underline hover:underline"
-                >
-                  {comment.parent.deleted
-                    ? `Reply to @${comment.parent.author.username}: [Deleted]`
-                    : `Reply to @${comment.parent.author.username}: 
+            {comment.parentId &&
+              comment.parent &&
+              comment.parentId !== comment.rootCommentId && (
+                <p className="mt-4 mb-1 line-clamp-1 max-w-md">
+                  <Link
+                    href={`?hPage=${Math.ceil(comment.parent.index / 10)}&sortBy=${sortBy}#${comment.parent.id}`}
+                    className="line-clamp-1 text-blue-500 no-underline hover:underline"
+                  >
+                    {comment.parent.deleted
+                      ? `Reply to @${comment.parent.author.username}: [Deleted]`
+                      : `Reply to @${comment.parent.author.username}: 
               "${comment.parent.content}"`}
-                </Link>
-              </p>
-            )}
+                  </Link>
+                </p>
+              )}
             <MarkdownComp content={comment.content} isComment={true} />
             <div>
               {commentReactionButton({
@@ -462,7 +463,8 @@ export default async function SystemLounge({
 
     if (
       user.id !==
-      comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)?.authorId
+      comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
+        ?.authorId
     ) {
       safeRedirect(
         `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Unauthorized to edit this comment`,
@@ -584,7 +586,8 @@ export default async function SystemLounge({
                         className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 ${getThemeColor.etc.focusRing} focus:outline-none dark:bg-zinc-900`}
                         defaultValue={
                           comments.find(
-                            (c: LoungeComment) => c.id === targetLoungeCommentId,
+                            (c: LoungeComment) =>
+                              c.id === targetLoungeCommentId,
                           )?.title
                         }
                       />
@@ -640,8 +643,9 @@ export default async function SystemLounge({
               required
               defaultValue={
                 targetLoungeCommentId
-                  ? comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
-                      ?.content
+                  ? comments.find(
+                      (c: LoungeComment) => c.id === targetLoungeCommentId,
+                    )?.content
                   : ""
               }
             ></textarea>
@@ -674,8 +678,9 @@ export default async function SystemLounge({
 
             if (
               user.id !==
-              comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
-                ?.authorId
+              comments.find(
+                (c: LoungeComment) => c.id === targetLoungeCommentId,
+              )?.authorId
             ) {
               safeRedirect(
                 `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to delete this comment`,

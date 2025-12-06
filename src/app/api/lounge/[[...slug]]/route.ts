@@ -128,8 +128,6 @@ export async function GET(
       return new Response("Comment not found", { status: 404 });
     }
 
-    
-
     return NextResponse.json({ data: findSingleComment, locationUrl: null });
   }
 
