@@ -24,8 +24,9 @@ export * from "./api/getPages";
 export * from "./api/getLoungeComments";
 export * from "./api/pagination";
 export * from "./api/wikiLinks";
-export * from "./slugify";
-export * from "./safeRedirect";
-export * from "./themeColor";
-export * from "./getEditLevelString";
-export * from "./isUsersPost";
+
+export * from "./functions/slugify";
+export * from "./functions/safeRedirect";
+export * from "./functions/themeColor";
+export * from "./functions/getEditLevelString";
+export * from "./functions/isUsersPost";
