@@ -4,9 +4,9 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' next dev --turbopack",
-    "build": "NODE_OPTIONS='--dns-result-order=ipv4first' next build --turbopack",
-    "start": "NODE_OPTIONS='--dns-result-order=ipv4first' next start",
+    "dev": "NODE_OPTIONS='--no-network-family-autoselection' next dev --turbopack",
+    "build": "NODE_OPTIONS='--no-network-family-autoselection' next build --turbopack",
+    "start": "NODE_OPTIONS='--no-network-family-autoselection' next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
