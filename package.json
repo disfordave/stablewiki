@@ -4,9 +4,9 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "dev": "NODE_OPTIONS='--no-network-family-autoselection' next dev --turbopack",
-    "build": "NODE_OPTIONS='--no-network-family-autoselection' next build --turbopack",
-    "start": "NODE_OPTIONS='--no-network-family-autoselection' next start",
+    "dev": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=1000' next dev --turbopack",
+    "build": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=1000' next build --turbopack",
+    "start": "NODE_OPTIONS='--network-family-autoselection-attempt-timeout=1000' next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
