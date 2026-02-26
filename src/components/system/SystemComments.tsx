@@ -123,7 +123,6 @@ export default async function SystemComments({
                         minute: "2-digit",
                         second: "2-digit",
                         timeZoneName: "short",
-                        timeZone: "UTC",
                       },
                     )}`}
                   </span>
@@ -141,7 +140,6 @@ export default async function SystemComments({
                             minute: "2-digit",
                             second: "2-digit",
                             timeZoneName: "short",
-                            timeZone: "UTC",
                           },
                         )}
                       </span>

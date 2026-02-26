@@ -60,7 +60,6 @@ export async function AsideLounges() {
           minute: "2-digit",
           second: "2-digit",
           timeZoneName: "short",
-          timeZone: "UTC",
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">

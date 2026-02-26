@@ -120,7 +120,6 @@ export default async function SystemRevisions({
                   minute: "2-digit",
                   second: "2-digit",
                   timeZoneName: "short",
-                  timeZone: "UTC",
                 })}
               </p>
               <div className="flex flex-wrap gap-2">

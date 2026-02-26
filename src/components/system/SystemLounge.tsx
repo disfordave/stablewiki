@@ -203,7 +203,6 @@ function RootCommentForList({
               minute: "2-digit",
               second: "2-digit",
               timeZoneName: "short",
-              timeZone: "UTC",
             })}`}
           </div>
           {comment.deleted ? (
@@ -279,7 +278,6 @@ export function Comment({
                 minute: "2-digit",
                 second: "2-digit",
                 timeZoneName: "short",
-                timeZone: "UTC",
               })}`}
               {comment.rootCommentId && ` (#${comment.index})`}
             </span>
@@ -294,7 +292,6 @@ export function Comment({
                   minute: "2-digit",
                   second: "2-digit",
                   timeZoneName: "short",
-                  timeZone: "UTC",
                 })}
               </span>
             )}

@@ -48,7 +48,7 @@ export async function AsideRevisions() {
   return (
     <section className="rounded-2xl bg-white p-4 dark:bg-zinc-800">
       <div className="font-bold">
-        <ClockIcon className="me-1 mb-[2px] inline size-5" />
+        <ClockIcon className="me-1 mb-0.5 inline size-5" />
         <span className="text-lg">Latest Updates</span>
       </div>
       <p className="text-xs text-zinc-500">
@@ -61,7 +61,6 @@ export async function AsideRevisions() {
           minute: "2-digit",
           second: "2-digit",
           timeZoneName: "short",
-          timeZone: "UTC",
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">
@@ -89,7 +88,6 @@ export async function AsideRevisions() {
                       minute: "2-digit",
                       second: "2-digit",
                       timeZoneName: "short",
-                      timeZone: "UTC",
                     })}
                   </span>
                 </p>

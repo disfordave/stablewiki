@@ -54,7 +54,6 @@ export default async function PublicUserInfo({
             month: "2-digit",
             year: "numeric",
             timeZoneName: "short",
-            timeZone: "UTC",
           })}
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-start gap-2">

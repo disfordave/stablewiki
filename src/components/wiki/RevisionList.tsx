@@ -88,7 +88,6 @@ export default function RevisionList({
                   minute: "2-digit",
                   second: "2-digit",
                   timeZoneName: "short",
-                  timeZone: "UTC",
                 })}
               </p>
 

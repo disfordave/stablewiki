@@ -52,7 +52,7 @@ export default async function WikiList({
             <a href={`/wiki/${page.slug}`} className="">
               <div className="rounded-xl bg-zinc-100 p-4 transition-colors duration-300 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-950">
                 <h2
-                  className={`line-clamp-3 text-lg font-semibold break-words ${page.isRedirect ? "text-zinc-500" : ""}`}
+                  className={`line-clamp-3 text-lg font-semibold wrap-break-word ${page.isRedirect ? "text-zinc-500" : ""}`}
                 >
                   {isPostList ? (
                     `${page.title.split("/")[1]} `
@@ -77,7 +77,6 @@ export default async function WikiList({
                         month: "2-digit",
                         year: "numeric",
                         timeZoneName: "short",
-                        timeZone: "UTC",
                       })}
                     </p>
                   </>
@@ -93,7 +92,6 @@ export default async function WikiList({
                         minute: "2-digit",
                         second: "2-digit",
                         timeZoneName: "short",
-                        timeZone: "UTC",
                       })}
                     </p>
                   </>
