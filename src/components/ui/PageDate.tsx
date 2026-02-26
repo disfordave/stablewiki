@@ -45,7 +45,6 @@ function PageDate({ page, isOld }: { page: Page; isOld: boolean }) {
           minute: "2-digit",
           second: "2-digit",
           timeZoneName: "short",
-          timeZone: "UTC",
         })}
       </span>
     </p>
