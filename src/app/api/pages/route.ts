@@ -25,6 +25,7 @@ import {
   checkRedirect,
   handleHPage,
   extractWikiLinkSlugs,
+  logSystemEvent,
 } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
@@ -100,6 +101,10 @@ export async function GET(request: NextRequest) {
         },
       },
     });
+
+    if (query.trim() !== "" && !userPostByUsername) {
+      logSystemEvent("PAGE_SEARCH", `Searched for: ${query}`);
+    }
 
     if (
       !userPostByUsername &&

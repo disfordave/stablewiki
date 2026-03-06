@@ -29,6 +29,7 @@ model User {
   reactions         Reaction[]
   negativeReactions NegativeReaction[]
   isHidden          Boolean            @default(false)
+  systemLogs        SystemLog[]
 }
 
 model Page {
@@ -156,6 +157,18 @@ model NegativeReaction {
 
   @@unique([userId, commentId, type])
   @@index([userId, commentId])
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  userId    String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([type])
+  @@index([userId])
 }
 
 enum Role {
