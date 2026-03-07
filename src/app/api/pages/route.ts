@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
   const action = searchParams.get("action") || "";
   const username = searchParams.get("username") || "";
   const sortBy = searchParams.get("sortBy") || "createdAt";
+  const noExactMatch = searchParams.get("noExactMatch") || "";
   const handledHPage = handleHPage(hPage) - 1;
 
   if (action === "revisions") {
@@ -109,7 +110,8 @@ export async function GET(request: NextRequest) {
     if (
       !userPostByUsername &&
       handleHPage(hPage) === 1 &&
-      !noAutomaticExactMatch
+      !noAutomaticExactMatch &&
+      !noExactMatch
     ) {
       const exactMatch = await prisma.page.findFirst({
         where: {

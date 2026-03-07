@@ -23,7 +23,7 @@ import DashboardPage from "./auth/DashboardPage";
 import SignInPage from "./auth/SignInPage";
 import SignupPage from "./auth/SignUpPage";
 import StableUpload from "./SystemUpload";
-import { SearchBox } from "../ui";
+import { SearchBox, EnhancedSearchBox } from "../ui";
 import { WIKI_NAME } from "@/config";
 import { StableEditor } from "../wiki";
 import SystemRevisions from "./SystemRevisions";
@@ -55,7 +55,14 @@ export default function SystemPages({
             </h1>
           )}
           <div className="mb-2">
-            <SearchBox />
+            <EnhancedSearchBox />
+            <noscript>
+              <p className="mt-2 text-sm text-red-500">
+                JavaScript is required to use the enhanced search box. Please
+                enable JavaScript or use the basic search box below.
+              </p>
+              <SearchBox />
+            </noscript>
           </div>
           <StableSearch query={q} hPage={hPage} />
         </div>

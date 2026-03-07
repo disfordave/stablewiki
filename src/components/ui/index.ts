@@ -31,6 +31,7 @@ export { PageDate } from "./PageDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";
 export { MarkdownComp } from "./MarkdownComp";
 export { Breadcrumbs } from "./Breadcrumbs";
+export { EnhancedSearchBox } from "./EnhancedSearchBox";
 export { SearchBox } from "./SearchBox";
 export { DefaultWikiLogo } from "./DefaultWikiLogo";
 export { LoungePreview } from "./LoungePreview";

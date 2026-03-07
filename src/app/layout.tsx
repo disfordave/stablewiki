@@ -23,7 +23,7 @@ import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
-import { Header, Footer } from "@/components";
+import { Header, Footer, Providers } from "@/components";
 import Head from "next/head";
 import { AsideLounges, AsideRevisions, BackToTopButton } from "@/components/ui";
 import { getThemeColor } from "@/utils";
@@ -72,22 +72,24 @@ export default function RootLayout({
         className={`${inter.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-zinc-100 dark:bg-zinc-800 sm:dark:bg-zinc-900`}
         id="up"
       >
-        <div className="h-full min-h-screen w-full bg-zinc-100 text-zinc-900 transition-colors duration-300 dark:bg-zinc-900 dark:text-zinc-100">
-          <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-4 p-0 sm:p-4">
-            <Header />
-            <div className="flex flex-1 flex-col gap-4 md:flex-row">
-              <main className="min-h-[calc(100vh-12rem)] basis-2/3 overflow-auto rounded-2xl bg-white p-4 dark:bg-zinc-800">
-                {children}
-              </main>
-              <aside className="flex basis-1/3 flex-col gap-4 md:sticky md:top-4 md:h-fit">
-                <AsideRevisions />
-                <AsideLounges />
-              </aside>
+        <Providers>
+          <div className="h-full min-h-screen w-full bg-zinc-100 text-zinc-900 transition-colors duration-300 dark:bg-zinc-900 dark:text-zinc-100">
+            <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-4 p-0 sm:p-4">
+              <Header />
+              <div className="flex flex-1 flex-col gap-4 md:flex-row">
+                <main className="min-h-[calc(100vh-12rem)] basis-2/3 overflow-auto rounded-2xl bg-white p-4 dark:bg-zinc-800">
+                  {children}
+                </main>
+                <aside className="flex basis-1/3 flex-col gap-4 md:sticky md:top-4 md:h-fit">
+                  <AsideRevisions />
+                  <AsideLounges />
+                </aside>
+              </div>
+              <Footer />
             </div>
-            <Footer />
+            <BackToTopButton />
           </div>
-          <BackToTopButton />
-        </div>
+        </Providers>
       </body>
     </html>
   );
