@@ -50,6 +50,7 @@ To install StableWiki Engine, follow these steps:
 - `WIKI_DISABLE_MEDIA`: A boolean to enable or disable media uploads. (Default: false)
 - `WIKI_MEDIA_ADMIN_ONLY`: A boolean to restrict media uploads to admin users only. (Default: false)
 - `WIKI_DISABLE_SIGNUP`: A boolean to enable or disable user signup. (Default: false)
+- `WIKI_DISABLE_SYSTEM_LOGS`: A boolean to enable or disable system logs (e.g., page searches). (Default: false)
 
 ### Logo and Theme Configuration
 
@@ -72,11 +73,9 @@ You can set `WIKI_THEME_COLOR` to any of the following colors:
 - pink
 - zinc
 
-## Important Notes
+## Important Notes on Serverless Platforms
 
-1. **StableWiki is a still in the very, very early stages of development.**
-
-2. The persistent storage of StableWiki relies on Node.js fs modules that require a full Node.js environment with file system access to run properly. **Although you can run StableWiki on Serverless platforms, persistent file storage will not be working properly. If you don't need media uploads, I recommend `WIKI_DISABLE_MEDIA=true` in `.env` to disable media uploads.**
+The persistent storage of StableWiki relies on Node.js fs modules that require a full Node.js environment with file system access to run properly. **Although you can run StableWiki on Serverless platforms, persistent file storage will not be working properly. If you don't need media uploads, I recommend `WIKI_DISABLE_MEDIA=true` in `.env` to disable media uploads.**
 
 ## Features
 
