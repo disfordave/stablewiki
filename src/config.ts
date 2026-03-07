@@ -22,7 +22,7 @@
 
 const WIKI_NAME = process.env.WIKI_NAME || "StableWiki Engine";
 const WIKI_HOMEPAGE_LINK =
-  "/wiki/" + process.env.WIKI_HOMEPAGE_LINK || "WelcomePage";
+  "/wiki/" + (process.env.WIKI_HOMEPAGE_LINK || "WelcomePage");
 const WIKI_DISABLE_LOGO =
   process.env.WIKI_DISABLE_LOGO?.toLowerCase() === "true";
 const WIKI_ROUND_LOGO = process.env.WIKI_ROUND_LOGO?.toLowerCase() === "true";
