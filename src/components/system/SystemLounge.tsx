@@ -432,7 +432,6 @@ export default async function SystemLounge({
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
-    console.log("Lounge post created:", result);
     safeRedirect(
       `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages === 0 ? 1 : totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
     );
@@ -491,7 +490,6 @@ export default async function SystemLounge({
     }
     // Optionally, you can handle success (e.g., redirect or show a message)
     const result = await response.json();
-    console.log("Lounge post edited:", result);
     safeRedirect(
       `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
     );

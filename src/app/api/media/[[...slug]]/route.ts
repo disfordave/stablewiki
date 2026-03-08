@@ -151,15 +151,12 @@ export async function POST(
   const buffer = Buffer.from(await media.arrayBuffer());
 
   const fullTitle = extension ? `${title}.${extension.toLowerCase()}` : title;
-  console.log({ fullTitle });
 
   const uploadDir = path.join(process.cwd(), "public", "media");
   await mkdir(uploadDir, { recursive: true });
   const filePath = path.join(uploadDir, fullTitle);
 
   await writeFile(filePath, buffer);
-
-  console.log(`Media file saved to ${filePath}`);
 
   try {
     const page = await prisma.page.create({

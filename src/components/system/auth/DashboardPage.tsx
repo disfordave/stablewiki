@@ -192,7 +192,6 @@ export default async function DashboardPage() {
     }
 
     if (response.ok) {
-      console.log("Password changed successfully");
       safeRedirect(
         `/wiki/System:Dashboard?success=${"Password changed successfully!"}`,
       );

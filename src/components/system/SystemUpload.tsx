@@ -58,8 +58,6 @@ export default async function StableUpload() {
     const title = formData.get("title") as string;
     const media = formData.get("media") as File;
 
-    console.log({ title, media });
-
     if (!title || !media) {
       throw new Error("Missing fields");
     }
@@ -79,13 +77,11 @@ export default async function StableUpload() {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.log("Response not ok:", errorData);
       const errorMsg = errorData.error || "Failed to upload media";
       safeRedirect(`/wiki/System:Upload?error=${errorMsg}`);
     }
 
     const data = await response.json();
-    console.log("Upload successful:", data);
 
     safeRedirect(`/wiki/${data.slug}`);
   }

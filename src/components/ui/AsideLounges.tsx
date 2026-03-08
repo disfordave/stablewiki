@@ -47,7 +47,7 @@ export async function AsideLounges() {
   return (
     <section className="rounded-2xl bg-white p-4 dark:bg-zinc-800">
       <div className="font-bold">
-        <ChatBubbleBottomCenterTextIcon className="me-1 mb-[2px] inline size-5" />
+        <ChatBubbleBottomCenterTextIcon className="me-1 mb-0.5 inline size-5" />
         <span className="text-lg">Latest on Lounge</span>
       </div>
       <p className="text-xs text-zinc-500">

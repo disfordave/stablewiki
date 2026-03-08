@@ -79,7 +79,7 @@ export default async function StableRevert({
     }
 
     const data = await res.json();
-    console.log("Edit response data:", data);
+
     safeRedirect(`/wiki/${slugify(data.title)}`);
   }
 

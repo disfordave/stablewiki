@@ -90,7 +90,6 @@ export async function GET(
         { status: 200 },
       );
     } catch (error) {
-      console.log(token);
       console.error(error);
       return Response.json(
         { error: "Invalid or expired token." },

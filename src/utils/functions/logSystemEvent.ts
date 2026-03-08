@@ -21,5 +21,5 @@ export async function logSystemEvent(
     return;
   }
 
-  console.log(`System Event Logged: [${systemLog.type}] ${systemLog.message}`);
+  // console.log(`System Event Logged: [${systemLog.type}] ${systemLog.message}`);
 }

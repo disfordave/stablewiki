@@ -440,7 +440,6 @@ export async function POST(
     });
 
     if (targetSlugs.length > 0) {
-      console.log("Creating wiki links:", targetSlugs);
       await prisma.wikiLink.createMany({
         data: targetSlugs.map((targetSlug) => ({
           sourceId: updatedPage.id,
@@ -448,8 +447,6 @@ export async function POST(
         })),
       });
     }
-
-    console.log("Updated page redirect status:", updatedPage);
 
     return Response.json(page, { status: 201 });
   } catch (error) {

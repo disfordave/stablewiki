@@ -115,8 +115,7 @@ export default async function StableEditor({
     }
 
     const data = await res.json();
-    console.log("Edit response data:", data);
-    safeRedirect(`/wiki/${slugify(title)}`);
+    safeRedirect(`/wiki/${slugify(data.title)}`);
   }
 
   async function deletePage() {

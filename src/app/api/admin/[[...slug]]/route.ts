@@ -50,7 +50,6 @@ export async function PUT(
         (accessLevel > 9 && accessLevel < 101) ||
         accessLevel > 102
       ) {
-        console.log("invalid access level:", accessLevel);
         return new Response("Invalid status value", { status: 400 });
       }
 

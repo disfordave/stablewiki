@@ -71,9 +71,12 @@ export async function POST(request: Request) {
         .setExpirationTime(`24h`) // Change this line
         .sign(new TextEncoder().encode(process.env.JWT_SECRET));
     } catch (err) {
-      console.log(err);
       return Response.json(
-        { error: "Failed to sign in user from JWT" },
+        {
+          error:
+            "Failed to sign in user from JWT" +
+            (err instanceof Error ? `: ${err.message}` : ""),
+        },
         { status: 500 },
       );
     }
