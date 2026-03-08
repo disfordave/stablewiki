@@ -29,5 +29,5 @@ export * from "./functions/slugify";
 export * from "./functions/safeRedirect";
 export * from "./functions/themeColor";
 export * from "./functions/getEditLevelString";
-export * from "./functions/isUsersPost";
+export * from "./functions/isUsersPage";
 export * from "./functions/logSystemEvent";
