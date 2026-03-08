@@ -202,8 +202,6 @@ export async function POST(request: Request) {
       return Response.json({ error: "Internal server error" }, { status: 500 });
     }
 
-    let token;
-
     if (newUser) {
       const data = { user: newUser };
       // Add user page creation automatically.
@@ -235,7 +233,6 @@ export async function POST(request: Request) {
         username: newUser.username,
         avatarUrl: newUser.avatarUrl,
         role: newUser.role,
-        token,
       },
     });
 
