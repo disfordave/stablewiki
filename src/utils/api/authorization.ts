@@ -21,6 +21,7 @@
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { User } from "@/types";
+import { prisma } from "@/lib/prisma";
 
 export async function validAuthorizationWithJwt(
   request: NextRequest | Request,
@@ -74,27 +75,39 @@ export async function getDecodedToken(
       return null;
     }
 
-    // const decodedToken = await jose
-    //   .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-    //   .then((result) => result.payload);
+    const decodedToken = await jose
+      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
+      .then((result) => result.payload);
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cache: "no-store",
-        credentials: "include",
-      },
-    );
-
-    if (!res.ok) {
+    const id = decodedToken.id;
+    if (!decodedToken || !id) {
       return null;
     }
 
-    const user = await res.json();
-    return user as User;
+    const response = await prisma.user.findUnique({
+      where: { id: id as string },
+      select: {
+        id: true,
+        username: true,
+        avatarUrl: true,
+        role: true,
+        createdAt: true,
+        status: true,
+      },
+    });
+
+    if (!response) {
+      return null;
+    }
+
+    return {
+      id: response.id,
+      username: response.username,
+      avatarUrl: response.avatarUrl,
+      role: response.role,
+      createdAt: response.createdAt,
+      status: response.status,
+    } as User;
   } catch (error) {
     console.error("Error decoding JWT:", error);
     return null;
