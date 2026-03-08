@@ -14,6 +14,8 @@ export function isUsersPage(
         return true;
       }
       return false;
+    } else {
+      return titleArray[0].toLowerCase() === username.toLowerCase();
     }
   } else {
     return false;
