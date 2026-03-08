@@ -10,6 +10,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
+    "test": "vitest",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --create-only",
@@ -48,6 +49,7 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "prisma": "^6.17.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.18"
   }
 }
