@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   const action = searchParams.get("action") || "";
   const username = searchParams.get("username") || "";
   const sortBy = searchParams.get("sortBy") || "createdAt";
-  const noExactMatch = searchParams.get("noExactMatch") || "";
+  const noSystemLog = searchParams.get("noSystemLog") || "";
   const handledHPage = handleHPage(hPage) - 1;
 
   if (action === "revisions") {
@@ -103,15 +103,14 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    if (query.trim() !== "" && !userPostByUsername) {
+    if (query.trim() !== "" && !userPostByUsername && noSystemLog !== "true") {
       logSystemEvent("PAGE_SEARCH", `Searched for: ${query}`);
     }
 
     if (
       !userPostByUsername &&
       handleHPage(hPage) === 1 &&
-      !noAutomaticExactMatch &&
-      !noExactMatch
+      !noAutomaticExactMatch
     ) {
       const exactMatch = await prisma.page.findFirst({
         where: {
@@ -290,9 +289,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  console.log({ decodedToken });
-  console.log({ title, link: WIKI_HOMEPAGE_LINK.slice(6) });
-
   if (decodedToken.status > 0) {
     return Response.json({ error: "Banned user" }, { status: 403 });
   }
@@ -361,7 +357,6 @@ export async function POST(request: Request) {
     });
 
     if (targetSlugs.length > 0) {
-      console.log("Creating wiki links:", targetSlugs);
       await prisma.wikiLink.createMany({
         data: targetSlugs.map((targetSlug) => ({
           sourceId: page.id,
