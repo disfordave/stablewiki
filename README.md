@@ -1,5 +1,7 @@
 # 🔭 StableWiki Engine
 
+![StableWiki Engine Mockup (SidWiki)](docs/images/stablewiki-sidwiki-mockup.jpg)
+
 StableWiki Engine is an open-source wiki and knowledge platform built with **Next.js, TypeScript, and PostgreSQL**.
 
 It was originally created to replace the friction of maintaining a **Git-based Markdown blog**.
