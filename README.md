@@ -1,6 +1,6 @@
 # 🔭 StableWiki Engine
 
-[![StableWiki Engine Mockup (SidWiki)](docs/images/stablewiki-sidwiki-mockup.jpg)](https://sidwiki.com)
+![StableWiki Engine Mockup (SidWiki)](docs/images/stablewiki-sidwiki-mockup.jpg)
 
 🌐 **Live Demo:** [https://sidwiki.com](https://sidwiki.com)
 
