@@ -255,6 +255,18 @@ git push origin feature/your-feature-name
 ```
 
 5. Open a pull request
+ 
+---
+
+# Built With
+
+- **Next.js** — full-stack framework
+- **TypeScript** — static typing
+- **PostgreSQL** — relational database
+- **Prisma ORM** — object-relational mapper
+- **Tailwind CSS** — styling
+- **TanStack Query** — data fetching (client)
+- **Vitest** — unit testing
 
 ---
 
