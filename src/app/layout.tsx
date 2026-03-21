@@ -47,6 +47,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: process.env.NEXT_PUBLIC_BASE_URL,
   title: WIKI_NAME,
   description: WIKI_DESCRIPTION,
 };
