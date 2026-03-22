@@ -661,8 +661,22 @@ export async function generateMetadata({
 
     if (isUserPagePostPage) {
       return {
-        title: `${page.title.split("/")[1]} by ${page.author.username} | ${WIKI_NAME}`,
-        description: `User post titled "${page.title.split("/")[2]}".`,
+        title: `${page.title.split("/")[1]} by ${page.title.split("/")[0].slice(5)} | ${WIKI_NAME}`,
+        description: `${stripMarkdown(page.content).slice(0, 200)}...`,
+      openGraph: {
+        title: `${page.title.split("/")[1]} by ${page.title.split("/")[0].slice(5)} | ${WIKI_NAME}`,
+        description: `${stripMarkdown(page.content).slice(0, 200)}...`,
+        url: process.env.NEXT_PUBLIC_BASE_URL,
+        siteName: WIKI_NAME,
+        images: [
+          {
+            url:
+              extractMedia(page.content) ||
+              `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
+          },
+        ],
+        type: "website",
+      },
       };
     }
 
@@ -694,7 +708,7 @@ export async function generateMetadata({
       title: `${page.title} | ${WIKI_NAME}`,
       description: `${stripMarkdown(page.content).slice(0, 200)}...`,
       openGraph: {
-        title: `${page.title}`,
+        title: `${page.title.startsWith("User:") ? page.title.split("/")[0].slice(5) + "'s Page" : page.title}`,
         description: `${stripMarkdown(page.content).slice(0, 200)}...`,
         url: process.env.NEXT_PUBLIC_BASE_URL,
         siteName: WIKI_NAME,
@@ -727,7 +741,11 @@ function extractMedia(input: string): string | null {
   if (match[1]) {
     return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}`;
   } else if (match[2]) {
-    return match[2];
+    if (match[2].endsWith(".jpg") || match[2].endsWith(".jpeg") || match[2].endsWith(".png") || match[2].endsWith(".gif") || match[2].endsWith(".webp")) {
+      return match[2];
+    } else {
+      return null;
+    }
   } else {
     return null;
   }
