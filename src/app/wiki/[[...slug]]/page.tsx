@@ -617,8 +617,9 @@ export async function generateMetadata({
     const isUserPage =
       slug &&
       slug.length > 0 &&
-      slug[0].startsWith(encodeURIComponent("User:"));
+      slug[0].startsWith("User:");
     const isUserPagePostPage = isUserPage && slug.length >= 2;
+
     if (showEdit) {
       if (page && page.title) {
         if (isUserPagePostPage) {
