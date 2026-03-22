@@ -39,32 +39,32 @@ export async function GET(
 
   if (forOpenGraph && noSvg && url && !slug) {
     const res = await fetch(url);
-  if (!res.ok) {
-    return new Response("Failed to fetch image", { status: 500 });
-  }
+    if (!res.ok) {
+      return new Response("Failed to fetch image", { status: 500 });
+    }
 
-  const contentType = res.headers.get("content-type") || "";
-  const buffer = Buffer.from(await res.arrayBuffer());
+    const contentType = res.headers.get("content-type") || "";
+    const buffer = Buffer.from(await res.arrayBuffer());
 
-  // ✅ If SVG → convert to PNG
-  if (contentType.includes("image/svg+xml") || url.endsWith(".svg")) {
-    const png = await sharp(buffer).png().toBuffer();
+    // ✅ If SVG → convert to PNG
+    if (contentType.includes("image/svg+xml") || url.endsWith(".svg")) {
+      const png = await sharp(buffer).png().toBuffer();
 
-    return new Response(new Uint8Array(png), {
+      return new Response(new Uint8Array(png), {
+        headers: {
+          "Content-Type": "image/png",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
+
+    // ✅ Otherwise return as-is
+    return new Response(new Uint8Array(buffer), {
       headers: {
-        "Content-Type": "image/png",
+        "Content-Type": contentType,
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
-  }
-
-  // ✅ Otherwise return as-is
-  return new Response(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": contentType,
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
-  });
   }
 
   if (!slug || slug.length === 0) {
@@ -95,8 +95,20 @@ export async function GET(
                 : "application/octet-stream";
 
     if (noSvg && type === "image/svg+xml") {
-      const png = await sharp(file).png().toBuffer();
-      return new NextResponse(new Uint8Array(png), {
+      const image = sharp(file);
+      const metadata = await image.metadata();
+
+      let pipeline = image;
+
+      if ((metadata.width ?? 0) < 630 || (metadata.height ?? 0) < 630) {
+        pipeline = pipeline.resize(630, 630, {
+          fit: "contain"
+        });
+      }
+
+      const output = await pipeline.png().toBuffer();
+
+      return new NextResponse(new Uint8Array(output), {
         headers: { "Content-Type": "image/png" },
       });
     }
