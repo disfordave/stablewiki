@@ -524,7 +524,7 @@ export async function generateMetadata({
   const isLoungeView =
     (baseSlug &&
       baseSlug.length > 0 &&
-      baseSlug.includes(encodeURIComponent("_lounge"))) ??
+      baseSlug.includes("_lounge")) ??
     false;
 
   const slug =
@@ -549,7 +549,7 @@ export async function generateMetadata({
   const loungeId =
     isLoungeView && baseSlug
       ? baseSlug
-          .slice(baseSlug.indexOf(encodeURIComponent("_lounge")) + 1)
+          .slice(baseSlug.indexOf("_lounge") + 1)
           .join("/")
       : null;
 
@@ -562,8 +562,8 @@ export async function generateMetadata({
 
     const data = await getPageData(joinedSlug, queryParams);
     const page = showHistoryList ? data.page : data.page;
-    const systemPage = slug[0].replace(encodeURIComponent("System:"), "");
-    if (slug[0].startsWith(encodeURIComponent("System:"))) {
+    const systemPage = slug[0].replace("System:", "");
+    if (slug[0].startsWith("System:")) {
       switch (systemPage) {
         case "Search":
           return {
