@@ -720,16 +720,14 @@ export async function generateMetadata({
 function extractMedia(input: string): string | null {
   const regex = /!\[\[([^\]]+)\]\]|!\[[^\]]*\]\(([^)]+)\)/;
 
-  const match = input.match(regex);
+  const match = input.trim().match(regex);
 
   if (!match) return null;
 
-  // match[1] → "Media:..."
-  // match[3] → markdown URL
   if (match[1]) {
     return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}`;
-  } else if (match[3]) {
-    return match[3];
+  } else if (match[2]) {
+    return match[2];
   } else {
     return null;
   }
