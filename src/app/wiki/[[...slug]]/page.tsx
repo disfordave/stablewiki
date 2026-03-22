@@ -739,7 +739,7 @@ function extractMedia(input: string): string | null {
   if (!match) return null;
 
   if (match[1]) {
-    return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}&noSvg=true`;
+    return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}?noSvg=true`;
   } else if (match[2]) {
     if (match[2].endsWith(".jpg") || match[2].endsWith(".jpeg") || match[2].endsWith(".png") || match[2].endsWith(".gif") || match[2].endsWith(".webp")) {
       return match[2];
