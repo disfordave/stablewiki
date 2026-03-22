@@ -25,12 +25,47 @@ import { writeFile, mkdir } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs/promises";
+import sharp from "sharp";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug?: string[] | undefined }> },
 ) {
   const { slug } = await params;
+  const { searchParams } = new URL(request.url);
+  const url = searchParams.get("url");
+  const noSvg = searchParams.get("noSvg") === "true";
+  const forOpenGraph = searchParams.get("forOpenGraph") === "true";
+
+  if (forOpenGraph && noSvg && url && !slug) {
+    const res = await fetch(url);
+  if (!res.ok) {
+    return new Response("Failed to fetch image", { status: 500 });
+  }
+
+  const contentType = res.headers.get("content-type") || "";
+  const buffer = Buffer.from(await res.arrayBuffer());
+
+  // ✅ If SVG → convert to PNG
+  if (contentType.includes("image/svg+xml") || url.endsWith(".svg")) {
+    const png = await sharp(buffer).png().toBuffer();
+
+    return new Response(new Uint8Array(png), {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    });
+  }
+
+  // ✅ Otherwise return as-is
+  return new Response(new Uint8Array(buffer), {
+    headers: {
+      "Content-Type": contentType,
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
+  }
 
   if (!slug || slug.length === 0) {
     return new NextResponse("Not found", { status: 404 });
@@ -58,6 +93,13 @@ export async function GET(
               : ext === ".webp"
                 ? "image/webp"
                 : "application/octet-stream";
+
+    if (noSvg && type === "image/svg+xml") {
+      const png = await sharp(file).png().toBuffer();
+      return new NextResponse(new Uint8Array(png), {
+        headers: { "Content-Type": "image/png" },
+      });
+    }
 
     return new NextResponse(new Uint8Array(file), {
       headers: { "Content-Type": type },
