@@ -102,7 +102,8 @@ export async function GET(
 
       if ((metadata.width ?? 0) < 630 || (metadata.height ?? 0) < 630) {
         pipeline = pipeline.resize(630, 630, {
-          fit: "contain"
+          fit: "contain",
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
         });
       }
 
