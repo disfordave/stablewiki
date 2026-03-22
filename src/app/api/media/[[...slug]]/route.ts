@@ -100,8 +100,8 @@ export async function GET(
 
       let pipeline = image;
 
-      if ((metadata.width ?? 0) < 630 || (metadata.height ?? 0) < 630) {
-        pipeline = pipeline.resize(630, 630, {
+      if ((metadata.width ?? 0) < 1200 || (metadata.height ?? 0) < 630) {
+        pipeline = pipeline.resize(1200, 630, {
           fit: "contain",
           background: { r: 255, g: 255, b: 255, alpha: 0 },
         });
