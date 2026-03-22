@@ -708,7 +708,7 @@ export async function generateMetadata({
       title: `${page.title} | ${WIKI_NAME}`,
       description: `${stripMarkdown(page.content).slice(0, 200)}...`,
       openGraph: {
-        title: `${page.title.startsWith("User:") ? page.title.split("/")[0].slice(5) + "'s Page" : page.title}`,
+        title: `${page.title.startsWith("User:") ? page.title.split("/")[0].slice(5) + "'s page" : page.title}`,
         description: `${stripMarkdown(page.content).slice(0, 200)}...`,
         url: process.env.NEXT_PUBLIC_BASE_URL,
         siteName: WIKI_NAME,
