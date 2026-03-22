@@ -692,7 +692,21 @@ export async function generateMetadata({
 
     return {
       title: `${page.title} | ${WIKI_NAME}`,
-      description: `Wiki page titled "${page.title}".`,
+      description: `${stripMarkdown(page.content).slice(0, 200)}...`,
+      openGraph: {
+        title: `${page.title}`,
+        description: `${stripMarkdown(page.content).slice(0, 200)}...`,
+        url: process.env.NEXT_PUBLIC_BASE_URL,
+        siteName: WIKI_NAME,
+        images: [
+          {
+            url:
+              extractMedia(page.content) ||
+              `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
+          },
+        ],
+        type: "website",
+      },
     };
   } catch (err) {
     console.error(err);
@@ -701,4 +715,71 @@ export async function generateMetadata({
       description: `Failed to load page.`,
     };
   }
+}
+
+function extractMedia(input: string): string | null {
+  const regex = /!\[\[([^\]]+)\]\]|!\[[^\]]*\]\(([^)]+)\)/;
+
+  const match = input.match(regex);
+
+  if (!match) return null;
+
+  // match[1] → "Media:..."
+  // match[3] → markdown URL
+  if (match[1]) {
+    return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}`;
+  } else if (match[3]) {
+    return match[3];
+  } else {
+    return null;
+  }
+}
+
+export function stripMarkdown(input: string): string {
+  return (
+    input
+      // ---- custom syntax: remove completely, including content ----
+      // ![[file.png]]
+      .replace(/!\[\[([^[\]]+)\]\]/g, "")
+
+      // [[page]] or [[page || label]]
+      .replace(/\[\[(.+?)(?:\s*\|\|\s*(.+?))?\]\]/g, "")
+
+      // code blocks
+      .replace(/```[\s\S]*?```/g, "")
+      .replace(/`([^`]*)`/g, "$1")
+
+      // images
+      .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
+
+      // links
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+
+      // headings
+      .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+
+      // blockquotes
+      .replace(/^\s{0,3}>\s?/gm, "")
+
+      // bold / italic / strikethrough
+      .replace(/(\*\*|__)(.*?)\1/g, "$2")
+      .replace(/(\*|_)(.*?)\1/g, "$2")
+      .replace(/~~(.*?)~~/g, "$1")
+
+      // unordered lists
+      .replace(/^\s*[-+*]\s+/gm, "")
+
+      // ordered lists
+      .replace(/^\s*\d+\.\s+/gm, "")
+
+      // horizontal rules
+      .replace(/^\s*([-*_]){3,}\s*$/gm, "")
+
+      // tables: remove pipes
+      .replace(/\|/g, "")
+
+      // extra newlines/spaces
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
 }
