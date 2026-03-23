@@ -46,7 +46,7 @@ export async function GET(
     const contentType = res.headers.get("content-type") || "";
     const buffer = Buffer.from(await res.arrayBuffer());
 
-    // ✅ If SVG → convert to PNG
+    // If SVG → convert to PNG
     if (contentType.includes("image/svg+xml") || url.endsWith(".svg")) {
       const png = await sharp(buffer).png().toBuffer();
 
@@ -58,7 +58,7 @@ export async function GET(
       });
     }
 
-    // ✅ Otherwise return as-is
+    // Otherwise return as-is
     return new Response(new Uint8Array(buffer), {
       headers: {
         "Content-Type": contentType,
