@@ -314,9 +314,12 @@ export async function POST(request: Request) {
   }
 
   if (title.startsWith("User:") || title.startsWith("user:")) {
-    if ((title as string).split("/")[0].slice(5) !== decodedToken.username) {
+    if (
+      (title as string).split("/")[0].slice(5) !== decodedToken.username &&
+      decodedToken.role !== "ADMIN"
+    ) {
       return Response.json(
-        { error: "You can only create a User page for your own username" },
+        { error: "You can only create a User page for your own username (ADMIN can add new post)" },
         { status: 403 },
       );
     }
