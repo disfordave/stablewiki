@@ -676,7 +676,7 @@ export async function generateMetadata({
               `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
           },
         ],
-        type: "website",
+        type: "article",
       },
       };
     }
@@ -720,7 +720,7 @@ export async function generateMetadata({
               `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
           },
         ],
-        type: "website",
+        type: page.title.startsWith("User:") ? "profile" : "website",
       },
     };
   } catch (err) {
