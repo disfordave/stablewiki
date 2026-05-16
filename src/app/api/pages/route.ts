@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const userPostByUsername = searchParams.get("userPostByUsername");
-  const itemsPerPage = 10;
+  const itemsPerPageFromParams = parseInt(searchParams.get("itemsPerPage") || "10");
   const hPage = searchParams.get("hPage") || "1";
   const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
   const action = searchParams.get("action") || "";
@@ -43,6 +43,16 @@ export async function GET(request: NextRequest) {
   const sortBy = searchParams.get("sortBy") || "createdAt";
   const noSystemLog = searchParams.get("noSystemLog") || "";
   const handledHPage = handleHPage(hPage) - 1;
+
+  let itemsPerPage;
+
+  if (isNaN(itemsPerPageFromParams) || itemsPerPageFromParams <= 0) {
+    itemsPerPage = 10;
+  } else if (itemsPerPageFromParams > 25) {
+    itemsPerPage = 25;
+  } else {
+    itemsPerPage = itemsPerPageFromParams;
+  }
 
   if (action === "revisions") {
     const pagesCount = await prisma.revision.count({
