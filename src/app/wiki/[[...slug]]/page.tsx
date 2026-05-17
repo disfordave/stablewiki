@@ -771,6 +771,9 @@ export function stripMarkdown(input: string): string {
       // images
       .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
 
+      // remove special /yt: links completely
+      .replace(/\[[^\]]*\]\(\/yt:[^)]+\)/g, "")
+
       // links
       .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
 
@@ -796,6 +799,9 @@ export function stripMarkdown(input: string): string {
 
       // tables: remove pipes
       .replace(/\|/g, "")
+
+      // remove all newlines
+      .replace(/\r?\n|\r/g, " ")
 
       // extra newlines/spaces
       .replace(/\n{3,}/g, "\n\n")
