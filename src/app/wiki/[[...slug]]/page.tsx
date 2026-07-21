@@ -522,10 +522,7 @@ export async function generateMetadata({
   );
 
   const isLoungeView =
-    (baseSlug &&
-      baseSlug.length > 0 &&
-      baseSlug.includes("_lounge")) ??
-    false;
+    (baseSlug && baseSlug.length > 0 && baseSlug.includes("_lounge")) ?? false;
 
   const slug =
     loungeIndex !== undefined && loungeIndex !== -1
@@ -548,9 +545,7 @@ export async function generateMetadata({
 
   const loungeId =
     isLoungeView && baseSlug
-      ? baseSlug
-          .slice(baseSlug.indexOf("_lounge") + 1)
-          .join("/")
+      ? baseSlug.slice(baseSlug.indexOf("_lounge") + 1).join("/")
       : null;
 
   try {
@@ -614,10 +609,7 @@ export async function generateMetadata({
           };
       }
     }
-    const isUserPage =
-      slug &&
-      slug.length > 0 &&
-      slug[0].startsWith("User:");
+    const isUserPage = slug && slug.length > 0 && slug[0].startsWith("User:");
     const isUserPagePostPage = isUserPage && slug.length >= 2;
 
     if (showEdit) {
@@ -664,20 +656,20 @@ export async function generateMetadata({
       return {
         title: `${page.title.split("/")[1]} by ${page.title.split("/")[0].slice(5)} | ${WIKI_NAME}`,
         description: `${stripMarkdown(page.content).slice(0, 200)}...`,
-      openGraph: {
-        title: `${page.title.split("/")[1]} by ${page.title.split("/")[0].slice(5)} | ${WIKI_NAME}`,
-        description: `${stripMarkdown(page.content).slice(0, 200)}...`,
-        url: process.env.NEXT_PUBLIC_BASE_URL,
-        siteName: WIKI_NAME,
-        images: [
-          {
-            url:
-              extractMedia(page.content) ||
-              `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
-          },
-        ],
-        type: "article",
-      },
+        openGraph: {
+          title: `${page.title.split("/")[1]} by ${page.title.split("/")[0].slice(5)} | ${WIKI_NAME}`,
+          description: `${stripMarkdown(page.content).slice(0, 200)}...`,
+          url: process.env.NEXT_PUBLIC_BASE_URL,
+          siteName: WIKI_NAME,
+          images: [
+            {
+              url:
+                extractMedia(page.content) ||
+                `${process.env.NEXT_PUBLIC_BASE_URL}/opengraph-image.jpg`,
+            },
+          ],
+          type: "article",
+        },
       };
     }
 
@@ -742,7 +734,13 @@ function extractMedia(input: string): string | null {
   if (match[1]) {
     return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media/${encodeURIComponent(match[1])}?noSvg=true`;
   } else if (match[2]) {
-    if (match[2].endsWith(".jpg") || match[2].endsWith(".jpeg") || match[2].endsWith(".png") || match[2].endsWith(".gif") || match[2].endsWith(".webp")) {
+    if (
+      match[2].endsWith(".jpg") ||
+      match[2].endsWith(".jpeg") ||
+      match[2].endsWith(".png") ||
+      match[2].endsWith(".gif") ||
+      match[2].endsWith(".webp")
+    ) {
       return match[2];
     } else if (match[2].endsWith(".svg")) {
       return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media?url=${encodeURIComponent(match[2])}&forOpenGraph=true&noSvg=true`;

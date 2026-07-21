@@ -35,7 +35,9 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const userPostByUsername = searchParams.get("userPostByUsername");
-  const itemsPerPageFromParams = parseInt(searchParams.get("itemsPerPage") || "10");
+  const itemsPerPageFromParams = parseInt(
+    searchParams.get("itemsPerPage") || "10",
+  );
   const hPage = searchParams.get("hPage") || "1";
   const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
   const action = searchParams.get("action") || "";
@@ -329,7 +331,10 @@ export async function POST(request: Request) {
       decodedToken.role !== "ADMIN"
     ) {
       return Response.json(
-        { error: "You can only create a User page for your own username (ADMIN can add new post)" },
+        {
+          error:
+            "You can only create a User page for your own username (ADMIN can add new post)",
+        },
         { status: 403 },
       );
     }

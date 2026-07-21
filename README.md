@@ -11,10 +11,10 @@ Instead of writing posts locally and pushing commits, StableWiki allows pages to
 
 The engine powers **[SidWiki](https://sidwiki.com)** — the ultimate knowledge base and blog platform that combines:
 
-* wiki-style articles
-* personal blog pages through user subpages
-* lightweight community discussions via `_lounge`
-* revision history and link-driven navigation
+- wiki-style articles
+- personal blog pages through user subpages
+- lightweight community discussions via `_lounge`
+- revision history and link-driven navigation
 
 StableWiki aims to be simple, transparent, and accessible, prioritizing **Markdown editing and server-rendered content** so that the platform remains usable even without JavaScript.
 
@@ -39,8 +39,8 @@ Category:Programming
 
 This allows the same system to support both:
 
-* structured knowledge articles
-* personal publishing
+- structured knowledge articles
+- personal publishing
 
 ---
 
@@ -55,8 +55,8 @@ Pages are connected using wiki links.
 
 These links automatically generate:
 
-* backlinks
-* category pages
+- backlinks
+- category pages
 
 ---
 
@@ -80,15 +80,15 @@ Core functionality works without JavaScript, while optional enhancements improve
 
 # Features
 
-* Wiki page system with namespace support
-* Markdown-based article editing
-* Page revision history with version rollback
-* User authentication and role-based permissions
-* Link-driven navigation with backlinks and categories
-* Redirect support using wiki syntax
-* Integrated discussion via `_lounge`
-* Search functionality with autocomplete
-* Responsive UI for mobile and desktop
+- Wiki page system with namespace support
+- Markdown-based article editing
+- Page revision history with version rollback
+- User authentication and role-based permissions
+- Link-driven navigation with backlinks and categories
+- Redirect support using wiki syntax
+- Integrated discussion via `_lounge`
+- Search functionality with autocomplete
+- Responsive UI for mobile and desktop
 
 ---
 
@@ -218,7 +218,7 @@ WIKI_DISABLE_MEDIA=true
 
 Future plans and development notes are tracked in:
 
-[https://sidwiki.com/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine](https://sidwiki.com/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine)
+[https://sidwiki.com/wiki/User:dave/[Wiki]\_The_Future_of_SidWiki_and_StableWiki_Engine](https://sidwiki.com/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine)
 
 ---
 
@@ -228,10 +228,10 @@ Contributions are welcome.
 
 Areas where contributions are particularly helpful:
 
-* Serverless compatibility
-* External storage support
-* UI improvements
-* documentation improvements
+- Serverless compatibility
+- External storage support
+- UI improvements
+- documentation improvements
 
 ### Contribution workflow
 
@@ -255,7 +255,7 @@ git push origin feature/your-feature-name
 ```
 
 5. Open a pull request
- 
+
 ---
 
 # Built With
@@ -276,8 +276,8 @@ This project is licensed under the **GNU Affero General Public License v3.0 or l
 
 In short:
 
-* You may freely use and modify the project.
-* If you deploy the project as a service, you must also share your modifications under the same license.
+- You may freely use and modify the project.
+- If you deploy the project as a service, you must also share your modifications under the same license.
 
 See the [LICENSE](LICENSE) file for details.
 
