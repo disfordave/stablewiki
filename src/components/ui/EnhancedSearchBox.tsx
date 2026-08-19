@@ -22,7 +22,7 @@
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { TransitionFormButton } from "./buttons/TransitionButton";
-import { safeRedirect } from "@/utils";
+import { safeRedirect } from "@/utils/functions/safeRedirect";
 import { SubmitEventHandler, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";

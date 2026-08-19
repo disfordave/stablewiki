@@ -50,6 +50,7 @@ export default async function SystemSearch({
 
   let results = null as Page[] | null;
   let totalPaginationPages = 0;
+  let error: "not-ok" | "threw" | null = null;
   try {
     const fetchResults = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(
@@ -58,17 +59,26 @@ export default async function SystemSearch({
     );
 
     if (!fetchResults.ok) {
-      return (
-        <div>
-          <p>Failed to fetch search results.</p>
-        </div>
-      );
-    }
-    const data = await fetchResults.json();
+      error = "not-ok";
+    } else {
+      const data = await fetchResults.json();
 
-    results = data.pages || [];
-    totalPaginationPages = data.totalPaginationPages || 0;
+      results = data.pages || [];
+      totalPaginationPages = data.totalPaginationPages || 0;
+    }
   } catch {
+    error = "threw";
+  }
+
+  if (error === "not-ok") {
+    return (
+      <div>
+        <p>Failed to fetch search results.</p>
+      </div>
+    );
+  }
+
+  if (error === "threw") {
     return (
       <div>
         <p>An error occurred while fetching search results.</p>

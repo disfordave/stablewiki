@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local media file
 /public/media/*
+
+# prisma generated client
+/src/generated/

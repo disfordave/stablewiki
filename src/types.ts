@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/client";
 
 export interface Page {
   id: string;
