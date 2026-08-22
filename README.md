@@ -2,6 +2,9 @@
 
 ![StableWiki Engine Mockup (SidWiki)](docs/images/stablewiki-sidwiki-mockup.jpg)
 
+[![CI](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml/badge.svg)](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml)
+![Licence](https://img.shields.io/badge/Licence-AGPL--3.0--or--later-blue)
+
 🌐 **Live Demo:** [https://sidwiki.com](https://sidwiki.com)
 
 StableWiki Engine is an open-source wiki and knowledge platform built with **Next.js, TypeScript, and PostgreSQL**.
