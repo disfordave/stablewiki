@@ -37,7 +37,7 @@
     "rehype-toc": "^3.0.2",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.35.3",
-    "themeflip": "^0.1.5"
+    "themeflip": "^0.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
