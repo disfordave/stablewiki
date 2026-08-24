@@ -24,7 +24,6 @@ import "./globals.css";
 import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
 
 import { Header, Footer, Providers } from "@/components";
-import Head from "next/head";
 import { AsideLounges, AsideRevisions, BackToTopButton } from "@/components/ui";
 import { getThemeColor } from "@/utils";
 
@@ -59,16 +58,19 @@ export const viewport: Viewport = {
   ],
 };
 
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})()`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
-      <Head>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
         <meta name="apple-mobile-web-app-title" content={WIKI_NAME} />
-      </Head>
+        <script defer dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body
         className={`${inter.variable} ${ibmPlexMono.variable} bg-white antialiased ${getThemeColor.etc.selection} sm:bg-zinc-100 dark:bg-zinc-800 sm:dark:bg-zinc-900`}
         id="up"

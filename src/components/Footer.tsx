@@ -25,10 +25,11 @@ import {
   WIKI_LICENSE_URL,
 } from "@/config";
 import Link from "next/link";
+import ThemeToggleWrapper from "@/components/ThemeToggle";
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-2xl bg-white px-4 py-8 text-start sm:rounded-2xl dark:bg-zinc-800">
+    <footer className="rounded-t-2xl bg-white px-4 py-4 text-start sm:rounded-2xl dark:bg-zinc-800">
       <p className="max-w-lg text-sm text-zinc-500">
         All wiki text — except for content on User:, System:, and Media: pages —
         is licensed under{" "}
@@ -42,7 +43,7 @@ export default function Footer() {
         </a>
       </p>
 
-      <p className="mt-4 text-sm text-zinc-500">
+      <p className="mt-2 text-sm text-zinc-500">
         &copy; {new Date().getFullYear()}{" "}
         <a
           href={WIKI_COPYRIGHT_HOLDER_URL}
@@ -64,6 +65,9 @@ export default function Footer() {
           StableWiki Engine v0.0.1
         </Link>
       </p>
+      <div className={`mt-2`}>
+        <ThemeToggleWrapper />
+      </div>
     </footer>
   );
 }
