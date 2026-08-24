@@ -25,7 +25,7 @@ export default function ThemeToggleWrapper() {
         activeButtonClassName="
     text-white dark:text-zinc-950
   "
-        auto={{
+        system={{
           label: "Auto",
           icon: (
             <svg
