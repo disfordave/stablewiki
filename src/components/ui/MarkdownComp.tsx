@@ -25,6 +25,7 @@ import rehypeSlug from "rehype-slug";
 // import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import toc from "rehype-toc";
 import Image from "next/image";
+import { CodeBlock, resolveLanguage } from "./CodeBlock";
 
 export function WikiMarkdown({
   content,
@@ -81,6 +82,39 @@ export function WikiMarkdown({
               }
               alt={alt || ""}
               {...rest}
+            />
+          );
+        },
+        pre(props) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { children, className, node, ...rest } = props;
+          return (
+            <pre
+              {...rest}
+              className={`sw-code not-prose my-4 overflow-x-auto p-4 text-sm leading-relaxed ${
+                isComment ? "rounded-lg" : "rounded-xl"
+              }${className ? " " + className : ""}`}
+            >
+              {children}
+            </pre>
+          );
+        },
+        code(props) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { children, className, node, ...rest } = props;
+          const language = resolveLanguage(className);
+          // Inline code and plain fences have no language and are left alone.
+          if (!language) {
+            return (
+              <code className={className} {...rest}>
+                {children}
+              </code>
+            );
+          }
+          return (
+            <CodeBlock
+              language={language}
+              value={String(children).replace(/\n$/, "")}
             />
           );
         },

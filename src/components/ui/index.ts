@@ -30,6 +30,7 @@ export { RedirectedFromMessage } from "./messages/RedirectedFromMessage";
 export { PageDate } from "./PageDate";
 export { LoadingSkeleton } from "./LoadingSkeleton";
 export { MarkdownComp } from "./MarkdownComp";
+export { CodeBlock } from "./CodeBlock";
 export { Breadcrumbs } from "./Breadcrumbs";
 export { EnhancedSearchBox } from "./EnhancedSearchBox";
 export { SearchBox } from "./SearchBox";
