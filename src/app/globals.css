@@ -48,3 +48,122 @@ html {
     font-family: var(--font-ibm-plex-mono), "Courier New", Courier, monospace;
   }
 }
+
+/*
+  Syntax highlighting for fenced code blocks (see components/ui/CodeBlock.tsx).
+  The highlighter renders Prism token classes rather than inline styles, so the
+  palette below can follow the .dark class and switch with the theme toggle.
+*/
+.sw-code {
+  --sw-code-bg: var(--color-zinc-100);
+  --sw-code-fg: #3f3f46;
+  --sw-code-comment: #6b6b74;
+  --sw-code-punctuation: #52525b;
+  --sw-code-keyword: #8250df;
+  --sw-code-string: #15803d;
+  --sw-code-number: #b45309;
+  --sw-code-function: #2563eb;
+  --sw-code-class: #92610a;
+  --sw-code-operator: #0f766e;
+  --sw-code-variable: #c81e1e;
+
+  background-color: var(--sw-code-bg);
+  color: var(--sw-code-fg);
+  tab-size: 2;
+}
+
+.dark .sw-code {
+  --sw-code-bg: var(--color-zinc-900);
+  --sw-code-fg: #e4e4e7;
+  --sw-code-comment: #8b8b93;
+  --sw-code-punctuation: #a1a1aa;
+  --sw-code-keyword: #c678dd;
+  --sw-code-string: #98c379;
+  --sw-code-number: #d19a66;
+  --sw-code-function: #61afef;
+  --sw-code-class: #e5c07b;
+  --sw-code-operator: #56b6c2;
+  --sw-code-variable: #e06c75;
+}
+
+.sw-code code {
+  font-family: inherit;
+  background: none;
+  color: inherit;
+}
+
+.sw-code .token.comment,
+.sw-code .token.prolog,
+.sw-code .token.doctype,
+.sw-code .token.cdata {
+  color: var(--sw-code-comment);
+  font-style: italic;
+}
+
+.sw-code .token.punctuation {
+  color: var(--sw-code-punctuation);
+}
+
+.sw-code .token.namespace {
+  opacity: 0.75;
+}
+
+.sw-code .token.property,
+.sw-code .token.tag,
+.sw-code .token.symbol,
+.sw-code .token.deleted,
+.sw-code .token.variable,
+.sw-code .token.important {
+  color: var(--sw-code-variable);
+}
+
+.sw-code .token.boolean,
+.sw-code .token.number,
+.sw-code .token.constant,
+.sw-code .token.unit,
+.sw-code .token.entity,
+.sw-code .token.url {
+  color: var(--sw-code-number);
+}
+
+.sw-code .token.selector,
+.sw-code .token.string,
+.sw-code .token.char,
+.sw-code .token.attr-value,
+.sw-code .token.inserted,
+.sw-code .token.regex {
+  color: var(--sw-code-string);
+}
+
+.sw-code .token.operator {
+  color: var(--sw-code-operator);
+}
+
+.sw-code .token.atrule,
+.sw-code .token.keyword,
+.sw-code .token.rule {
+  color: var(--sw-code-keyword);
+}
+
+.sw-code .token.function,
+.sw-code .token.builtin {
+  color: var(--sw-code-function);
+}
+
+.sw-code .token.class-name,
+.sw-code .token.maybe-class-name,
+.sw-code .token.attr-name {
+  color: var(--sw-code-class);
+}
+
+.sw-code .token.bold {
+  font-weight: 700;
+}
+
+.sw-code .token.italic {
+  font-style: italic;
+}
+
+.sw-code .token.entity {
+  cursor: help;
+}
