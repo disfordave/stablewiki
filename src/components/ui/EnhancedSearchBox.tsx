@@ -20,6 +20,7 @@
 
 "use client";
 
+import { useSearchParams, useRouter } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { TransitionFormButton } from "./buttons/TransitionButton";
 import { safeRedirect } from "@/utils/functions/safeRedirect";
@@ -31,14 +32,14 @@ import { Page } from "@/types";
 export function EnhancedSearchBox() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropDown, setShowDropDown] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const listRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropDownRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim() === "") return;
-    safeRedirect(`/wiki/System:Search?q=${searchQuery}`);
-  };
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchParamsQueryValue = searchParams.get("q");
 
   const handleDropDown = () => setShowDropDown((state) => !state);
 
@@ -74,15 +75,63 @@ export function EnhancedSearchBox() {
     staleTime: 1000 * 60,
   });
 
+  useEffect(() => {
+    listRef.current
+      ?.querySelector(`#search-result-${activeIndex}`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex, data]);
+
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    setShowDropDown(false);
+    if (searchQuery.trim() === "") return;
+    if (activeIndex > 1) {
+      router.push(`/wiki/${data[activeIndex - 2].slug[0]}`);
+      return;
+    } else if (activeIndex === 1) {
+      router.push(`/wiki/${searchQuery}`);
+      return;
+    }
+    safeRedirect(`/wiki/System:Search?q=${searchQuery}`);
+  };
+
+  useEffect(() => {
+    if (!searchParamsQueryValue) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    } else {
+      inputRef.current?.blur();
+    }
+  }, [searchParamsQueryValue]);
+
   return (
     <div className="relative">
-      <form onSubmit={handleSubmit} className="relative mt-2 flex w-full gap-2">
+      <form
+        onSubmit={handleSubmit}
+        className="relative mt-2 flex w-full gap-2"
+        onMouseEnter={() => setActiveIndex(0)}
+      >
         <input
           ref={inputRef}
           autoComplete="off"
           value={searchQuery}
           onFocus={handleDropDown}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            // A new query means a new list, so the highlight starts over.
+            setActiveIndex(0);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") {
+              event.preventDefault();
+              if (data.length === 0) return;
+              setActiveIndex((i) => Math.min(i + 1, data.length - 1));
+            } else if (event.key === "ArrowUp") {
+              event.preventDefault();
+              setActiveIndex((i) => Math.max(i - 1, 0));
+            }
+          }}
           type="text"
           name="enhanced-search"
           className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 focus:ring-zinc-500/50 focus:outline-none dark:bg-zinc-900`}
@@ -103,12 +152,17 @@ export function EnhancedSearchBox() {
             ref={dropDownRef}
             className="absolute top-0 z-10 max-h-60 w-full overflow-auto rounded-xl bg-zinc-100 p-4 shadow-md dark:bg-zinc-900"
           >
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2" ref={listRef}>
               {searchQuery.trim() !== "" && (
-                <li>
+                <li
+                  role="option"
+                  onMouseEnter={() => setActiveIndex(1)}
+                  aria-selected={1 === activeIndex}
+                  id={`search-result-1`}
+                >
                   <Link
                     href={`/wiki/${searchQuery}`}
-                    className="opacity-80 hover:underline"
+                    className={`opacity-75 ${activeIndex === 1 ? "underline" : ""}`}
                   >
                     <p>Go to &quot;{searchQuery}&quot;</p>
                   </Link>
@@ -119,11 +173,17 @@ export function EnhancedSearchBox() {
                   <p>Loading...</p>
                 </li>
               ) : data.length > 0 ? (
-                data.map((page: Page) => (
-                  <li key={page.title}>
+                data.map((page: Page, position: number) => (
+                  <li
+                    role="option"
+                    onMouseEnter={() => setActiveIndex(position + 2)}
+                    aria-selected={position + 2 === activeIndex}
+                    key={page.title}
+                    id={`search-result-${position + 2}`}
+                  >
                     <Link
                       href={`/wiki/${page.slug[0]}`}
-                      className="hover:underline"
+                      className={`${activeIndex === position + 2 ? "underline" : ""}`}
                     >
                       <p>{page.title}</p>
                     </Link>
