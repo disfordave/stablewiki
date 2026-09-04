@@ -126,7 +126,7 @@ export function EnhancedSearchBox() {
             if (event.key === "ArrowDown") {
               event.preventDefault();
               if (data.length === 0) return;
-              setActiveIndex((i) => Math.min(i + 1, data.length - 1));
+              setActiveIndex((i) => Math.min(i + 1, data.length - 1 + 2));
             } else if (event.key === "ArrowUp") {
               event.preventDefault();
               setActiveIndex((i) => Math.max(i - 1, 0));
