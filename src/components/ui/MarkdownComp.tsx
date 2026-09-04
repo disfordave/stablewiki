@@ -63,6 +63,16 @@ export function WikiMarkdown({
       // rehypePlugins={[rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], toc]}
       rehypePlugins={[rehypeSlug, toc]}
       components={{
+        table: ({ className, ...props }) => (
+          <div className="overflow-auto">
+            <table
+              {...props}
+              className={["w-full overflow-auto text-nowrap", className]
+                .filter(Boolean)
+                .join(" ")}
+            />
+          </div>
+        ),
         img(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { alt, className, node, src, height, width, ...rest } = props;
