@@ -96,11 +96,7 @@ export function EnhancedSearchBox() {
   };
 
   useEffect(() => {
-    if (!searchParamsQueryValue) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    } else {
+    if (searchParamsQueryValue) {
       inputRef.current?.blur();
     }
   }, [searchParamsQueryValue]);
@@ -116,6 +112,7 @@ export function EnhancedSearchBox() {
           ref={inputRef}
           autoComplete="off"
           value={searchQuery}
+          autoFocus={!searchParamsQueryValue}
           onFocus={handleDropDown}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -125,7 +122,6 @@ export function EnhancedSearchBox() {
           onKeyDown={(event) => {
             if (event.key === "ArrowDown") {
               event.preventDefault();
-              if (data.length === 0) return;
               setActiveIndex((i) => Math.min(i + 1, data.length - 1 + 2));
             } else if (event.key === "ArrowUp") {
               event.preventDefault();
@@ -134,25 +130,25 @@ export function EnhancedSearchBox() {
           }}
           type="text"
           name="enhanced-search"
-          className={`w-full rounded-full bg-zinc-100 px-4 py-1 focus:ring-2 focus:ring-zinc-500/50 focus:outline-none dark:bg-zinc-900`}
+          className={`w-full rounded-full bg-zinc-100 px-4 py-2 focus:ring-2 focus:ring-zinc-500/25 focus:outline-none dark:bg-zinc-900`}
           placeholder="Search..."
           required
         />
         <TransitionFormButton
           title="Search"
           useButtonWithoutForm={true}
-          className={`absolute inset-e-0 h-full rounded-full`}
+          className={`absolute inset-e-1 h-full rounded-full`}
         >
           <MagnifyingGlassIcon className="inline size-4" />
         </TransitionFormButton>
       </form>
-      <div className="relative mt-2">
+      <div className="relative mt-3">
         {showDropDown && (
           <div
             ref={dropDownRef}
-            className="absolute top-0 z-10 max-h-60 w-full overflow-auto rounded-xl bg-zinc-100 p-4 shadow-md dark:bg-zinc-900"
+            className="absolute top-0 z-10 max-h-72 w-full overflow-auto rounded-xl border-2 border-zinc-500/25 bg-zinc-100 shadow-md dark:bg-zinc-900"
           >
-            <ul className="flex flex-col gap-2" ref={listRef}>
+            <ul className="flex flex-col gap-0" ref={listRef}>
               {searchQuery.trim() !== "" && (
                 <li
                   role="option"
@@ -162,14 +158,16 @@ export function EnhancedSearchBox() {
                 >
                   <Link
                     href={`/wiki/${searchQuery}`}
-                    className={`opacity-75 ${activeIndex === 1 ? "underline" : ""}`}
+                    className={`px-4 py-3 ${activeIndex === 1 ? "bg-zinc-500/25" : ""} inline-block w-full`}
                   >
-                    <p>Go to &quot;{searchQuery}&quot;</p>
+                    <p className="opacity-75">
+                      Go to &quot;{searchQuery}&quot;
+                    </p>
                   </Link>
                 </li>
               )}
               {isFetching ? (
-                <li>
+                <li className={`px-4 py-3`}>
                   <p>Loading...</p>
                 </li>
               ) : data.length > 0 ? (
@@ -183,14 +181,14 @@ export function EnhancedSearchBox() {
                   >
                     <Link
                       href={`/wiki/${page.slug[0]}`}
-                      className={`${activeIndex === position + 2 ? "underline" : ""}`}
+                      className={`px-4 py-3 ${activeIndex === position + 2 ? "bg-zinc-500/25" : ""} inline-block w-full`}
                     >
                       <p>{page.title}</p>
                     </Link>
                   </li>
                 ))
               ) : (
-                <li>
+                <li className="px-4 py-3">
                   {searchQuery.trim() !== "" ? (
                     <p>No results found.</p>
                   ) : (
