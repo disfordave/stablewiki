@@ -5,14 +5,14 @@
 [![CI](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml/badge.svg)](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml)
 ![Licence](https://img.shields.io/badge/Licence-AGPL--3.0--or--later-blue)
 
-🌐 **Live Demo:** [https://sidwiki.com](https://sidwiki.com)
+🌐 **Live Demo:** [https://wiki.hsw.is](https://wiki.hsw.is)
 
 StableWiki Engine is an open-source wiki and knowledge platform built with **Next.js, TypeScript, and PostgreSQL**.
 
 It was originally created to replace the friction of maintaining a **Git-based Markdown blog**.
 Instead of writing posts locally and pushing commits, StableWiki allows pages to be created and edited directly on the web while preserving the structure and traceability of a wiki.
 
-The engine powers **[SidWiki](https://sidwiki.com)** — the ultimate knowledge base and blog platform that combines:
+The engine powers **[SidWiki](https://wiki.hsw.is)** — the ultimate knowledge base and blog platform that combines:
 
 - wiki-style articles
 - personal blog pages through user subpages
@@ -221,7 +221,7 @@ WIKI_DISABLE_MEDIA=true
 
 Future plans and development notes are tracked in:
 
-[https://sidwiki.com/wiki/User:dave/[Wiki]\_The_Future_of_SidWiki_and_StableWiki_Engine](https://sidwiki.com/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine)
+[https://wiki.hsw.is/wiki/User:dave/[Wiki]\_The_Future_of_SidWiki_and_StableWiki_Engine](https://wiki.hsw.is/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine)
 
 ---
 
@@ -292,6 +292,6 @@ StableWiki Engine currently powers:
 
 **SidWiki**
 
-[https://sidwiki.com](https://sidwiki.com)
+[https://wiki.hsw.is](https://wiki.hsw.is)
 
-The ultimate knowledge base and blog platform built using the StableWiki engine created by the [same developer](https://sidwiki.com/wiki/User:disfordave).
+The ultimate knowledge base and blog platform built using the StableWiki engine created by the [same developer](https://wiki.hsw.is/wiki/User:disfordave).
