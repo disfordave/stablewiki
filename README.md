@@ -147,11 +147,12 @@ http://localhost:3000
 
 ## App Configuration
 
-| Variable               | Description                          |
-| ---------------------- | ------------------------------------ |
-| `NEXT_PUBLIC_BASE_URL` | Base URL of your StableWiki instance |
-| `DATABASE_URL`         | PostgreSQL connection string         |
-| `JWT_SECRET`           | Secret key used for authentication   |
+| Variable                 | Description                           |
+| ------------------------ | ------------------------------------- |
+| `NEXT_PUBLIC_BASE_URL`   | Base URL of your StableWiki instance  |
+| `DATABASE_URL`           | PostgreSQL connection string          |
+| `DATABASE_MAX_POOL_SLOT` | Maximum database connection pool size |
+| `JWT_SECRET`             | Secret key used for authentication    |
 
 ---
 
