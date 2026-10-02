@@ -742,9 +742,9 @@ function extractMedia(input: string): string | null {
       match[2].endsWith(".webp")
     ) {
       return match[2];
-    } else if (match[2].endsWith(".svg")) {
-      return `${process.env.NEXT_PUBLIC_BASE_URL}/api/media?url=${encodeURIComponent(match[2])}&forOpenGraph=true&noSvg=true`;
     } else {
+      // External SVGs are not proxied (that endpoint allowed arbitrary fetches),
+      // so they fall back to the default OpenGraph image.
       return null;
     }
   } else {

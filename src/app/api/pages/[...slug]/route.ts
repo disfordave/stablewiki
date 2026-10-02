@@ -29,8 +29,10 @@ import {
   isUsersPage,
   extractWikiLinkSlugs,
 } from "@/utils";
+import { hasErrorCode } from "@/utils/api/errorCodes";
+import { resolveMediaPath } from "@/utils/api/media";
+import { getPageEditDenial } from "@/utils/api/pagePermissions";
 import { unlink } from "fs/promises";
-import path from "path";
 
 export async function GET(
   request: Request,
@@ -303,6 +305,10 @@ export async function POST(
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (typeof title !== "string" || typeof content !== "string") {
+    return Response.json({ error: "Invalid fields" }, { status: 400 });
+  }
+
   if (title.split("/").some((p: string) => p.toLowerCase() === "_lounge")) {
     return Response.json(
       { error: 'Titles cannot contain "_lounge" segment' },
@@ -317,13 +323,6 @@ export async function POST(
     );
   }
 
-  if (title.startsWith("System:") || title.startsWith("system:")) {
-    return Response.json(
-      { error: 'Titles cannot start with "System:" prefix' },
-      { status: 400 },
-    );
-  }
-
   const decodedToken = await getDecodedToken(request);
 
   if (!decodedToken || !decodedToken.id) {
@@ -334,17 +333,6 @@ export async function POST(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (
-    "/wiki/" + title === WIKI_HOMEPAGE_LINK &&
-    decodedToken.role !== "ADMIN" &&
-    decodedToken.role !== "EDITOR"
-  ) {
-    return Response.json(
-      { error: "Only admins and editors can create or modify the homepage" },
-      { status: 403 },
-    );
-  }
-
   if (decodedToken.status > 0) {
     return Response.json(
       { error: "Banned users cannot create nor modify pages" },
@@ -352,50 +340,34 @@ export async function POST(
     );
   }
 
-  const redirection = checkRedirect(content, title);
-
-  if (title.startsWith("Wiki:") || title.startsWith("wiki:")) {
-    if (decodedToken.role !== "ADMIN" && decodedToken.role !== "EDITOR") {
-      return Response.json(
-        { error: "Only admins and editors can create Wiki namespace pages" },
-        { status: 403 },
-      );
-    }
-  }
-
-  if (title.startsWith("User:") || title.startsWith("user:")) {
-    if (
-      (title as string).split("/")[0].slice(5) !== decodedToken?.username &&
-      decodedToken.role !== "ADMIN"
-    ) {
-      return Response.json(
-        { error: "You can only create a User page for your own username" },
-        { status: 403 },
-      );
-    }
-  }
-
-  if (title.startsWith("Media:") || title.startsWith("media:")) {
-    return Response.json(
-      {
-        error:
-          "Media pages cannot be modified via this endpoint, deletion is only allowed through the media endpoint",
-      },
-      { status: 403 },
-    );
-  }
-
-  const accessLevelOfPost = await prisma.page.findUnique({
+  const currentPage = await prisma.page.findUnique({
     where: { slug: slug.join("/") },
-    select: { accessLevel: true },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      accessLevel: true,
+      isMedia: true,
+    },
   });
 
-  if (!accessLevelOfPost) {
+  if (!currentPage) {
     return Response.json({ error: "Page not found" }, { status: 400 });
   }
 
+  const denial = getPageEditDenial({
+    editor: decodedToken,
+    currentPage,
+    newTitle: title,
+    homepageLink: WIKI_HOMEPAGE_LINK,
+  });
+
+  if (denial) {
+    return Response.json({ error: denial.error }, { status: denial.status });
+  }
+
   if (
-    accessLevelOfPost.accessLevel > 0 &&
+    currentPage.accessLevel > 0 &&
     decodedToken.role !== "ADMIN" &&
     decodedToken.role !== "EDITOR"
   ) {
@@ -405,53 +377,94 @@ export async function POST(
     );
   }
 
-  try {
-    const revisionsCount = await prisma.revision.count({
-      where: { page: { slug: slug.join("/") } },
+  const newSlug = slugify(title);
+
+  if (newSlug !== currentPage.slug) {
+    const conflictingPage = await prisma.page.findUnique({
+      where: { slug: newSlug },
+      select: { id: true },
     });
 
-    const page = await prisma.revision.create({
-      data: {
-        content,
-        title,
-        page: { connect: { slug: slug.join("/") } },
-        author: { connect: { id: decodedToken.id as string } },
-        version: revisionsCount + 1,
-        summary,
-        isRedirect: redirection.isRedirect,
-        redirectTargetSlug: redirection.targetSlug,
-      },
-    });
-
-    const targetSlugs = extractWikiLinkSlugs(content);
-
-    const updatedPage = await prisma.page.update({
-      where: { slug: slug.join("/") },
-      data: {
-        title: title,
-        slug: slugify(title),
-        isRedirect: redirection.isRedirect,
-        accessLevel,
-      },
-    });
-
-    await prisma.wikiLink.deleteMany({
-      where: { sourceId: updatedPage.id },
-    });
-
-    if (targetSlugs.length > 0) {
-      await prisma.wikiLink.createMany({
-        data: targetSlugs.map((targetSlug) => ({
-          sourceId: updatedPage.id,
-          targetSlug,
-        })),
-      });
+    if (conflictingPage) {
+      return Response.json(
+        { error: "A page with this title already exists" },
+        { status: 409 },
+      );
     }
+  }
 
-    return Response.json(page, { status: 201 });
+  // Only admins may change the edit level, and only to a known level
+  const newAccessLevel =
+    decodedToken.role === "ADMIN" &&
+    Number.isInteger(accessLevel) &&
+    accessLevel >= 0 &&
+    accessLevel <= 9
+      ? accessLevel
+      : undefined;
+
+  const redirection = checkRedirect(content, title);
+  const targetSlugs = extractWikiLinkSlugs(content);
+
+  try {
+    const revision = await prisma.$transaction(async (tx) => {
+      // Locking the page row gives concurrent edits consecutive versions
+      await tx.$queryRaw`SELECT id FROM "Page" WHERE id = ${currentPage.id} FOR UPDATE`;
+
+      const latest = await tx.revision.aggregate({
+        where: { pageId: currentPage.id },
+        _max: { version: true },
+      });
+
+      const newRevision = await tx.revision.create({
+        data: {
+          content,
+          title,
+          page: { connect: { id: currentPage.id } },
+          author: { connect: { id: decodedToken.id as string } },
+          version: (latest._max.version ?? 0) + 1,
+          summary,
+          isRedirect: redirection.isRedirect,
+          redirectTargetSlug: redirection.targetSlug,
+        },
+      });
+
+      await tx.page.update({
+        where: { id: currentPage.id },
+        data: {
+          title: title,
+          slug: newSlug,
+          isRedirect: redirection.isRedirect,
+          accessLevel: newAccessLevel,
+        },
+      });
+
+      await tx.wikiLink.deleteMany({
+        where: { sourceId: currentPage.id },
+      });
+
+      if (targetSlugs.length > 0) {
+        await tx.wikiLink.createMany({
+          data: targetSlugs.map((targetSlug) => ({
+            sourceId: currentPage.id,
+            targetSlug,
+          })),
+        });
+      }
+
+      return newRevision;
+    });
+
+    return Response.json(revision, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Failed to create page" }, { status: 500 });
+
+    if (hasErrorCode(error, "P2002")) {
+      return Response.json(
+        { error: "A page with this title already exists" },
+        { status: 409 },
+      );
+    }
+    return Response.json({ error: "Failed to edit page" }, { status: 500 });
   }
 }
 
@@ -514,13 +527,13 @@ export async function DELETE(
     });
 
     if (page.isMedia) {
-      const titlePart = page.title.replace(/^Media:/, "");
-      const uploadDir = path.join(process.cwd(), "public", "media");
-      const filePath = path.join(uploadDir, titlePart);
-      try {
-        await unlink(filePath);
-      } catch (err) {
-        console.error(`Failed to delete media file: ${filePath}`, err);
+      const filePath = resolveMediaPath(page.title.replace(/^Media:/, ""));
+      if (filePath) {
+        try {
+          await unlink(filePath);
+        } catch (err) {
+          console.error(`Failed to delete media file: ${filePath}`, err);
+        }
       }
     }
     return Response.json(page, { status: 200 });

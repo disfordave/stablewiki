@@ -29,6 +29,8 @@ import {
 } from "@/utils";
 import { type NextRequest } from "next/server";
 import { slugify } from "@/utils/";
+import { hasErrorCode } from "@/utils/api/errorCodes";
+import { getPageEditDenial } from "@/utils/api/pagePermissions";
 import { WIKI_HOMEPAGE_LINK } from "@/config";
 
 export async function GET(request: NextRequest) {
@@ -270,6 +272,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (typeof title !== "string" || typeof content !== "string") {
+    return Response.json({ error: "Invalid fields" }, { status: 400 });
+  }
+
   if (title.split("/").some((p: string) => p.toLowerCase() === "_lounge")) {
     return Response.json(
       { error: 'Titles cannot contain "_lounge" segment' },
@@ -280,13 +286,6 @@ export async function POST(request: Request) {
   if (title.length > 255) {
     return Response.json(
       { error: "Title exceeds maximum length of 255 characters" },
-      { status: 400 },
-    );
-  }
-
-  if (title.startsWith("System:") || title.startsWith("system:")) {
-    return Response.json(
-      { error: 'Titles cannot start with "System:" prefix' },
       { status: 400 },
     );
   }
@@ -305,90 +304,63 @@ export async function POST(request: Request) {
     return Response.json({ error: "Banned user" }, { status: 403 });
   }
 
-  if (
-    "/wiki/" + title === WIKI_HOMEPAGE_LINK &&
-    decodedToken.role !== "ADMIN" &&
-    decodedToken.role !== "EDITOR"
-  ) {
-    return Response.json(
-      { error: "Only admins and editors can create or modify the homepage" },
-      { status: 403 },
-    );
-  }
+  const denial = getPageEditDenial({
+    editor: decodedToken,
+    newTitle: title,
+    homepageLink: WIKI_HOMEPAGE_LINK,
+  });
 
-  if (title.startsWith("Wiki:") || title.startsWith("wiki:")) {
-    if (decodedToken.role !== "ADMIN" && decodedToken.role !== "EDITOR") {
-      return Response.json(
-        { error: "Only admins and editors can create Wiki namespace pages" },
-        { status: 403 },
-      );
-    }
-  }
-
-  if (title.startsWith("User:") || title.startsWith("user:")) {
-    if (
-      (title as string).split("/")[0].slice(5) !== decodedToken.username &&
-      decodedToken.role !== "ADMIN"
-    ) {
-      return Response.json(
-        {
-          error:
-            "You can only create a User page for your own username (ADMIN can add new post)",
-        },
-        { status: 403 },
-      );
-    }
-  }
-
-  if (title.startsWith("Media:") || title.startsWith("media:")) {
-    return Response.json(
-      { error: "Media pages cannot be created via this endpoint" },
-      { status: 403 },
-    );
+  if (denial) {
+    return Response.json({ error: denial.error }, { status: denial.status });
   }
 
   try {
     const targetSlugs = extractWikiLinkSlugs(content);
+    const redirection = checkRedirect(content, title);
 
-    const page = await prisma.page.create({
-      data: {
-        title,
-        content: "",
-        slug: slugify(title),
-        author: { connect: { id: decodedToken.id as string } },
-        revisions: {
-          create: {
-            content,
-            author: { connect: { id: decodedToken.id as string } },
-            summary,
-            isRedirect: checkRedirect(content, title).isRedirect,
-            redirectTargetSlug: checkRedirect(content, title).targetSlug,
-            title,
+    const page = await prisma.$transaction(async (tx) => {
+      const newPage = await tx.page.create({
+        data: {
+          title,
+          content: "",
+          slug: slugify(title),
+          author: { connect: { id: decodedToken.id as string } },
+          revisions: {
+            create: {
+              content,
+              author: { connect: { id: decodedToken.id as string } },
+              summary,
+              isRedirect: redirection.isRedirect,
+              redirectTargetSlug: redirection.targetSlug,
+              title,
+            },
           },
+          isRedirect: redirection.isRedirect,
         },
-        isRedirect: checkRedirect(content, title).isRedirect,
-      },
-    });
-
-    await prisma.wikiLink.deleteMany({
-      where: { sourceId: page.id },
-    });
-
-    if (targetSlugs.length > 0) {
-      await prisma.wikiLink.createMany({
-        data: targetSlugs.map((targetSlug) => ({
-          sourceId: page.id,
-          targetSlug,
-        })),
       });
-    }
+
+      if (targetSlugs.length > 0) {
+        await tx.wikiLink.createMany({
+          data: targetSlugs.map((targetSlug) => ({
+            sourceId: newPage.id,
+            targetSlug,
+          })),
+        });
+      }
+
+      return newPage;
+    });
 
     return Response.json(page, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json(
-      { error: "Failed to create page: " + error },
-      { status: 500 },
-    );
+
+    if (hasErrorCode(error, "P2002")) {
+      return Response.json(
+        { error: "A page with this title already exists" },
+        { status: 409 },
+      );
+    }
+    return Response.json({ error: "Failed to create page" }, { status: 500 });
   }
 }

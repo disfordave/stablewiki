@@ -18,9 +18,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import type { Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getDecodedToken } from "@/utils";
+import { hasErrorCode } from "@/utils/api/errorCodes";
 import { NextRequest, NextResponse } from "next/server";
+
+// - 0 for active, 1 for banned
+// - 101 for normal user, 102 for moderators, 103 for editors, 109 for admins
+const USER_STATUS_CHANGES: Record<number, { status: number } | { role: Role }> =
+  {
+    0: { status: 0 },
+    1: { status: 1 },
+    101: { role: "USER" },
+    102: { role: "MODERATOR" },
+    103: { role: "EDITOR" },
+    109: { role: "ADMIN" },
+  };
+
+// Never send password hashes or other private fields back to the client
+const PUBLIC_USER_FIELDS = {
+  id: true,
+  username: true,
+  role: true,
+  status: true,
+} as const;
 
 export async function PUT(
   request: NextRequest,
@@ -46,6 +68,7 @@ export async function PUT(
       // - 101 for enabled Lounge access, 102 for disabled Lounge
 
       if (
+        !Number.isInteger(accessLevel) ||
         accessLevel < 0 ||
         (accessLevel > 9 && accessLevel < 101) ||
         accessLevel > 102
@@ -77,8 +100,20 @@ export async function PUT(
       const body = await request.json();
       const { status } = body;
 
-      // - 0 for active, 1 for banned
-      // - 101 for normal user, 102 for moderators, 103 for editors, 109 for admins
+      const change = Number.isInteger(status)
+        ? USER_STATUS_CHANGES[status]
+        : undefined;
+
+      if (!change) {
+        return new Response("Invalid status value", { status: 400 });
+      }
+
+      // Prevents admins from locking themselves out of the admin panel
+      if (slug[1] === decodedToken.username) {
+        return new Response("You cannot change your own status or role", {
+          status: 400,
+        });
+      }
 
       const userCounter = await prisma.user.count();
       if (userCounter <= 1) {
@@ -88,37 +123,18 @@ export async function PUT(
         );
       }
 
-      if (status < 0 || status < 101 || status > 109) {
-        return new Response("Invalid status value", { status: 400 });
-      }
-
-      if (status < 2) {
-        const updatedUser = await prisma.user.update({
-          where: { username: slug[1] },
-          data: {
-            status,
-          },
-        });
-        return NextResponse.json({ data: updatedUser });
-      }
-
       const updatedUser = await prisma.user.update({
         where: { username: slug[1] },
-        data: {
-          role:
-            status === 101
-              ? "USER"
-              : status === 102
-                ? "MODERATOR"
-                : status === 103
-                  ? "EDITOR"
-                  : "ADMIN",
-        },
+        data: change,
+        select: PUBLIC_USER_FIELDS,
       });
 
       return NextResponse.json({ data: updatedUser });
     }
   } catch (error) {
+    if (hasErrorCode(error, "P2025")) {
+      return new Response("Not Found", { status: 404 });
+    }
     console.error(error);
     return new Response("Internal Server Error", { status: 500 });
   }

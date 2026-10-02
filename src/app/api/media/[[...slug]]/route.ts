@@ -21,10 +21,20 @@
 import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY } from "@/config";
 import { prisma } from "@/lib/prisma";
 import { getDecodedToken, slugify } from "@/utils";
-import { writeFile, mkdir } from "fs/promises";
+import { hasErrorCode } from "@/utils/api/errorCodes";
+import {
+  MAX_MEDIA_BYTES,
+  MEDIA_SECURITY_HEADERS,
+  getMediaContentType,
+  getMediaDir,
+  getMediaExtension,
+  isSafeMediaTitle,
+  isUnsafeSvg,
+  resolveMediaPath,
+  sniffMediaType,
+} from "@/utils/api/media";
+import { mkdir, readFile, unlink, writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import fs from "fs/promises";
 import sharp from "sharp";
 
 export async function GET(
@@ -33,66 +43,18 @@ export async function GET(
 ) {
   const { slug } = await params;
   const { searchParams } = new URL(request.url);
-  const url = searchParams.get("url");
   const noSvg = searchParams.get("noSvg") === "true";
-  const forOpenGraph = searchParams.get("forOpenGraph") === "true";
 
-  if (forOpenGraph && noSvg && url && !slug) {
-    const res = await fetch(url);
-    if (!res.ok) {
-      return new Response("Failed to fetch image", { status: 500 });
-    }
+  const filePath =
+    slug && slug.length > 0 ? resolveMediaPath(slug.join("/")) : null;
 
-    const contentType = res.headers.get("content-type") || "";
-    const buffer = Buffer.from(await res.arrayBuffer());
-
-    // If SVG → convert to PNG
-    if (contentType.includes("image/svg+xml") || url.endsWith(".svg")) {
-      const png = await sharp(buffer).png().toBuffer();
-
-      return new Response(new Uint8Array(png), {
-        headers: {
-          "Content-Type": "image/png",
-          "Cache-Control": "public, max-age=31536000, immutable",
-        },
-      });
-    }
-
-    // Otherwise return as-is
-    return new Response(new Uint8Array(buffer), {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
-  }
-
-  if (!slug || slug.length === 0) {
-    return new NextResponse("Not found", { status: 404 });
-  }
-
-  const filename = slug?.join("/") || "";
-  const filePath = path.join(process.cwd(), "public", "media", filename);
-
-  if (!filename) {
+  if (!filePath) {
     return new NextResponse("Not found", { status: 404 });
   }
 
   try {
-    const file = await fs.readFile(filePath);
-    const ext = path.extname(filePath).toLowerCase();
-    const type =
-      ext === ".svg"
-        ? "image/svg+xml"
-        : ext === ".png"
-          ? "image/png"
-          : ext === ".jpg" || ext === ".jpeg"
-            ? "image/jpeg"
-            : ext === ".gif"
-              ? "image/gif"
-              : ext === ".webp"
-                ? "image/webp"
-                : "application/octet-stream";
+    const file = await readFile(filePath);
+    const type = getMediaContentType(filePath);
 
     if (noSvg && type === "image/svg+xml") {
       const image = sharp(file);
@@ -110,12 +72,12 @@ export async function GET(
       const output = await pipeline.png().toBuffer();
 
       return new NextResponse(new Uint8Array(output), {
-        headers: { "Content-Type": "image/png" },
+        headers: { "Content-Type": "image/png", ...MEDIA_SECURITY_HEADERS },
       });
     }
 
     return new NextResponse(new Uint8Array(file), {
-      headers: { "Content-Type": type },
+      headers: { "Content-Type": type, ...MEDIA_SECURITY_HEADERS },
     });
   } catch {
     return new NextResponse("Not found", { status: 404 });
@@ -168,57 +130,104 @@ export async function POST(
     );
   }
 
-  const body = await request.formData();
-  const title = body.get("title") as string;
-  const media = body.get("media") as File;
+  // Refuse oversized bodies before buffering them (the form adds some overhead)
+  if (Number(request.headers.get("content-length")) > 2 * MAX_MEDIA_BYTES) {
+    return Response.json({ error: "Media file is too large" }, { status: 413 });
+  }
 
-  if (!title || !media) {
+  const body = await request.formData();
+  const rawTitle = body.get("title");
+  const media = body.get("media");
+
+  if (!rawTitle || !media) {
     return Response.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  if (!(media instanceof File)) {
+  if (typeof rawTitle !== "string" || !(media instanceof File)) {
     return Response.json({ error: "Invalid media file" }, { status: 400 });
   }
 
-  // Ensure the media is not too large (e.g., max 1MB)
-  if (media.size > 1 * 1024 * 1024) {
+  const title = rawTitle.trim();
+
+  if (!isSafeMediaTitle(title)) {
+    return Response.json(
+      {
+        error:
+          "Title cannot start with a dot or contain slashes or control characters",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (media.size > MAX_MEDIA_BYTES) {
     return Response.json({ error: "Media file is too large" }, { status: 400 });
   }
 
-  // Only allow PNG, JPG/JPEG, WEBP, GIF and SVG files
-  const allowedTypes = [
-    "image/png",
-    "image/jpeg",
-    "image/webp",
-    "image/gif",
-    "image/svg+xml",
-  ];
-  if (!media.type || !allowedTypes.includes(media.type)) {
+  const buffer = Buffer.from(await media.arrayBuffer());
+
+  // Only allow PNG, JPG/JPEG, WEBP, GIF and SVG files, judged by their content
+  const type = sniffMediaType(buffer);
+  if (!type) {
     return Response.json(
       { error: "Only PNG, JPG, JPEG, WEBP, GIF and SVG files are allowed" },
       { status: 400 },
     );
   }
 
-  // Save the media file to the public directory
+  if (type === "image/svg+xml" && isUnsafeSvg(buffer.toString("utf8"))) {
+    return Response.json(
+      {
+        error:
+          "SVG files cannot contain scripts, event handlers or embedded documents",
+      },
+      { status: 400 },
+    );
+  }
 
-  const extension = media.name.split(".").pop();
-  const buffer = Buffer.from(await media.arrayBuffer());
+  const fullTitle = `${title}.${getMediaExtension(type, media.name)}`;
+  const pageSlug = `${"Media:" + slugify(fullTitle)}`;
+  const filePath = resolveMediaPath(fullTitle);
 
-  const fullTitle = extension ? `${title}.${extension.toLowerCase()}` : title;
+  if (!filePath) {
+    return Response.json({ error: "Invalid media title" }, { status: 400 });
+  }
 
-  const uploadDir = path.join(process.cwd(), "public", "media");
-  await mkdir(uploadDir, { recursive: true });
-  const filePath = path.join(uploadDir, fullTitle);
+  const existingPage = await prisma.page.findUnique({
+    where: { slug: pageSlug },
+    select: { id: true },
+  });
 
-  await writeFile(filePath, buffer);
+  if (existingPage) {
+    return Response.json(
+      { error: "A media file with this title already exists" },
+      { status: 409 },
+    );
+  }
+
+  try {
+    await mkdir(getMediaDir(), { recursive: true });
+    // "wx" never overwrites a file that is already on disk
+    await writeFile(filePath, buffer, { flag: "wx" });
+  } catch (error) {
+    if (hasErrorCode(error, "EEXIST")) {
+      return Response.json(
+        { error: "A media file with this title already exists" },
+        { status: 409 },
+      );
+    }
+    console.error(error);
+    return Response.json(
+      { error: "Failed to store media file" },
+      { status: 500 },
+    );
+  }
 
   try {
     const page = await prisma.page.create({
       data: {
         title: `Media:${fullTitle}`,
         content: "",
-        slug: `${"Media:" + slugify(fullTitle)}`,
+        slug: pageSlug,
         author: { connect: { id: decodedToken.id as string } },
         revisions: {
           create: {
@@ -233,6 +242,14 @@ export async function POST(
     return Response.json(page, { status: 201 });
   } catch (error) {
     console.error(error);
+    await unlink(filePath).catch(() => undefined);
+
+    if (hasErrorCode(error, "P2002")) {
+      return Response.json(
+        { error: "A media file with this title already exists" },
+        { status: 409 },
+      );
+    }
     return Response.json({ error: "Failed to create page" }, { status: 500 });
   }
 }

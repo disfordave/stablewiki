@@ -68,7 +68,6 @@ export default async function StableRevert({
         body: JSON.stringify({
           title: page.title,
           content,
-          author: user,
           summary: `Reverted to version ${targetVersion}`,
         }),
       },
