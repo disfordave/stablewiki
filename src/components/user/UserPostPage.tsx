@@ -23,6 +23,8 @@ import { Page } from "@/types";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import WikiList from "../WikiList";
 import { getUser } from "@/lib";
+import { reportError } from "@/server/monitoring";
+import { listPages } from "@/server/pages";
 import Pagination from "../ui/Pagination";
 import { getThemeColor, safeRedirect } from "@/utils";
 
@@ -45,33 +47,20 @@ export default async function UserPostPage({
 
   let results = null as Page[] | null;
   let totalPaginationPages = 0;
-  let error: "not-ok" | "threw" | null = null;
+  let failed = false;
   try {
-    const fetchResults = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?userPostByUsername=${username}&hPage=${hPage ? hPage : "1"}`,
-    );
-
-    if (!fetchResults.ok) {
-      error = "not-ok";
-    } else {
-      const data = await fetchResults.json();
-
-      results = data.pages || [];
-      totalPaginationPages = data.totalPaginationPages || 0;
-    }
-  } catch {
-    error = "threw";
+    const data = await listPages({
+      userPostsOf: username,
+      hPage: Number(hPage || "1"),
+    });
+    results = data.pages;
+    totalPaginationPages = data.totalPaginationPages;
+  } catch (error) {
+    reportError(error, { username });
+    failed = true;
   }
 
-  if (error === "not-ok") {
-    return (
-      <div>
-        <p>Failed to fetch search results.</p>
-      </div>
-    );
-  }
-
-  if (error === "threw") {
+  if (failed) {
     return (
       <div>
         <p>An error occurred while fetching search results.</p>

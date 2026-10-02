@@ -28,6 +28,7 @@ import { WIKI_NAME } from "@/config";
 import { StableEditor } from "../wiki";
 import SystemRevisions from "./SystemRevisions";
 import SystemComments from "./SystemComments";
+import SystemTrash from "./SystemTrash";
 
 export default function SystemPages({
   slug,
@@ -100,6 +101,8 @@ export default function SystemPages({
       );
     case "Comments":
       return <SystemComments hPage={hPage} username={username} />;
+    case "Trash":
+      return <SystemTrash hPage={hPage} />;
     default:
       return (
         <div>

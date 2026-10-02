@@ -64,7 +64,7 @@ export function EnhancedSearchBox() {
     queryKey: ["pages", searchQuery],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(searchQuery.trim())}&hPage=${"1"}&noAutomaticExactMatch=true&noSystemLog=true`,
+        `/api/pages?q=${encodeURIComponent(searchQuery.trim())}&hPage=${"1"}&noAutomaticExactMatch=true&noSystemLog=true`,
       );
       const data = await res.json();
       return data.pages.filter((p: Page) =>

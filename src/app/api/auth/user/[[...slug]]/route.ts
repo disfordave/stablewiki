@@ -18,18 +18,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { prisma } from "@/lib/prisma";
-import { PublicUser } from "@/types";
+import { registerUser } from "@/server/auth/registration";
+import { getRequestUser } from "@/server/auth/session";
+import { errorResponse, readJsonBody } from "@/server/errors";
+import { RATE_LIMITS, checkRateLimit, getClientIp } from "@/server/rateLimit";
+import { changePassword, getPublicUser } from "@/server/users";
 import { NextRequest } from "next/server";
-import { User } from "@/types";
-import bcrypt from "bcryptjs";
-import * as jose from "jose";
-import { registerUser } from "@/lib/auth/registration";
-import {
-  RATE_LIMITS,
-  checkRateLimit,
-  getClientIp,
-} from "@/utils/api/rateLimit";
 
 export async function GET(
   request: NextRequest,
@@ -37,97 +31,36 @@ export async function GET(
 ) {
   const { slug } = await params;
 
-  if (!slug || slug.length === 0) {
-    const authHeader = request.headers.get("Authorization");
+  try {
+    // The account behind the bearer token
+    if (!slug || slug.length === 0) {
+      const token = request.headers.get("Authorization")?.split(" ")[1];
+      if (!token) {
+        return Response.json(
+          { error: "Error! Token was not provided." },
+          { status: 401 },
+        );
+      }
 
-    if (!authHeader) {
-      return Response.json(
-        { error: "Error! Token was not provided." },
-        { status: 401 },
-      );
-    }
-
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return Response.json(
-        { error: "Error! Token was not provided." },
-        { status: 401 },
-      );
-    }
-
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not defined in the environment variables.");
-      return Response.json({ error: "Internal server error" }, { status: 500 });
-    }
-
-    try {
-      const decodedToken = await jose
-        .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-        .then((result) => result.payload);
-
-      const id = decodedToken.id;
-      if (!decodedToken || !id) {
+      const user = await getRequestUser(request);
+      if (!user) {
         return Response.json(
           { error: "Invalid or expired token." },
           { status: 403 },
         );
       }
 
-      const user = await prisma.user.findUnique({
-        where: { id: id as string },
-      });
-
-      if (!user) {
-        return Response.json({ error: "User not found." }, { status: 404 });
-      }
-
-      return Response.json(
-        {
-          id: user.id,
-          username: user.username,
-          avatarUrl: user.avatarUrl,
-          role: user.role,
-          token,
-          createdAt: user.createdAt,
-          status: user.status,
-        } as User,
-        { status: 200 },
-      );
-    } catch (error) {
-      console.error(error);
-      return Response.json(
-        { error: "Invalid or expired token." },
-        { status: 403 },
-      );
+      return Response.json({ ...user, token }, { status: 200 });
     }
-  }
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { username: slug?.[0] as string },
-    });
-
+    // Anyone's public profile
+    const user = await getPublicUser(slug[0]);
     if (!user) {
       return Response.json({ error: "User not found." }, { status: 404 });
     }
-
-    return Response.json(
-      {
-        id: user.id,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
-        role: user.role,
-        createdAt: user.createdAt,
-        status: user.status,
-      } as PublicUser,
-      { status: 200 },
-    );
+    return Response.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return Response.json(
-      { error: "Invalid or expired token." },
-      { status: 403 },
-    );
+    return errorResponse(error);
   }
 }
 
@@ -168,106 +101,29 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: NextRequest): Promise<Response> {
-  const body = await request.json();
-  const { currentPassword, newPassword, newPasswordConfirm, username } = body;
-
-  if (!currentPassword || !newPassword || !newPasswordConfirm || !username) {
-    return Response.json(
-      { error: "Current password, new password, and username are required" },
-      { status: 400 },
-    );
-  }
-
-  if (newPassword !== newPasswordConfirm) {
-    return Response.json({ error: "Passwords do not match" }, { status: 400 });
-  }
-
-  if (newPassword.length < 8) {
-    return Response.json(
-      { error: "Password must be at least 8 characters long" },
-      { status: 400 },
-    );
-  }
-
-  // if (!consent) {
-  //   return Response.json(
-  //     { error: "You must agree to the terms and conditions" },
-  //     { status: 400 },
-  //   );
-  // }
-
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-
   try {
-    const authHeader = request.headers.get("Authorization");
-
-    if (!authHeader) {
-      return Response.json(
-        { error: "Error! Token was not provided." },
-        { status: 401 },
-      );
-    }
-
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return Response.json(
-        { error: "Error! Token was not provided." },
-        { status: 401 },
-      );
-    }
-
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not defined in the environment variables.");
-      return Response.json({ error: "Internal server error" }, { status: 500 });
-    }
-
-    const decodedToken = await jose
-      .jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
-      .then((result) => result.payload);
-
-    if (!decodedToken || !decodedToken.id) {
+    const user = await getRequestUser(request);
+    if (!user) {
       return Response.json(
         { error: "Invalid or expired token." },
         { status: 403 },
       );
     }
 
-    if (decodedToken.username !== username) {
+    const body = (await readJsonBody(request)) as { username?: unknown } | null;
+    if (body?.username !== user.username) {
       return Response.json(
         { error: "Changing username is not allowed at this time." },
         { status: 400 },
       );
-      // await prisma.user.update({
-      //   where: { id: decodedToken.id as string },
-      //   data: { username },
-      // });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: decodedToken.id as string },
-    });
-
-    if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
-      return Response.json(
-        { error: "Current password is incorrect" },
-        { status: 401 },
-      );
-    }
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword },
-    });
-
+    await changePassword(user, body);
     return Response.json(
       { message: "Password updated successfully" },
       { status: 200 },
     );
   } catch (error) {
-    console.error(error);
-    return Response.json(
-      { error: "An unexpected error occurred" },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
 }

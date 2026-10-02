@@ -20,6 +20,8 @@
 
 import { TransitionLinkButton } from "@/components/ui";
 import { WikiList } from "@/components";
+import { reportError } from "@/server/monitoring";
+import { listPages } from "@/server/pages";
 import type { Page } from "@/types";
 import { PencilSquareIcon, DocumentTextIcon } from "@heroicons/react/24/solid";
 import Pagination from "../ui/Pagination";
@@ -50,35 +52,20 @@ export default async function SystemSearch({
 
   let results = null as Page[] | null;
   let totalPaginationPages = 0;
-  let error: "not-ok" | "threw" | null = null;
+  let failed = false;
   try {
-    const fetchResults = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?q=${encodeURIComponent(
-        removeTrailingSpace(query as string),
-      )}&hPage=${hPage ? encodeURIComponent(hPage as string) : "1"}`,
-    );
-
-    if (!fetchResults.ok) {
-      error = "not-ok";
-    } else {
-      const data = await fetchResults.json();
-
-      results = data.pages || [];
-      totalPaginationPages = data.totalPaginationPages || 0;
-    }
-  } catch {
-    error = "threw";
+    const data = await listPages({
+      query: removeTrailingSpace(query as string),
+      hPage: Number(hPage || "1"),
+    });
+    results = data.pages;
+    totalPaginationPages = data.totalPaginationPages;
+  } catch (error) {
+    reportError(error, { query });
+    failed = true;
   }
 
-  if (error === "not-ok") {
-    return (
-      <div>
-        <p>Failed to fetch search results.</p>
-      </div>
-    );
-  }
-
-  if (error === "threw") {
+  if (failed) {
     return (
       <div>
         <p>An error occurred while fetching search results.</p>

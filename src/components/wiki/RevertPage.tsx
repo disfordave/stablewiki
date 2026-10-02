@@ -27,6 +27,9 @@ import {
 } from "../ui";
 import StableDiffViewer from "./DiffViewer";
 import { getUser } from "@/lib";
+import { getPageModifyDenial } from "@/server/authz";
+import { errorMessage } from "@/server/errors";
+import { editPage } from "@/server/pages";
 import { safeRedirect, slugify } from "@/utils";
 import { Page } from "@/types";
 
@@ -49,60 +52,36 @@ export default async function StableRevert({
     return <MustSignInMessage />;
   }
 
-  async function editPage(formData: FormData) {
+  // The page's stored slug (the URL segment may be percent-encoded)
+  const pageSlug = page.slug[0];
+  const pageTitle = page.title;
+
+  async function revertAction(formData: FormData) {
     "use server";
-    const content = formData.get("content") as string;
-
-    if (!user) {
-      throw new Error("User not found");
+    let newTitle: string;
+    try {
+      const revision = await editPage(await getUser(), pageSlug, {
+        title: pageTitle,
+        content: formData.get("content"),
+        summary: `Reverted to version ${targetVersion}`,
+      });
+      newTitle = revision.title;
+    } catch (error) {
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${errorMessage(error, "Failed to edit page")}`,
+      );
     }
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${slug}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          title: page.title,
-          content,
-          summary: `Reverted to version ${targetVersion}`,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      safeRedirect(`/wiki/${slug}?action=edit&error=${"Failed to edit page"}`);
-    }
-
-    const data = await res.json();
-
-    safeRedirect(`/wiki/${slugify(data.title)}`);
+    safeRedirect(`/wiki/${slugify(newTitle)}`);
   }
 
-  if (
-    (decodeURIComponent(slug).startsWith("User:") ||
-      decodeURIComponent(slug).startsWith("user:")) &&
-    user.username !== decodeURIComponent(slug).split("/")[0].slice(5) &&
-    user.role !== "ADMIN"
-  ) {
-    return (
-      <>
-        <DisabledMessage message="You cannot edit this page" />
-      </>
-    );
-  }
-
-  if (user.status > 0) {
-    return <DisabledMessage message="Your account has been banned" />;
-  }
-
-  if (page && page.accessLevel > 0 && user.role !== "ADMIN") {
-    return (
-      <DisabledMessage message="You cannot edit this page since you do not have the required access/edit level." />
-    );
+  const denial = getPageModifyDenial(user, {
+    title: page.title,
+    slug: page.slug[0],
+    isMedia: page.title.startsWith("Media:"),
+    accessLevel: page.accessLevel,
+  });
+  if (denial) {
+    return <DisabledMessage message={denial} />;
   }
 
   return (
@@ -113,7 +92,7 @@ export default async function StableRevert({
         oldVer={"latest"}
         newVer={Number(targetVersion)}
       />
-      <form className="flex flex-col gap-4" action={editPage}>
+      <form className="flex flex-col gap-4" action={revertAction}>
         <input type="hidden" name="content" value={newTargetContent} />
         <div className="mt-4 animate-pulse font-bold">
           You&apos;re about to revert to version {targetVersion}. (Reverting

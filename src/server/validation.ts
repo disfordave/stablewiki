@@ -18,34 +18,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export async function getPageData(joinedSlug: string, queryParams: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${joinedSlug}${queryParams}`,
-    {
-      cache: "no-store",
-    },
-  );
+import "server-only";
+import { z } from "zod";
+import { ServiceError } from "./errors";
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch page: ${res.status} ${res.statusText}`);
-  }
-
-  return res.json();
-}
-
-export async function getLatestPageRevision(joinedSlug: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${joinedSlug}`,
-    {
-      cache: "no-store",
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch page revisions: ${res.status} ${res.statusText}`,
+// Validates untrusted input, reporting the first problem as a 400
+export function parseInput<T extends z.ZodType>(
+  schema: T,
+  input: unknown,
+): z.output<T> {
+  const result = schema.safeParse(input);
+  if (!result.success) {
+    throw new ServiceError(
+      400,
+      result.error.issues[0]?.message ?? "Invalid input",
     );
   }
-
-  return res.json();
+  return result.data;
 }

@@ -86,6 +86,7 @@ Core functionality works without JavaScript, while optional enhancements improve
 - Wiki page system with namespace support
 - Markdown-based article editing
 - Page revision history with version rollback
+- Trash: deleted pages can be restored by editors
 - User authentication and role-based permissions
 - Link-driven navigation with backlinks and categories
 - Redirect support using wiki syntax
@@ -124,8 +125,11 @@ Rename `.env.example` to `.env` and update the values accordingly.
 ### 5. Set up the database
 
 ```bash
-npx prisma db push
+npx prisma migrate deploy
 ```
+
+Run this again after every update; it applies any new migrations, including
+data fixes that `prisma db push` would skip.
 
 ### 6. Start the development server
 
@@ -204,17 +208,100 @@ zinc
 
 ---
 
+## Media Storage
+
+| Variable               | Description                                                |
+| ---------------------- | ---------------------------------------------------------- |
+| `STORAGE_DRIVER`       | `local` (default) or `s3`                                  |
+| `STORAGE_LOCAL_DIR`    | Folder for `local` storage (default `public/media`)        |
+| `S3_BUCKET`            | Bucket name (required for `s3`)                            |
+| `S3_REGION`            | Region (default `auto`, which suits Cloudflare R2)         |
+| `S3_ENDPOINT`          | Endpoint for S3-compatible services such as R2 or MinIO    |
+| `S3_ACCESS_KEY_ID`     | Access key (omit to use the AWS SDK's default credentials) |
+| `S3_SECRET_ACCESS_KEY` | Secret key                                                 |
+| `S3_FORCE_PATH_STYLE`  | `true` for MinIO and other path-style services             |
+| `S3_KEY_PREFIX`        | Prefix for object keys (default `media/`)                  |
+
+---
+
+## Monitoring
+
+| Variable                    | Description                                  |
+| --------------------------- | -------------------------------------------- |
+| `LOG_LEVEL`                 | `debug`, `info` (default), `warn` or `error` |
+| `SENTRY_DSN`                | Sends server errors to Sentry when set       |
+| `SENTRY_ENVIRONMENT`        | Environment name reported to Sentry          |
+| `SENTRY_TRACES_SAMPLE_RATE` | Share of requests traced, 0 to 1 (default 0) |
+
+In production, logs are written as one JSON object per line.
+
+---
+
 # Serverless Platform Notes
 
-StableWiki relies on Node.js filesystem features for media storage.
+The default `local` media storage writes to the server's disk, which
+serverless platforms don't keep. Use object storage instead:
 
-Because of this, **persistent file uploads may not function correctly on serverless platforms**.
+```
+STORAGE_DRIVER=s3
+S3_BUCKET=your-bucket
+S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+```
 
-If your deployment environment does not support persistent storage, you can disable media uploads:
+Or disable media uploads entirely:
 
 ```
 WIKI_DISABLE_MEDIA=true
 ```
+
+---
+
+# Edit Levels
+
+Admins can raise a page's edit level from the dashboard:
+
+| Level  | Who can edit                |
+| ------ | --------------------------- |
+| 0      | Any signed-in user          |
+| 2      | Accounts older than 14 days |
+| 1, 3–7 | Moderators and above        |
+| 8      | Editors and above           |
+| 9      | Admins only                 |
+
+`Wiki:` pages and the homepage always require an editor, and `User:` pages
+can only be edited by their owner (or an admin).
+
+---
+
+# Upgrading
+
+1. Pull the new version and run `npm install`.
+2. Apply new migrations with `npx prisma migrate deploy`.
+
+If your database was created with `prisma db push`, Prisma doesn't know which
+migrations it already has. Mark the existing ones as applied once, then deploy:
+
+```bash
+for m in $(ls prisma/migrations | grep -v migration_lock); do
+  [ "$m" = "20261002120000_soft_delete_and_unique_revision_versions" ] && break
+  npx prisma migrate resolve --applied "$m"
+done
+npx prisma migrate deploy
+```
+
+---
+
+# Development
+
+```bash
+npm run dev               # development server
+npm test                  # unit tests
+npm run test:integration  # tests against a real, temporary PostgreSQL
+```
+
+The integration tests download and start their own PostgreSQL through
+`embedded-postgres`, so no Docker or local database is needed. They never
+touch the database in `.env`.
 
 ---
 
@@ -233,7 +320,6 @@ Contributions are welcome.
 Areas where contributions are particularly helpful:
 
 - Serverless compatibility
-- External storage support
 - UI improvements
 - documentation improvements
 

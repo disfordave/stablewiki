@@ -18,38 +18,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export async function fetchComments({
-  pageId,
-  commentId,
-  hPage,
-  sortBy,
-}: {
-  pageId: string;
-  commentId: string;
-  hPage: number;
-  sortBy: string;
-}) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${pageId}/${commentId}?hPage=${hPage}&sortBy=${sortBy}`,
-  );
-  if (!response.ok) {
-    return null;
-  }
-  return await response.json();
-}
+import "server-only";
+import path from "path";
+import { createLocalStorage } from "./local";
+import { createS3StorageFromEnv } from "./s3";
+import type { StorageDriver } from "./types";
 
-export async function fetchSingleComment({
-  pageId,
-  commentId,
-}: {
-  pageId: string;
-  commentId: string;
-}) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/${pageId}/single/${commentId}`,
-  );
-  if (!response.ok) {
-    return null;
-  }
-  return await response.json();
+export type { StorageDriver } from "./types";
+
+let storage: StorageDriver | undefined;
+
+// STORAGE_DRIVER=s3 for object storage (needed on serverless hosts),
+// otherwise files go to STORAGE_LOCAL_DIR or public/media.
+export function getStorage(): StorageDriver {
+  storage ??=
+    process.env.STORAGE_DRIVER === "s3"
+      ? createS3StorageFromEnv()
+      : createLocalStorage(
+          process.env.STORAGE_LOCAL_DIR ||
+            path.join(
+              /* turbopackIgnore: true */ process.cwd(),
+              "public",
+              "media",
+            ),
+        );
+  return storage;
 }

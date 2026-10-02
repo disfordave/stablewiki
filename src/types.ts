@@ -18,7 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/prisma/client";
 
 export interface Page {
   id: string;
@@ -28,7 +28,7 @@ export interface Page {
   author?: {
     id: string;
     username: string;
-  };
+  } | null;
   createdAt: Date;
   updatedAt: Date;
   isRedirect?: boolean;
@@ -43,6 +43,8 @@ export interface Page {
     categories: SimplePageData[];
   };
   loungeDisabled: boolean;
+  // Set while the page is in the trash
+  deletedAt?: Date | null;
 }
 
 interface SimplePageData {
@@ -61,20 +63,20 @@ export interface Revision {
   version: number;
   title: string;
   content: string;
-  createdAt: string;
-  author?: { id: string; username: string };
+  createdAt: string | Date;
+  author?: { id: string; username: string } | null;
   summary: string;
   page?: {
     title: string;
   };
 }
 
+// The signed-in account (see getUser in @/lib)
 export interface User {
   id: string;
   username: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   role: Role;
-  token: string;
   createdAt: Date;
   status: number;
 }
@@ -82,7 +84,7 @@ export interface User {
 export interface PublicUser {
   id: string;
   username: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   role: Role;
   createdAt: Date;
   status: number;
@@ -97,7 +99,7 @@ export interface LoungePreviewComment {
   author?: {
     id: string;
     username: string;
-  };
+  } | null;
 }
 
 export interface LoungeComment {

@@ -18,6 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import "server-only";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
 import type { Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";

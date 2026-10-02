@@ -18,31 +18,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { LoungeComment } from "@/types";
+import { listRecentComments } from "@/server/lounge";
 import { slugify } from "@/utils";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export async function AsideLounges() {
-  async function fetchComments() {
-    // Placeholder for fetching comments logic
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge?action=comments&onlyRoot=true&hPage=1&noDeletedLounges=true`,
-      {
-        method: "GET",
-        cache: "no-store",
-      },
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      console.error("Failed to fetch comments");
-      return [];
-    }
-  }
-  const comments = await fetchComments();
+  const comments = await listRecentComments({
+    onlyRoot: true,
+    excludeDeleted: true,
+  });
 
   return (
     <section className="rounded-2xl bg-white p-4 dark:bg-zinc-800">
@@ -63,7 +48,7 @@ export async function AsideLounges() {
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">
-        {comments.data.slice(0, 5).map((c: LoungeComment) => (
+        {comments.data.slice(0, 5).map((c) => (
           <li key={c.id}>
             <Link
               href={`/wiki/${slugify(c.page.title)}/_lounge/${c.id}`}

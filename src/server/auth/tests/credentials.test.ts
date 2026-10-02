@@ -23,8 +23,8 @@ vi.mock("@/lib/prisma", () => ({ prisma: prismaMock }));
 import {
   sessionCookieOptions,
   signInWithPassword,
-} from "@/lib/auth/credentials";
-import { registerUser } from "@/lib/auth/registration";
+} from "@/server/auth/credentials";
+import { registerUser } from "@/server/auth/registration";
 
 const SECRET = "test-secret";
 let bob: Record<string, unknown>;

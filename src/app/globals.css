@@ -23,6 +23,72 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+  Theme color. The root layout sets data-theme-color on <html>, and themed
+  utilities (bg-theme-500, text-theme-600, ...) read these variables, so the
+  color can differ per request without generating different class names.
+*/
+@theme inline {
+  --color-theme-400: var(--theme-400);
+  --color-theme-500: var(--theme-500);
+  --color-theme-600: var(--theme-600);
+}
+
+:root,
+[data-theme-color="violet"] {
+  --theme-400: var(--color-violet-400);
+  --theme-500: var(--color-violet-500);
+  --theme-600: var(--color-violet-600);
+}
+
+[data-theme-color="rose"] {
+  --theme-400: var(--color-rose-400);
+  --theme-500: var(--color-rose-500);
+  --theme-600: var(--color-rose-600);
+}
+
+[data-theme-color="orange"] {
+  --theme-400: var(--color-orange-400);
+  --theme-500: var(--color-orange-500);
+  --theme-600: var(--color-orange-600);
+}
+
+[data-theme-color="sky"] {
+  --theme-400: var(--color-sky-400);
+  --theme-500: var(--color-sky-500);
+  --theme-600: var(--color-sky-600);
+}
+
+[data-theme-color="emerald"] {
+  --theme-400: var(--color-emerald-400);
+  --theme-500: var(--color-emerald-500);
+  --theme-600: var(--color-emerald-600);
+}
+
+[data-theme-color="yellow"] {
+  --theme-400: var(--color-yellow-400);
+  --theme-500: var(--color-yellow-500);
+  --theme-600: var(--color-yellow-600);
+}
+
+[data-theme-color="pink"] {
+  --theme-400: var(--color-pink-400);
+  --theme-500: var(--color-pink-500);
+  --theme-600: var(--color-pink-600);
+}
+
+[data-theme-color="indigo"] {
+  --theme-400: var(--color-indigo-400);
+  --theme-500: var(--color-indigo-500);
+  --theme-600: var(--color-indigo-600);
+}
+
+[data-theme-color="zinc"] {
+  --theme-400: var(--color-zinc-400);
+  --theme-500: var(--color-zinc-500);
+  --theme-600: var(--color-zinc-600);
+}
+
 html {
   scroll-behavior: smooth;
 }

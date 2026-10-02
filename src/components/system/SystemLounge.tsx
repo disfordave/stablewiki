@@ -18,7 +18,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { fetchComments, getThemeColor, safeRedirect } from "@/utils";
+import { getThemeColor, safeRedirect, wasEdited } from "@/utils";
+import { errorMessage } from "@/server/errors";
+import {
+  createComment,
+  deleteComment,
+  editComment,
+  getThread,
+  listThreads,
+  toggleLike,
+} from "@/server/lounge";
 import {
   MarkdownComp,
   TransitionFormButton,
@@ -49,83 +58,22 @@ function commentReactionButton({
 }) {
   const isReacted = comment.reactions.some((r) => r.userId === user?.id);
   const isDisabled = !user || user.status > 0 || loungeDisabled;
+  // Only plain strings go into the action, not the whole comment
+  const commentId = comment.id;
+  const threadUrl = `/wiki/${comment.page.slug}/_lounge/${
+    comment.rootCommentId ? comment.rootCommentId : comment.id
+  }?hPage=${hPage}&sortBy=${sortBy}`;
 
   return (
     <TransitionFormButton
       action={async () => {
         "use server";
-        const type = "1";
-
-        if (loungeDisabled) {
-          safeRedirect("/wiki/System:Lounge");
+        try {
+          await toggleLike(await getUser(), commentId);
+        } catch (error) {
+          safeRedirect(`${threadUrl}&error=${errorMessage(error)}`);
         }
-
-        if (!user) {
-          safeRedirect("/wiki/System:SignIn");
-        }
-
-        if (
-          comment.reactions.some((r) => r.userId === user?.id && r.type === 1)
-        ) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/reactions`,
-            {
-              method: "DELETE",
-              body: JSON.stringify({
-                reactionId:
-                  comment.reactions.find(
-                    (r) => r.userId === user?.id && r.type === 1,
-                  )?.id || "",
-              }),
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`,
-              },
-            },
-          );
-
-          if (!response.ok) {
-            safeRedirect(
-              `/wiki/${comment.page.slug}/_lounge/${
-                comment.rootCommentId ? comment.rootCommentId : comment.id
-              }?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
-            );
-          }
-          // Optionally, you can handle success (e.g., redirect or show a message)
-          safeRedirect(
-            `/wiki/${comment.page.slug}/_lounge/${
-              comment.rootCommentId ? comment.rootCommentId : comment.id
-            }?hPage=${hPage}&sortBy=${sortBy}#${comment.id}`,
-          );
-        }
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge/reactions`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              commentId: comment.id,
-              type,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user.token}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          safeRedirect(
-            `/wiki/${comment.page.slug}/_lounge/${
-              comment.rootCommentId ? comment.rootCommentId : comment.id
-            }?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
-          );
-        }
-        safeRedirect(
-          `/wiki/${comment.page.slug}/_lounge/${
-            comment.rootCommentId ? comment.rootCommentId : comment.id
-          }?hPage=${hPage}&sortBy=${sortBy}#${comment.id}`,
-        );
+        safeRedirect(`${threadUrl}#${commentId}`);
       }}
       className={`mt-4 shadow-xs ${
         isReacted
@@ -281,10 +229,12 @@ export function Comment({
               })}`}
               {comment.rootCommentId && ` (#${comment.index})`}
             </span>
-            {comment.updatedAt && comment.updatedAt !== comment.createdAt && (
+            {wasEdited(comment.createdAt, comment.updatedAt) && (
               <span className="text-xs opacity-75">
                 Edited on{" "}
-                {new Date(comment.updatedAt).toLocaleDateString("en-GB", {
+                {new Date(
+                  comment.updatedAt ?? comment.createdAt,
+                ).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",
@@ -386,113 +336,65 @@ export default async function SystemLounge({
 }) {
   const user = await getUser();
 
-  const data = await fetchComments({
-    pageId: page.id,
-    commentId: commentId ? commentId : "",
-    hPage,
-    sortBy,
-  });
-  const comments = data ? data.data : [];
-  const totalPaginationPages = data ? data.totalPaginationPages : 0;
+  const result = commentId
+    ? await getThread(page.id, commentId, { hPage, sortBy })
+    : await listThreads(page.id, { hPage, sortBy });
+  const comments = (result?.data ?? []) as unknown as LoungeComment[];
+  const totalPaginationPages = result?.totalPaginationPages ?? 0;
 
-  async function createComment(formData: FormData) {
+  // Only plain strings go into the actions, not the whole page
+  const pageId = page.id;
+  const loungePath = `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`;
+  const replyTarget = typeof replyTo === "string" ? replyTo : null;
+  const editTarget =
+    typeof targetLoungeCommentId === "string" ? targetLoungeCommentId : null;
+
+  async function createCommentAction(formData: FormData) {
     "use server";
-    const { title, content } = Object.fromEntries(formData);
-
-    if (page.loungeDisabled) {
+    let createdId: string;
+    try {
+      const created = await createComment(await getUser(), {
+        title: formData.get("title") || "No Title",
+        content: formData.get("content"),
+        pageId,
+        rootCommentId: commentId,
+        parentId: replyTarget || commentId || null,
+      });
+      createdId = created.id;
+    } catch (error) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Lounge is disabled for this page`,
+        `${loungePath}?hPage=${hPage}&sortBy=${sortBy}&error=${errorMessage(error)}`,
       );
     }
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          title: title || "No Title",
-          content,
-          pageId: page.id,
-          rootCommentId: commentId,
-          parentId: replyTo || commentId || null,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      },
-    );
-    if (!response.ok) {
-      safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
-      );
-    }
-    // Optionally, you can handle success (e.g., redirect or show a message)
-    const result = await response.json();
     safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages === 0 ? 1 : totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
+      `${loungePath}?hPage=${totalPaginationPages === 0 ? 1 : totalPaginationPages}&sortBy=${sortBy}#${createdId}`,
     );
   }
 
-  async function editComment(formData: FormData) {
+  async function editCommentAction(formData: FormData) {
     "use server";
-    const { content, title } = Object.fromEntries(formData);
-
-    if (page.loungeDisabled) {
+    try {
+      await editComment(await getUser(), {
+        id: editTarget,
+        title: formData.get("title") || "No Title",
+        content: formData.get("content"),
+      });
+    } catch (error) {
       safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Lounge is disabled for this page`,
+        `${loungePath}?hPage=${hPage}&sortBy=${sortBy}&error=${errorMessage(error)}`,
       );
     }
+    safeRedirect(`${loungePath}?hPage=${hPage}&sortBy=${sortBy}#${editTarget}`);
+  }
 
-    if (!user) {
-      safeRedirect("/login");
+  async function deleteCommentAction() {
+    "use server";
+    try {
+      await deleteComment(await getUser(), editTarget);
+    } catch (error) {
+      safeRedirect(`${loungePath}?error=${errorMessage(error)}`);
     }
-
-    if (!targetLoungeCommentId || typeof targetLoungeCommentId !== "string") {
-      safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Invalid targetLoungeCommentId`,
-      );
-    }
-
-    if (
-      user.id !==
-      comments.find((c: LoungeComment) => c.id === targetLoungeCommentId)
-        ?.authorId
-    ) {
-      safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=Unauthorized to edit this comment`,
-      );
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          content,
-          title: title || "No Title",
-          id: targetLoungeCommentId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      safeRedirect(
-        `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${hPage}&sortBy=${sortBy}&error=${await response.text()}`,
-      );
-    }
-    // Optionally, you can handle success (e.g., redirect or show a message)
-    const result = await response.json();
-    safeRedirect(
-      `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?hPage=${totalPaginationPages}&sortBy=${sortBy}#${result.id}`,
-    );
+    safeRedirect(loungePath);
   }
 
   return (
@@ -548,7 +450,7 @@ export default async function SystemLounge({
       )}
       {user && user.status === 0 && !page.loungeDisabled && (
         <form
-          action={targetLoungeCommentId ? editComment : createComment}
+          action={editTarget ? editCommentAction : createCommentAction}
           id="writer"
         >
           {commentId ? (
@@ -653,62 +555,16 @@ export default async function SystemLounge({
           </TransitionFormButton>
         </form>
       )}
-      {user && targetLoungeCommentId && user.status === 0 && (
-        <button
-          onClick={async () => {
-            "use server";
-
-            if (
-              !targetLoungeCommentId ||
-              typeof targetLoungeCommentId !== "string"
-            ) {
-              safeRedirect(
-                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Invalid targetLoungeCommentId`,
-              );
-            }
-
-            if (!user) {
-              safeRedirect("/login");
-            }
-
-            if (
-              user.id !==
-              comments.find(
-                (c: LoungeComment) => c.id === targetLoungeCommentId,
-              )?.authorId
-            ) {
-              safeRedirect(
-                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=Unauthorized to delete this comment`,
-              );
-            }
-
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge`,
-              {
-                method: "DELETE",
-                body: JSON.stringify({ id: targetLoungeCommentId }),
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${user.token}`,
-                },
-              },
-            );
-
-            if (!response.ok) {
-              safeRedirect(
-                `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}?error=${await response.text()}`,
-              );
-            }
-
-            safeRedirect(
-              `/wiki/${page.slug.join("/")}/_lounge/${commentId ? commentId : ""}`,
-            );
-          }}
-          className="mt-4 text-red-500 hover:underline"
-        >
-          Delete Comment
-        </button>
-      )}
+      {user &&
+        editTarget &&
+        user.status === 0 &&
+        comments.find((c) => c.id === editTarget)?.authorId === user.id && (
+          <form action={deleteCommentAction}>
+            <button type="submit" className="mt-4 text-red-500 hover:underline">
+              Delete Comment
+            </button>
+          </form>
+        )}
       <BackToPageButton page={page} commentId={commentId} />
     </div>
   );

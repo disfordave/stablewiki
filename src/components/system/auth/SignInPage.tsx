@@ -25,16 +25,13 @@ import {
   SignInResult,
   sessionCookieOptions,
   signInWithPassword,
-} from "@/lib/auth/credentials";
+} from "@/server/auth/credentials";
+import { SESSION_COOKIE } from "@/server/auth/session";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { getThemeColor, safeRedirect } from "@/utils";
-import {
-  RATE_LIMITS,
-  checkRateLimit,
-  getClientIp,
-} from "@/utils/api/rateLimit";
+import { RATE_LIMITS, checkRateLimit, getClientIp } from "@/server/rateLimit";
 
 export default async function SignIn() {
   const user = await getUser();
@@ -82,7 +79,7 @@ export default async function SignIn() {
 
     const cookieStore = await cookies();
     cookieStore.set({
-      name: "jwt",
+      name: SESSION_COOKIE,
       value: result.token,
       ...sessionCookieOptions(),
     });

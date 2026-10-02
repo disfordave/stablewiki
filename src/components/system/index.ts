@@ -26,3 +26,4 @@ export { default as SignInPage } from "./auth/SignInPage";
 export { default as SignUpPage } from "./auth/SignUpPage";
 export { default as SystemRevisions } from "./SystemRevisions";
 export { default as SystemComments } from "./SystemComments";
+export { default as SystemTrash } from "./SystemTrash";

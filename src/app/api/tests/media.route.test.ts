@@ -123,7 +123,7 @@ describe("POST /api/media", () => {
     expect(response.status).toBe(201);
     expect(fsMock.writeFile).toHaveBeenCalledWith(
       path.join(MEDIA_DIR, "Logo.png"),
-      expect.any(Buffer),
+      expect.any(Uint8Array),
       { flag: "wx" },
     );
     expect(prismaMock.page.create).toHaveBeenCalledWith({
@@ -157,7 +157,7 @@ describe("POST /api/media", () => {
     expect((await upload("Shell", png("shell.php"))).status).toBe(201);
     expect(fsMock.writeFile).toHaveBeenCalledWith(
       path.join(MEDIA_DIR, "Shell.png"),
-      expect.any(Buffer),
+      expect.any(Uint8Array),
       { flag: "wx" },
     );
   });

@@ -18,10 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from "./api/authorization";
 export * from "./api/checkRedirect";
-export * from "./api/getPages";
-export * from "./api/getLoungeComments";
 export * from "./api/pagination";
 export * from "./api/wikiLinks";
 
@@ -30,4 +27,4 @@ export * from "./functions/safeRedirect";
 export * from "./functions/themeColor";
 export * from "./functions/getEditLevelString";
 export * from "./functions/isUsersPage";
-export * from "./functions/logSystemEvent";
+export * from "./functions/wasEdited";

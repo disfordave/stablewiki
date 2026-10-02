@@ -18,13 +18,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Matches Prisma error codes (e.g. P2002) and Node errno codes (e.g. EEXIST)
-// without importing the generated Prisma client.
-export function hasErrorCode(error: unknown, code: string): boolean {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    error.code === code
-  );
+import "server-only";
+import { logger } from "./logger";
+
+// Logs an unexpected error and, when SENTRY_DSN is set, sends it to Sentry.
+// Expected failures (bad input, permissions) are ServiceErrors and skip this.
+export function reportError(error: unknown, context: object = {}) {
+  logger.error(error instanceof Error ? error.message : "Unexpected error", {
+    ...context,
+    error,
+  });
+
+  if (process.env.SENTRY_DSN) {
+    import("@sentry/nextjs")
+      .then((Sentry) =>
+        Sentry.captureException(error, { extra: { ...context } }),
+      )
+      .catch(() => undefined);
+  }
 }

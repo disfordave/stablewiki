@@ -19,7 +19,10 @@
 */
 
 import { getUser } from "@/lib";
-import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY, WIKI_NAME } from "@/config";
+import { WIKI_NAME } from "@/config";
+import { getUploadDenial } from "@/server/authz";
+import { errorMessage } from "@/server/errors";
+import { uploadMedia } from "@/server/media";
 import {
   DisabledMessage,
   MustSignInMessage,
@@ -34,68 +37,37 @@ export const metadata = {
 };
 
 export default async function StableUpload() {
-  if (WIKI_DISABLE_MEDIA) {
-    return <DisabledMessage message="Media uploads are disabled." />;
-  }
-
   const user = await getUser();
 
-  if (WIKI_MEDIA_ADMIN_ONLY) {
-    if (!user || user.role !== "ADMIN") {
-      return (
-        <DisabledMessage message="Media uploads are restricted to admin users only." />
+  async function uploadAction(formData: FormData) {
+    "use server";
+    let mediaSlug: string;
+    try {
+      const page = await uploadMedia(await getUser(), {
+        title: formData.get("title"),
+        file: formData.get("media"),
+      });
+      mediaSlug = page.slug;
+    } catch (error) {
+      safeRedirect(
+        `/wiki/System:Upload?error=${errorMessage(error, "Failed to upload media")}`,
       );
     }
+    safeRedirect(`/wiki/${mediaSlug}`);
   }
 
-  async function uploadMedia(formData: FormData) {
-    "use server";
-
-    if (!user) {
-      throw new Error("Unauthorized");
-    }
-
-    const title = formData.get("title") as string;
-    const media = formData.get("media") as File;
-
-    if (!title || !media) {
-      throw new Error("Missing fields");
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/media`,
-      {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-        method: "POST",
-        body: formData,
-      },
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      const errorMsg = errorData.error || "Failed to upload media";
-      safeRedirect(`/wiki/System:Upload?error=${errorMsg}`);
-    }
-
-    const data = await response.json();
-
-    safeRedirect(`/wiki/${data.slug}`);
-  }
-
-  if (!user || !user.username) {
+  const denial = getUploadDenial(user);
+  if (denial?.status === 401) {
     return <MustSignInMessage />;
   }
-
-  if (user.status > 0) {
-    return <DisabledMessage message="Your account has been banned" />;
+  if (denial) {
+    return <DisabledMessage message={denial.error} />;
   }
   //   const error = searchParams.error as string | undefined;
   return (
     <div>
       <h1 className="text-3xl font-bold">Upload Media</h1>
-      <form action={uploadMedia} className="mt-4 flex flex-col gap-4">
+      <form action={uploadAction} className="mt-4 flex flex-col gap-4">
         <div>
           <label className="mb-2 block font-medium">Title</label>
           <input

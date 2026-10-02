@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { getPageEditDenial } from "@/utils/api/pagePermissions";
+import {
+  canDeletePage,
+  canReadPage,
+  getEditLevelDenial,
+  getPageEditDenial,
+} from "@/server/authz";
+import { getAccessEditLevelString } from "@/utils/functions/getEditLevelString";
 
 type Editor = Parameters<typeof getPageEditDenial>[0]["editor"];
 
@@ -84,5 +90,66 @@ describe("getPageEditDenial", () => {
         homepageLink: HOMEPAGE,
       })?.status,
     ).toBe(403);
+  });
+});
+
+describe("edit levels", () => {
+  const account = (role: Editor["role"], ageDays = 365) => ({
+    username: "someone",
+    role,
+    status: 0,
+    createdAt: new Date(Date.now() - ageDays * 86_400_000),
+  });
+
+  it("enforces exactly what each level's label promises", () => {
+    for (let level = 0; level <= 9; level++) {
+      const label = getAccessEditLevelString(level);
+      const allowed = (
+        ["USER", "MODERATOR", "EDITOR", "ADMIN"] as const
+      ).filter((role) => getEditLevelDenial(account(role), level) === null);
+      const expected: Record<string, string[]> = {
+        "Signed In Users": ["USER", "MODERATOR", "EDITOR", "ADMIN"],
+        "Signed In Users after 14 days": [
+          "USER",
+          "MODERATOR",
+          "EDITOR",
+          "ADMIN",
+        ],
+        "Moderators and above": ["MODERATOR", "EDITOR", "ADMIN"],
+        "Editors and above": ["EDITOR", "ADMIN"],
+        "Admin Only": ["ADMIN"],
+      };
+      expect([level, label, allowed]).toEqual([level, label, expected[label]]);
+    }
+  });
+
+  it("holds new accounts back from level 2 pages", () => {
+    expect(getEditLevelDenial(account("USER", 3), 2)).toMatch(/14 days/);
+    expect(getEditLevelDenial(account("USER", 30), 2)).toBeNull();
+    expect(getEditLevelDenial(account("MODERATOR", 3), 2)).toBeNull();
+  });
+});
+
+describe("trash permissions", () => {
+  it("lets only editors see trashed pages", () => {
+    const trashed = { deletedAt: new Date() };
+    expect(canReadPage(null, trashed)).toBe(false);
+    expect(canReadPage({ role: "USER" }, trashed)).toBe(false);
+    expect(canReadPage({ role: "EDITOR" }, trashed)).toBe(true);
+    expect(canReadPage(null, { deletedAt: null })).toBe(true);
+  });
+
+  it("lets users delete only their own posts, and never while banned", () => {
+    const bob = { username: "bob", role: "USER" as const, status: 0 };
+    expect(canDeletePage(bob, { title: "User:bob/Diary" })).toBe(true);
+    expect(canDeletePage(bob, { title: "User:bob" })).toBe(false);
+    expect(canDeletePage(bob, { title: "User:alice/Diary" })).toBe(false);
+    expect(canDeletePage(bob, { title: "JavaScript" })).toBe(false);
+    expect(
+      canDeletePage({ ...bob, status: 1 }, { title: "User:bob/Diary" }),
+    ).toBe(false);
+    expect(
+      canDeletePage({ ...bob, role: "EDITOR" }, { title: "JavaScript" }),
+    ).toBe(true);
   });
 });
