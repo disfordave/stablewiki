@@ -76,21 +76,40 @@ export function WikiMarkdown({
         img(props) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { alt, className, node, src, height, width, ...rest } = props;
+          const imageClassName =
+            (className ? className + " " : "") +
+            "mt-4 mb-4 max-h-[61vh] w-full rounded-xl bg-zinc-100 object-contain dark:bg-zinc-900";
+
+          if (typeof src !== "string" || !src) {
+            return null;
+          }
+
+          // Only the wiki's own media goes through the image optimizer
+          if (src.startsWith("/api/media/")) {
+            return (
+              <Image
+                className={imageClassName}
+                width={0}
+                height={0}
+                sizes="100vw"
+                fetchPriority="high"
+                loading="eager"
+                src={src}
+                alt={alt || ""}
+                {...rest}
+              />
+            );
+          }
+
           return (
-            <Image
-              className={
-                (className ? className + " " : "") +
-                "mt-4 mb-4 max-h-[61vh] w-full rounded-xl bg-zinc-100 object-contain dark:bg-zinc-900"
-              }
-              width={0}
-              height={0}
-              sizes="100vw"
-              fetchPriority="high"
-              loading="eager"
-              src={
-                typeof src === "string" ? src : "https://placehold.co/600x400"
-              }
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className={imageClassName}
+              src={src}
               alt={alt || ""}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
               {...rest}
             />
           );
@@ -154,8 +173,9 @@ export function WikiMarkdown({
           const { children, className, node, href, ...rest } = props;
           // Https or http links
           const externalLink = /^https?:\/\//.test(href || "");
-          // Embedded YouTube links like [youtube](/yt:VIDEO_ID)
-          const embeddedYouTube = /^\/yt:(.+)/.test(href || "");
+          // Embedded YouTube links like [youtube](/yt:VIDEO_ID); anything after
+          // the 11-character id is ignored so it can't alter the embed URL
+          const videoId = /^\/yt:\s*([A-Za-z0-9_-]{11})/.exec(href || "")?.[1];
           if (externalLink) {
             return (
               <a
@@ -166,13 +186,14 @@ export function WikiMarkdown({
                   " not-prose cursor-pointer text-green-600 after:ml-0.5 after:content-['↗'] hover:underline dark:text-green-500"
                 }
                 target={externalLink ? "_blank" : undefined}
-                rel={externalLink ? "noopener noreferrer" : undefined}
+                rel={
+                  externalLink ? "nofollow ugc noopener noreferrer" : undefined
+                }
               >
                 {children}
               </a>
             );
-          } else if (embeddedYouTube) {
-            const videoId = href?.substring(4).trim();
+          } else if (videoId) {
             return (
               <iframe
                 className={`my-4 h-80 w-full overflow-auto ${isComment ? "rounded-lg" : "rounded-xl"}`}

@@ -512,7 +512,18 @@ export default async function DashboardPage() {
             Debug Info
           </summary>
           <pre className="mt-2 overflow-auto rounded-xl bg-zinc-100 p-4 dark:bg-zinc-900">
-            {JSON.stringify(user, null, 2)}
+            {JSON.stringify(
+              {
+                id: user.id,
+                username: user.username,
+                avatarUrl: user.avatarUrl,
+                role: user.role,
+                status: user.status,
+                createdAt: user.createdAt,
+              },
+              null,
+              2,
+            )}
           </pre>
         </details>
       </>

@@ -21,10 +21,20 @@
 import { TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
 import { getUser } from "@/lib";
+import {
+  SignInResult,
+  sessionCookieOptions,
+  signInWithPassword,
+} from "@/lib/auth/credentials";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/solid";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { getThemeColor, safeRedirect } from "@/utils";
+import {
+  RATE_LIMITS,
+  checkRateLimit,
+  getClientIp,
+} from "@/utils/api/rateLimit";
 
 export default async function SignIn() {
   const user = await getUser();
@@ -39,44 +49,45 @@ export default async function SignIn() {
       safeRedirect(`/wiki/System:Dashboard`);
     }
 
-    //Extracting form data
-
-    const rawFormData = {
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
-    };
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/signin`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(rawFormData),
-      },
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-
-      const cookieStore = await cookies();
-      cookieStore.set({
-        name: "jwt",
-        value: data.user.token,
-        httpOnly: true,
-        sameSite: "lax",
-      });
-
-      safeRedirect(`/wiki/System:Dashboard`);
-    } else {
-      const data = await res.json();
+    // Limit by the visitor's address; a fetch to our own API would only see the server's
+    if (
+      !checkRateLimit(
+        `signin:${getClientIp(await headers())}`,
+        RATE_LIMITS.signIn,
+      )
+    ) {
       safeRedirect(
-        `/wiki/System:SignIn?error=${
-          data.error || "An unexpected error occurred"
-        }`,
+        `/wiki/System:SignIn?error=${"Too many sign-in attempts. Please try again later."}`,
       );
     }
+
+    let result: SignInResult;
+    try {
+      result = await signInWithPassword(
+        formData.get("username"),
+        formData.get("password"),
+      );
+    } catch (error) {
+      console.error(error);
+      result = {
+        ok: false,
+        status: 500,
+        error: "An unexpected error occurred",
+      };
+    }
+
+    if (!result.ok) {
+      safeRedirect(`/wiki/System:SignIn?error=${result.error}`);
+    }
+
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: "jwt",
+      value: result.token,
+      ...sessionCookieOptions(),
+    });
+
+    safeRedirect(`/wiki/System:Dashboard`);
   }
 
   return (

@@ -24,8 +24,12 @@ import { NextRequest } from "next/server";
 import { User } from "@/types";
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
-import { WIKI_DISABLE_SIGNUP } from "@/config";
-import { slugify } from "@/utils";
+import { registerUser } from "@/lib/auth/registration";
+import {
+  RATE_LIMITS,
+  checkRateLimit,
+  getClientIp,
+} from "@/utils/api/rateLimit";
 
 export async function GET(
   request: NextRequest,
@@ -128,115 +132,35 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const { username, password, passwordConfirm, consent } = body;
-
-  if (WIKI_DISABLE_SIGNUP) {
+  if (
+    !checkRateLimit(
+      `signup:${getClientIp(request.headers)}`,
+      RATE_LIMITS.signUp,
+    )
+  ) {
     return Response.json(
-      { error: "User signup has been disabled." },
-      { status: 403 },
+      { error: "Too many requests, please try again later." },
+      { status: 429 },
     );
   }
 
-  if (!username || !password || !passwordConfirm || !consent) {
-    return Response.json(
-      { error: "Username, password, and consent are required" },
-      { status: 400 },
-    );
-  }
+  const body = await request.json().catch(() => null);
 
-  if (password !== passwordConfirm) {
-    return Response.json({ error: "Passwords do not match" }, { status: 400 });
-  }
-
-  if (!username.match(/^[a-z0-9_]{3,20}$/)) {
-    return Response.json(
-      {
-        error:
-          "Username must be 3-20 characters long and can only contain lower case letters, numbers, and underscores",
-      },
-      { status: 400 },
-    );
-  }
-
-  if (password.length < 8) {
-    return Response.json(
-      { error: "Password must be at least 8 characters long" },
-      { status: 400 },
-    );
-  }
-
-  if (!consent) {
-    return Response.json(
-      { error: "You must agree to the terms and conditions" },
-      { status: 400 },
-    );
+  if (!body || typeof body !== "object") {
+    return Response.json({ error: "Invalid request body" }, { status: 400 });
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({
-      where: { username: username.toLowerCase() },
-    });
+    const result = await registerUser(body);
 
-    if (existingUser) {
-      return Response.json(
-        { error: "Username already taken" },
-        { status: 409 },
-      );
+    if (!result.ok) {
+      return Response.json({ error: result.error }, { status: result.status });
     }
 
-    const userCount = await prisma.user.count();
-    const isFirstUser = userCount === 0;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        username: username.toLowerCase(),
-        password: hashedPassword,
-        role: isFirstUser ? "ADMIN" : "USER",
-      },
-    });
-
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not defined in the environment variables.");
-      return Response.json({ error: "Internal server error" }, { status: 500 });
-    }
-
-    if (newUser) {
-      const data = { user: newUser };
-      // Add user page creation automatically.
-      await prisma.page.create({
-        data: {
-          title: `User:${data.user.username}`,
-          content: "",
-          slug: slugify(`User:${data.user.username}`),
-          author: { connect: { id: data.user.id as string } },
-          revisions: {
-            create: {
-              content: `Hello, ${data.user.username}!`,
-              author: { connect: { id: data.user.id as string } },
-              summary: `User page for ${data.user.username}`,
-              isRedirect: false,
-              redirectTargetSlug: null,
-              title: `User:${data.user.username}`,
-            },
-          },
-          isRedirect: false,
-        },
-      });
-    }
-
-    const response = Response.json({
+    return Response.json({
       message: "Signup successful! Welcome aboard!",
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        avatarUrl: newUser.avatarUrl,
-        role: newUser.role,
-      },
+      user: result.user,
     });
-
-    return response;
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to sign up user" }, { status: 500 });

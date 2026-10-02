@@ -18,67 +18,34 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { prisma } from "@/lib/prisma";
-import * as jose from "jose";
-import bcrypt from "bcryptjs";
+import { signInWithPassword } from "@/lib/auth/credentials";
 import { User } from "@/types";
-
-const DUMMY_HASH =
-  "$2a$10$KIX/8sW3x3lP1n7i6E1w8u3hQKq5N7e2v1a8BqQH6G1nE7Hq1m0y."; // any valid bcrypt hash
+import {
+  RATE_LIMITS,
+  checkRateLimit,
+  getClientIp,
+} from "@/utils/api/rateLimit";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const { username, password } = body;
-
-  if (!username || !password) {
+  if (
+    !checkRateLimit(
+      `signin:${getClientIp(request.headers)}`,
+      RATE_LIMITS.signIn,
+    )
+  ) {
     return Response.json(
-      { error: "Username and password are required" },
-      { status: 400 },
+      { error: "Too many requests, please try again later." },
+      { status: 429 },
     );
   }
 
+  const body = await request.json().catch(() => null);
+
   try {
-    const user = await prisma.user.findUnique({
-      where: { username: username },
-    });
+    const result = await signInWithPassword(body?.username, body?.password);
 
-    const hash = user?.password ?? DUMMY_HASH;
-
-    if (!user || !(await bcrypt.compare(password, hash))) {
-      return Response.json(
-        { error: "Invalid username or password" },
-        { status: 401 },
-      );
-    }
-
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not defined in the environment variables.");
-      return Response.json({ error: "Internal server error" }, { status: 500 });
-    }
-
-    let token;
-    try {
-      //Creating jwt token
-      token = await new jose.SignJWT({
-        id: user.id,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
-        role: user.role,
-        createdAt: user.createdAt,
-      })
-        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-        .setIssuedAt()
-        .setExpirationTime(`24h`) // Change this line
-        .sign(new TextEncoder().encode(process.env.JWT_SECRET));
-    } catch (err) {
-      return Response.json(
-        {
-          error:
-            "Failed to sign in user from JWT" +
-            (err instanceof Error ? `: ${err.message}` : ""),
-        },
-        { status: 500 },
-      );
+    if (!result.ok) {
+      return Response.json({ error: result.error }, { status: result.status });
     }
 
     const clientType = request.headers.get("X-Client-Type");
@@ -86,32 +53,17 @@ export async function POST(request: Request) {
       return Response.json(
         {
           message: "Login successful! Happy reading!",
-          token: token,
-          user: {
-            id: user.id,
-            username: user.username,
-            avatarUrl: user.avatarUrl,
-            role: user.role,
-            createdAt: user.createdAt,
-          },
+          token: result.token,
+          user: result.user,
         },
         { status: 200 },
       );
     }
 
-    const response = Response.json({
+    return Response.json({
       message: "Login successful! Happy reading!",
-      user: {
-        id: user.id,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
-        role: user.role,
-        token,
-        createdAt: user.createdAt,
-      } as User,
+      user: { ...result.user, token: result.token } as User,
     });
-
-    return response;
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Failed to sign in user" }, { status: 500 });

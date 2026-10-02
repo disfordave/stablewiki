@@ -62,8 +62,6 @@ export default async function StableUpload() {
       throw new Error("Missing fields");
     }
 
-    formData.append("user", JSON.stringify(user));
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/media`,
       {

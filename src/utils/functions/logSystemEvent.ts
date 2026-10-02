@@ -9,17 +9,15 @@ export async function logSystemEvent(
     return;
   }
 
-  const systemLog = await prisma.systemLog.create({
-    data: {
-      type: eventType,
-      message,
-    },
-  });
-
-  if (!systemLog) {
-    console.error("Failed to log system event:", { eventType, message });
-    return;
+  // Callers don't await this, so a failure must not become an unhandled rejection
+  try {
+    await prisma.systemLog.create({
+      data: {
+        type: eventType,
+        message,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to log system event:", { eventType, message }, error);
   }
-
-  // console.log(`System Event Logged: [${systemLog.type}] ${systemLog.message}`);
 }

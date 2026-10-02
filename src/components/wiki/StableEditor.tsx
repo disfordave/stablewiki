@@ -104,7 +104,6 @@ export default async function StableEditor({
         body: JSON.stringify({
           title,
           content,
-          author: user,
           summary,
         }),
       },

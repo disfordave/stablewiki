@@ -20,9 +20,16 @@
 
 import { DisabledMessage, TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
+import { SignUpResult, registerUser } from "@/lib/auth/registration";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { getThemeColor, safeRedirect } from "@/utils";
+import {
+  RATE_LIMITS,
+  checkRateLimit,
+  getClientIp,
+} from "@/utils/api/rateLimit";
 
 export default async function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {
@@ -45,34 +52,39 @@ export default async function SignupPage() {
       );
     }
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-          passwordConfirm,
-          consent,
-        }),
-      },
-    );
+    if (
+      !checkRateLimit(
+        `signup:${getClientIp(await headers())}`,
+        RATE_LIMITS.signUp,
+      )
+    ) {
+      safeRedirect(
+        `/wiki/System:SignUp?error=${"Too many sign-up attempts. Please try again later."}`,
+      );
+    }
 
-    if (res.ok) {
+    let result: SignUpResult;
+    try {
+      result = await registerUser({
+        username,
+        password,
+        passwordConfirm,
+        consent,
+      });
+    } catch (error) {
+      console.error(error);
+      safeRedirect(
+        `/wiki/System:SignUp?error=${"An unexpected error occurred"}`,
+      );
+    }
+
+    if (result.ok) {
       // Redirect to signin page with success message
       safeRedirect(
         `/wiki/System:SignIn?success=${"Account created successfully. Please sign in."}`,
       );
     } else {
-      const data = await res.json();
-      safeRedirect(
-        `/wiki/System:SignUp?error=${
-          data.error || "An unexpected error occurred"
-        }`,
-      );
+      safeRedirect(`/wiki/System:SignUp?error=${result.error}`);
     }
   }
   //   const params = await searchParams;
