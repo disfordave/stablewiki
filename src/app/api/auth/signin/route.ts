@@ -18,13 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { signInWithPassword } from "@/lib/auth/credentials";
-import { User } from "@/types";
-import {
-  RATE_LIMITS,
-  checkRateLimit,
-  getClientIp,
-} from "@/utils/api/rateLimit";
+import { signInWithPassword } from "@/server/auth/credentials";
+import { RATE_LIMITS, checkRateLimit, getClientIp } from "@/server/rateLimit";
 
 export async function POST(request: Request) {
   if (
@@ -62,7 +57,7 @@ export async function POST(request: Request) {
 
     return Response.json({
       message: "Login successful! Happy reading!",
-      user: { ...result.user, token: result.token } as User,
+      user: { ...result.user, token: result.token },
     });
   } catch (error) {
     console.error(error);

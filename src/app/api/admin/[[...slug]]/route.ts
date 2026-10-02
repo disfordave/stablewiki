@@ -18,31 +18,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import type { Role } from "@/generated/prisma/client";
-import { prisma } from "@/lib/prisma";
-import { getDecodedToken } from "@/utils";
-import { hasErrorCode } from "@/utils/api/errorCodes";
+import { getRequestUser } from "@/server/auth/session";
+import { errorResponse, readJsonBody } from "@/server/errors";
+import { setPageAccessLevel, setUserStatus } from "@/server/users";
 import { NextRequest, NextResponse } from "next/server";
 
-// - 0 for active, 1 for banned
-// - 101 for normal user, 102 for moderators, 103 for editors, 109 for admins
-const USER_STATUS_CHANGES: Record<number, { status: number } | { role: Role }> =
-  {
-    0: { status: 0 },
-    1: { status: 1 },
-    101: { role: "USER" },
-    102: { role: "MODERATOR" },
-    103: { role: "EDITOR" },
-    109: { role: "ADMIN" },
-  };
-
-// Never send password hashes or other private fields back to the client
-const PUBLIC_USER_FIELDS = {
-  id: true,
-  username: true,
-  role: true,
-  status: true,
-} as const;
+// Admin responses report errors as plain text, as this API always has
+const plainText = { plainText: true };
 
 export async function PUT(
   request: NextRequest,
@@ -55,88 +37,28 @@ export async function PUT(
   }
 
   try {
-    const decodedToken = await getDecodedToken(request);
-    if (!decodedToken || decodedToken.role !== "ADMIN") {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    const user = await getRequestUser(request);
 
     if (slug[0] === "pages" && slug.length === 1) {
-      const body = await request.json();
-      const { accessLevel, slug: pageSlug } = body;
-
-      // - 0 for registered users, 1 for moderators, 9 for admins only
-      // - 101 for enabled Lounge access, 102 for disabled Lounge
-
-      if (
-        !Number.isInteger(accessLevel) ||
-        accessLevel < 0 ||
-        (accessLevel > 9 && accessLevel < 101) ||
-        accessLevel > 102
-      ) {
-        return new Response("Invalid status value", { status: 400 });
-      }
-
-      if (accessLevel >= 101) {
-        const updatedPage = await prisma.page.update({
-          where: { slug: pageSlug },
-          data: {
-            loungeDisabled: accessLevel === 102,
-          },
-        });
-        return NextResponse.json({ data: updatedPage });
-      }
-
-      const updatedPage = await prisma.page.update({
-        where: { slug: pageSlug },
-        data: {
-          accessLevel,
-        },
-      });
-
-      return NextResponse.json({ data: updatedPage });
+      const body = (await readJsonBody(request)) as {
+        slug?: unknown;
+        accessLevel?: unknown;
+      } | null;
+      const page = await setPageAccessLevel(
+        user,
+        body?.slug,
+        body?.accessLevel,
+      );
+      return NextResponse.json({ data: page });
     }
 
     if (slug[0] === "users" && slug.length === 2) {
-      const body = await request.json();
-      const { status } = body;
-
-      const change = Number.isInteger(status)
-        ? USER_STATUS_CHANGES[status]
-        : undefined;
-
-      if (!change) {
-        return new Response("Invalid status value", { status: 400 });
-      }
-
-      // Prevents admins from locking themselves out of the admin panel
-      if (slug[1] === decodedToken.username) {
-        return new Response("You cannot change your own status or role", {
-          status: 400,
-        });
-      }
-
-      const userCounter = await prisma.user.count();
-      if (userCounter <= 1) {
-        return new Response(
-          "Cannot change status of the only user in the system",
-          { status: 400 },
-        );
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: { username: slug[1] },
-        data: change,
-        select: PUBLIC_USER_FIELDS,
-      });
-
+      const body = (await readJsonBody(request)) as { status?: unknown } | null;
+      const updatedUser = await setUserStatus(user, slug[1], body?.status);
       return NextResponse.json({ data: updatedUser });
     }
   } catch (error) {
-    if (hasErrorCode(error, "P2025")) {
-      return new Response("Not Found", { status: 404 });
-    }
-    console.error(error);
-    return new Response("Internal Server Error", { status: 500 });
+    return errorResponse(error, plainText);
   }
 
   return NextResponse.json({ data: null });

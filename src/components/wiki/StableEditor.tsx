@@ -20,6 +20,13 @@
 
 import { getUser } from "@/lib";
 import {
+  canDeletePage,
+  getPageEditDenial,
+  getPageModifyDenial,
+} from "@/server/authz";
+import { errorMessage } from "@/server/errors";
+import { createPage, deletePage, editPage } from "@/server/pages";
+import {
   DisabledMessage,
   MustSignInMessage,
   TransitionFormButton,
@@ -27,7 +34,7 @@ import {
 } from "../ui";
 import { Page } from "@/types";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
-import { getThemeColor, isUsersPage, safeRedirect, slugify } from "@/utils";
+import { getThemeColor, safeRedirect, slugify } from "@/utils";
 
 export default async function StableEditor({
   page,
@@ -39,111 +46,60 @@ export default async function StableEditor({
   isSystemNewPage?: boolean;
 }) {
   const user = await getUser();
+  // The page's stored slug (the URL segment may be percent-encoded)
+  const pageSlug = page?.slug[0];
 
-  async function createPage(formData: FormData) {
+  async function createPageAction(formData: FormData) {
     "use server";
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    const summary = formData.get("summary") as string;
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (!title || !content) {
+    let createdSlug: string;
+    try {
+      const created = await createPage(await getUser(), {
+        title: formData.get("title"),
+        content: formData.get("content"),
+        summary: formData.get("summary"),
+      });
+      createdSlug = created.slug;
+    } catch (error) {
       safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Title and content are required"}`,
+        `/wiki/${slug}?action=edit&error=${errorMessage(error, "Failed to create page")}`,
       );
     }
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({
-        title,
-        content,
-        summary,
-      }),
-    });
-
-    if (!res.ok) {
-      safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to create page"}`,
-      );
-    }
-
-    const data = await res.json();
-    safeRedirect(`/wiki/${data.slug}`);
+    safeRedirect(`/wiki/${createdSlug}`);
   }
 
-  async function editPage(formData: FormData) {
+  async function editPageAction(formData: FormData) {
     "use server";
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    const summary = formData.get("summary") as string;
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (!page || !page.id || !page.slug) {
+    if (!pageSlug) {
       throw new Error("Page not found");
     }
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page.slug}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          title,
-          content,
-          summary,
-        }),
-      },
-    );
-
-    if (!res.ok) {
-      safeRedirect(`/wiki/${slug}?action=edit&error=${"Failed to edit page"}`);
-    }
-
-    const data = await res.json();
-    safeRedirect(`/wiki/${slugify(data.title)}`);
-  }
-
-  async function deletePage() {
-    "use server";
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (!page || !page.id || !page.slug) {
-      throw new Error("Page not found");
-    }
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages/${page.slug}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      },
-    );
-
-    if (!res.ok) {
+    let newTitle: string;
+    try {
+      const revision = await editPage(await getUser(), pageSlug, {
+        title: formData.get("title"),
+        content: formData.get("content"),
+        summary: formData.get("summary"),
+      });
+      newTitle = revision.title;
+    } catch (error) {
       safeRedirect(
-        `/wiki/${slug}?action=edit&error=${"Failed to delete page"}`,
+        `/wiki/${slug}?action=edit&error=${errorMessage(error, "Failed to edit page")}`,
       );
     }
+    safeRedirect(`/wiki/${slugify(newTitle)}`);
+  }
 
+  async function deletePageAction() {
+    "use server";
+    if (!pageSlug) {
+      throw new Error("Page not found");
+    }
+    try {
+      await deletePage(await getUser(), pageSlug);
+    } catch (error) {
+      safeRedirect(
+        `/wiki/${slug}?action=edit&error=${errorMessage(error, "Failed to delete page")}`,
+      );
+    }
     safeRedirect(`/`);
   }
 
@@ -151,45 +107,30 @@ export default async function StableEditor({
     return <MustSignInMessage />;
   }
 
-  if (
-    (decodeURIComponent(slug).startsWith("User:") ||
-      decodeURIComponent(slug).startsWith("user:")) &&
-    user.username !== decodeURIComponent(slug).split("/")[0].slice(5) &&
-    user.role !== "ADMIN"
-  ) {
-    return (
-      <>
-        <DisabledMessage message="You cannot edit this page" />
-      </>
-    );
-  }
+  // Same rules the services enforce, so the form only appears when saving works
+  const denial = page
+    ? getPageModifyDenial(user, {
+        title: page.title,
+        slug: page.slug[0],
+        isMedia: page.title.startsWith("Media:"),
+        accessLevel: page.accessLevel,
+      })
+    : user.status > 0
+      ? "Your account has been banned"
+      : isSystemNewPage
+        ? null
+        : (getPageEditDenial({
+            editor: user,
+            newTitle: decodeURIComponent(slug),
+          })?.error ?? null);
 
-  if (
-    page &&
-    (page.title.startsWith("User:") || page.title.startsWith("user:")) &&
-    user.username !== page.title.split("/")[0].slice(5) &&
-    user.role !== "ADMIN"
-  ) {
-    return (
-      <>
-        <DisabledMessage message="You cannot edit this page" />
-      </>
-    );
-  }
-
-  if (user.status > 0) {
-    return <DisabledMessage message="Your account has been banned" />;
-  }
-
-  if (page && page.accessLevel > 0 && user.role !== "ADMIN") {
-    return (
-      <DisabledMessage message="You cannot edit this page since you do not have the required access/edit level." />
-    );
+  if (denial) {
+    return <DisabledMessage message={denial} />;
   }
 
   if (!page?.id) {
     return (
-      <form action={createPage} className="flex flex-col gap-3">
+      <form action={createPageAction} className="flex flex-col gap-3">
         <input
           type="text"
           name="title"
@@ -211,7 +152,7 @@ export default async function StableEditor({
   } else {
     return (
       <>
-        <form action={editPage} className="flex flex-col gap-3">
+        <form action={editPageAction} className="flex flex-col gap-3">
           <input
             type="text"
             name="title"
@@ -229,18 +170,17 @@ export default async function StableEditor({
             Save Changes
           </TransitionFormButton>
         </form>
-        {(user.role === "ADMIN" ||
-          isUsersPage(page.title, user.username, true)) && (
+        {canDeletePage(user, page) && (
           <details className="mt-3">
             <summary className="cursor-pointer font-semibold text-red-500">
               Delete this page
             </summary>
-            <p className="mt-2 animate-pulse font-bold">
-              Warning: This action is irreversible. All page history will be
-              lost.
+            <p className="mt-2 font-bold">
+              The page moves to the trash with its full history, where editors
+              can restore it.
             </p>
             <TransitionFormButton
-              action={deletePage}
+              action={deletePageAction}
               className="mt-4 bg-red-500 text-white hover:bg-red-600"
             >
               <TrashIcon className="inline size-5" />

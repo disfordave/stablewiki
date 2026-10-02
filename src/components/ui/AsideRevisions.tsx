@@ -18,32 +18,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Page } from "@/types";
+import { listPages } from "@/server/pages";
 import { slugify } from "@/utils";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export async function AsideRevisions() {
-  async function fetchRevisions() {
-    "use server";
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?sortBy=updatedAt&hPage=1`,
-      {
-        method: "GET",
-        cache: "no-store",
-      },
-    );
-
-    if (!response.ok) {
-      console.error("Failed to fetch revisions");
-      return [];
-    }
-
-    const data = await response.json();
-    return data || [];
-  }
-
-  const revisionsData = await fetchRevisions();
+  const { pages } = await listPages({
+    sortBy: "updatedAt",
+    itemsPerPage: 5,
+    exactMatchFirst: false,
+    logSearch: false,
+  });
 
   return (
     <section className="rounded-2xl bg-white p-4 dark:bg-zinc-800">
@@ -64,7 +50,7 @@ export async function AsideRevisions() {
         })}
       </p>
       <ul className="mt-2 flex flex-col gap-2">
-        {(revisionsData.pages as Page[]).slice(0, 5).map((rev) => (
+        {pages.map((rev) => (
           <li key={rev.id}>
             <Link
               href={`/wiki/${slugify(rev.title)}${rev.isRedirect ? "?preventRedirect=true" : ""}`}

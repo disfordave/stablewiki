@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     StableWiki is a modern, open-source wiki platform focused on simplicity,
     collaboration, and ease of use.
@@ -19,7 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getThemeColor } from "@/utils";
+import { listRecentComments } from "@/server/lounge";
+import { getThemeColor, wasEdited } from "@/utils";
 import Link from "next/link";
 import { MarkdownComp } from "../ui";
 import Pagination from "../ui/Pagination";
@@ -31,27 +31,12 @@ export default async function SystemComments({
   hPage?: string | string[] | undefined;
   username?: string | string[] | undefined;
 }) {
-  async function fetchComments() {
-    // Placeholder for fetching comments logic
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/lounge${hPage ? `?hPage=${hPage}` : ""}${username ? `${hPage ? "&" : "?"}username=${username}` : ""}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      },
-    );
+  const comments = await listRecentComments({
+    username: typeof username === "string" ? username : null,
+    hPage: Number(hPage || "1"),
+  });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      console.error("Failed to fetch comments");
-      return [];
-    }
-  }
-  const comments = await fetchComments();
-
-  if (comments && comments.length === 0) {
+  if (comments.data.length === 0 && comments.totalPaginationPages === 0) {
     return <div>No comments available.</div>;
   } else {
     return (
@@ -75,7 +60,7 @@ export default async function SystemComments({
           )}
           .
         </p>
-        {comments.data.map((comment: any) => (
+        {comments.data.map((comment) => (
           <div
             key={comment.id}
             id={comment.id}
@@ -107,12 +92,16 @@ export default async function SystemComments({
               >
                 <div className="flex flex-col items-start">
                   <span>
-                    <Link
-                      className="font-semibold no-underline hover:underline"
-                      href={`/wiki/User:${comment.author.username}`}
-                    >
-                      {comment.author.username}
-                    </Link>
+                    {comment.author ? (
+                      <Link
+                        className="font-semibold no-underline hover:underline"
+                        href={`/wiki/User:${comment.author.username}`}
+                      >
+                        {comment.author.username}
+                      </Link>
+                    ) : (
+                      <span className="font-semibold">Unknown</span>
+                    )}
                     {` on ${new Date(comment.createdAt).toLocaleDateString(
                       "en-GB",
                       {
@@ -126,24 +115,20 @@ export default async function SystemComments({
                       },
                     )}`}
                   </span>
-                  {comment.updatedAt &&
-                    comment.updatedAt !== comment.createdAt && (
-                      <span className="text-xs opacity-75">
-                        Edited on{" "}
-                        {new Date(comment.updatedAt).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            timeZoneName: "short",
-                          },
-                        )}
-                      </span>
-                    )}
+                  {wasEdited(comment.createdAt, comment.updatedAt) && (
+                    <span className="text-xs opacity-75">
+                      Edited on{" "}
+                      {comment.updatedAt.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        timeZoneName: "short",
+                      })}
+                    </span>
+                  )}
                 </div>
               </div>
               {comment.deleted ? (
@@ -168,10 +153,7 @@ export default async function SystemComments({
                   >
                     👍{" "}
                     <span className="tabular-nums">
-                      {
-                        comment.reactions.filter((r: any) => r.type === 1)
-                          .length
-                      }
+                      {comment.reactions.filter((r) => r.type === 1).length}
                     </span>
                   </div>
                 </div>

@@ -18,7 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { PageRevisionData, Revision } from "@/types";
+import { listRecentRevisions } from "@/server/pages";
+import { Revision } from "@/types";
 import Pagination from "../ui/Pagination";
 import Link from "next/link";
 import { slugify } from "@/utils";
@@ -30,26 +31,10 @@ export default async function SystemRevisions({
   hPage?: string | string[] | undefined;
   username?: string | string[] | undefined;
 }) {
-  async function fetchRevisions() {
-    "use server";
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/pages?action=revisions&hPage=${hPage || "1"}&username=${username || ""}`,
-      {
-        method: "GET",
-        cache: "no-store",
-      },
-    );
-
-    if (!response.ok) {
-      console.error("Failed to fetch revisions");
-      return [];
-    }
-
-    const data = await response.json();
-    return data || [];
-  }
-
-  const revisionsData = (await fetchRevisions()) as PageRevisionData;
+  const revisionsData = await listRecentRevisions({
+    username: typeof username === "string" ? username : null,
+    hPage: Number(hPage || "1"),
+  });
 
   return (
     <div>

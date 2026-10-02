@@ -25,6 +25,13 @@ import {
 } from "@/components/ui";
 import { WIKI_DISABLE_MEDIA, WIKI_MEDIA_ADMIN_ONLY } from "@/config";
 import { getUser, signOutUser } from "@/lib";
+import { canRestorePages } from "@/server/authz";
+import { errorMessage } from "@/server/errors";
+import {
+  changePassword,
+  setPageAccessLevel,
+  setUserStatus,
+} from "@/server/users";
 import { getThemeColor, safeRedirect } from "@/utils";
 import {
   PencilSquareIcon,
@@ -34,6 +41,7 @@ import {
   ClockIcon,
   DocumentTextIcon,
   ChatBubbleBottomCenterTextIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import { Role } from "@/generated/prisma/client";
 
@@ -43,8 +51,6 @@ export default async function DashboardPage() {
   async function adminAction(formData: FormData) {
     "use server";
     const actionType = formData.get("actionType") as string;
-    const targetUsername = formData.get("targetUsername") as string;
-    const newStatus = parseInt(formData.get("newStatus") as string, 10);
     const consent = formData.get("consent") as string;
 
     if (consent !== "on") {
@@ -53,149 +59,52 @@ export default async function DashboardPage() {
       );
     }
 
-    if (!user || user.role !== Role.ADMIN) {
+    try {
+      const admin = await getUser();
+      if (actionType === "changeUserStatus") {
+        await setUserStatus(
+          admin,
+          String(formData.get("targetUsername") ?? ""),
+          parseInt(formData.get("newStatus") as string, 10),
+        );
+      } else if (actionType === "changePageAccessLevel") {
+        await setPageAccessLevel(
+          admin,
+          formData.get("targetPageId"),
+          parseInt(formData.get("newAccessLevel") as string, 10),
+        );
+      } else {
+        safeRedirect(
+          `/wiki/System:Dashboard?error=${"Invalid admin action type."}`,
+        );
+      }
+    } catch (error) {
       safeRedirect(
-        `/wiki/System:Dashboard?error=${"You must be an admin to perform this action."}`,
+        `/wiki/System:Dashboard?error=${errorMessage(error, "Failed to perform admin action")}`,
       );
     }
 
-    if (actionType === "changeUserStatus") {
-      if (!targetUsername) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"Target username is required."}`,
-        );
-      }
-
-      if (isNaN(newStatus)) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"New status must be a valid number."}`,
-        );
-      }
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/users/${targetUsername}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({
-            status: newStatus,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"Failed to perform admin action"}`,
-        );
-      }
-
-      if (response.ok) {
-        safeRedirect(
-          `/wiki/System:Dashboard?success=${"Admin action completed successfully!"}`,
-        );
-      }
-    } else if (actionType === "changePageAccessLevel") {
-      const targetPageId = formData.get("targetPageId") as string;
-      const newAccessLevel = parseInt(
-        formData.get("newAccessLevel") as string,
-        10,
-      );
-
-      if (!targetPageId) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"Target page ID is required."}`,
-        );
-      }
-
-      if (!newAccessLevel) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"New access level is required."}`,
-        );
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/pages`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({
-            accessLevel: newAccessLevel,
-            slug: targetPageId,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        safeRedirect(
-          `/wiki/System:Dashboard?error=${"Failed to perform admin action"}`,
-        );
-      }
-
-      if (response.ok) {
-        safeRedirect(
-          `/wiki/System:Dashboard?success=${"Admin action completed successfully!"}`,
-        );
-      }
-    } else {
-      safeRedirect(
-        `/wiki/System:Dashboard?error=${"Invalid admin action type."}`,
-      );
-    }
+    safeRedirect(
+      `/wiki/System:Dashboard?success=${"Admin action completed successfully!"}`,
+    );
   }
 
-  async function changePassword(formData: FormData) {
+  async function changePasswordAction(formData: FormData) {
     "use server";
-    const currentPassword = formData.get("currentPassword") as string;
-    const newPassword = formData.get("newPassword") as string;
-    const newPasswordConfirm = formData.get("newPasswordConfirm") as string;
-    // const username = formData.get("username") as string;
-
-    if (!user) {
+    try {
+      await changePassword(await getUser(), {
+        currentPassword: formData.get("currentPassword"),
+        newPassword: formData.get("newPassword"),
+        newPasswordConfirm: formData.get("newPasswordConfirm"),
+      });
+    } catch (error) {
       safeRedirect(
-        `/wiki/System:SignIn?error=${"You must be signed in to change your password."}`,
+        `/wiki/System:Dashboard?error=${errorMessage(error, "Failed to change password")}`,
       );
     }
-
-    if (newPassword !== newPasswordConfirm) {
-      safeRedirect(
-        `/wiki/System:Dashboard?error=${"New passwords do not match"}`,
-      );
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          username: user.username,
-          currentPassword,
-          newPassword,
-          newPasswordConfirm,
-        }),
-      },
+    safeRedirect(
+      `/wiki/System:Dashboard?success=${"Password changed successfully!"}`,
     );
-
-    if (!response.ok) {
-      const data = await response.json();
-      safeRedirect(
-        `/wiki/System:Dashboard?error=${data.error || "Failed to change password"}`,
-      );
-    }
-
-    if (response.ok) {
-      safeRedirect(
-        `/wiki/System:Dashboard?success=${"Password changed successfully!"}`,
-      );
-    }
   }
 
   if (!user) {
@@ -323,6 +232,15 @@ export default async function DashboardPage() {
                   Upload Media
                 </TransitionLinkButton>
               )}
+              {canRestorePages(user) && (
+                <TransitionLinkButton
+                  href={`/wiki/System:Trash`}
+                  className="bg-zinc-500 text-white hover:bg-zinc-600"
+                >
+                  <TrashIcon className="inline size-5" />
+                  Trash
+                </TransitionLinkButton>
+              )}
               <TransitionFormButton
                 action={signOutUser}
                 className="bg-red-500 text-white hover:bg-red-600"
@@ -410,8 +328,8 @@ export default async function DashboardPage() {
                 <label htmlFor="newAccessLevel" className="block">
                   <p className="font-medium">New Page Edit Level</p>
                   <p className="mb-0 text-sm text-zinc-500 dark:text-zinc-400">
-                    - 0 for registered users, 1 for moderators, 9 for admins
-                    only
+                    - 0 for signed-in users, 2 for accounts older than 14 days,
+                    1 or 3-7 for moderators, 8 for editors, 9 for admins only
                   </p>
                   <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
                     - 101 for enabled Lounge access, 102 for disabled Lounge
@@ -452,7 +370,10 @@ export default async function DashboardPage() {
           <summary className="mt-4 font-semibold select-none">
             Change Password
           </summary>
-          <form className="mt-2 flex flex-col gap-4" action={changePassword}>
+          <form
+            className="mt-2 flex flex-col gap-4"
+            action={changePasswordAction}
+          >
             <div>
               <label
                 htmlFor="currentPassword"

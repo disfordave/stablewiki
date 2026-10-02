@@ -18,349 +18,54 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { prisma } from "@/lib/prisma";
-import { Page, PageRevisionData } from "@/types";
-import {
-  getDecodedToken,
-  checkRedirect,
-  handleHPage,
-  extractWikiLinkSlugs,
-  logSystemEvent,
-} from "@/utils";
+import { getRequestUser } from "@/server/auth/session";
+import { errorResponse, readJsonBody } from "@/server/errors";
+import { createPage, listPages, listRecentRevisions } from "@/server/pages";
 import { type NextRequest } from "next/server";
-import { slugify } from "@/utils/";
-import { hasErrorCode } from "@/utils/api/errorCodes";
-import { getPageEditDenial } from "@/utils/api/pagePermissions";
-import { WIKI_HOMEPAGE_LINK } from "@/config";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get("q") || "";
-  const userPostByUsername = searchParams.get("userPostByUsername");
-  const itemsPerPageFromParams = parseInt(
-    searchParams.get("itemsPerPage") || "10",
-  );
-  const hPage = searchParams.get("hPage") || "1";
-  const noAutomaticExactMatch = searchParams.get("noAutomaticExactMatch");
-  const action = searchParams.get("action") || "";
-  const username = searchParams.get("username") || "";
-  const sortBy = searchParams.get("sortBy") || "createdAt";
-  const noSystemLog = searchParams.get("noSystemLog") || "";
-  const handledHPage = handleHPage(hPage) - 1;
-
-  let itemsPerPage;
-
-  if (isNaN(itemsPerPageFromParams) || itemsPerPageFromParams <= 0) {
-    itemsPerPage = 10;
-  } else if (itemsPerPageFromParams > 25) {
-    itemsPerPage = 25;
-  } else {
-    itemsPerPage = itemsPerPageFromParams;
-  }
-
-  if (action === "revisions") {
-    const pagesCount = await prisma.revision.count({
-      where: {
-        author: {
-          username: username || undefined,
-        },
-      },
-    });
-
-    const revisions = await prisma.revision.findMany({
-      where: {
-        author: {
-          username: username || undefined,
-        },
-      },
-      include: {
-        page: {
-          select: {
-            title: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      skip: handledHPage * itemsPerPage,
-      take: itemsPerPage,
-    });
-    return Response.json({
-      totalPages: Math.ceil(pagesCount / itemsPerPage),
-      revisions: revisions.map((rev) => ({
-        id: rev.id,
-        version: rev.version,
-        title: rev.title,
-        content: rev.content,
-        createdAt: rev.createdAt.toISOString(),
-        author: rev.author
-          ? { id: rev.author.id, username: rev.author.username }
-          : undefined,
-        summary: rev.summary,
-        page: rev.page ? { title: rev.page.title } : undefined,
-      })),
-    } as PageRevisionData);
-  }
+  const hPage = Number(searchParams.get("hPage") || "1");
+  const itemsPerPage = parseInt(searchParams.get("itemsPerPage") || "10");
 
   try {
-    const pagesCount = await prisma.page.count({
-      where: {
-        title: {
-          contains: userPostByUsername ? `User:${userPostByUsername}/` : query,
-          mode: userPostByUsername ? "default" : "insensitive",
-        },
-      },
-    });
-
-    if (query.trim() !== "" && !userPostByUsername && noSystemLog !== "true") {
-      logSystemEvent("PAGE_SEARCH", `Searched for: ${query}`);
+    if (searchParams.get("action") === "revisions") {
+      return Response.json(
+        await listRecentRevisions({
+          username: searchParams.get("username"),
+          hPage,
+          itemsPerPage,
+        }),
+      );
     }
 
-    if (
-      !userPostByUsername &&
-      handleHPage(hPage) === 1 &&
-      !noAutomaticExactMatch
-    ) {
-      const exactMatch = await prisma.page.findFirst({
-        where: {
-          title: {
-            equals: query.toLowerCase(),
-            mode: "insensitive",
-          },
-        },
-        include: {
-          revisions: {
-            orderBy: { createdAt: "desc" },
-            take: 1,
-            include: { author: { select: { id: true, username: true } } },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-      });
-      if (exactMatch) {
-        return Response.json({
-          totalPaginationPages: Math.ceil(pagesCount / itemsPerPage),
-          pages: [
-            {
-              id: exactMatch.id,
-              title: exactMatch.title,
-              content:
-                exactMatch.revisions.length > 0
-                  ? exactMatch.revisions[0].content
-                  : exactMatch.content,
-              slug: [exactMatch.slug],
-              author:
-                exactMatch.revisions.length > 0
-                  ? exactMatch.revisions[0].author
-                    ? {
-                        id: exactMatch.revisions[0].author.id,
-                        username: exactMatch.revisions[0].author.username,
-                      }
-                    : null
-                  : null,
-              createdAt: exactMatch.createdAt,
-              updatedAt:
-                exactMatch.revisions.length > 0
-                  ? exactMatch.revisions[0].createdAt
-                  : exactMatch.updatedAt,
-              isRedirect: exactMatch.isRedirect,
-              accessLevel: exactMatch.accessLevel,
-              redirectTargetSlug:
-                exactMatch.revisions.length > 0
-                  ? exactMatch.revisions[0].redirectTargetSlug
-                  : undefined,
-              backlinks: {
-                general: [],
-                user: [],
-                redirects: [],
-                media: [],
-                categories: [],
-              },
-              loungeDisabled: exactMatch.loungeDisabled,
-            } as Page,
-          ],
-        });
-      }
-    }
-
-    const pages = await prisma.page.findMany({
-      where: {
-        title: {
-          contains: userPostByUsername ? `User:${userPostByUsername}/` : query,
-          mode: userPostByUsername ? "default" : "insensitive",
-        },
-      },
-      include: {
-        revisions: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-          include: { author: { select: { id: true, username: true } } },
-        },
-      },
-      orderBy: { [sortBy === "updatedAt" ? "updatedAt" : "createdAt"]: "desc" },
-      skip: handledHPage * itemsPerPage,
-      take: itemsPerPage,
-    });
-
-    return Response.json({
-      totalPaginationPages: Math.ceil(pagesCount / itemsPerPage),
-      pages: pages
-        .sort((a, b) => {
-          const aTitle = a.title.toLowerCase();
-          const bTitle = b.title.toLowerCase();
-          const searchQuery = query.toLowerCase();
-
-          // Exact match comes first
-          if (aTitle === searchQuery) return -1;
-          if (bTitle === searchQuery) return 1;
-
-          return 0;
-        })
-        .map((page) => ({
-          id: page.id,
-          title: page.title,
-          content:
-            page.revisions.length > 0
-              ? page.revisions[0].content
-              : page.content,
-          slug: [page.slug],
-          author:
-            page.revisions.length > 0
-              ? page.revisions[0].author
-                ? {
-                    id: page.revisions[0].author.id,
-                    username: page.revisions[0].author.username,
-                  }
-                : null
-              : null,
-          createdAt: page.createdAt,
-          updatedAt:
-            page.revisions.length > 0
-              ? page.revisions[0].createdAt
-              : page.updatedAt,
-          isRedirect: page.isRedirect,
-          accessLevel: page.accessLevel,
-          redirectTargetSlug:
-            page.revisions.length > 0
-              ? page.revisions[0].redirectTargetSlug
-              : undefined,
-          backlinks: {
-            general: [],
-            user: [],
-            redirects: [],
-            media: [],
-            categories: [],
-          },
-          loungeDisabled: page.loungeDisabled,
-        })) as Page[],
-    });
+    return Response.json(
+      await listPages({
+        query: searchParams.get("q") || "",
+        userPostsOf: searchParams.get("userPostByUsername"),
+        hPage,
+        itemsPerPage,
+        sortBy:
+          searchParams.get("sortBy") === "updatedAt"
+            ? "updatedAt"
+            : "createdAt",
+        exactMatchFirst: !searchParams.get("noAutomaticExactMatch"),
+        logSearch: searchParams.get("noSystemLog") !== "true",
+      }),
+    );
   } catch (error) {
-    console.error(error);
-    return Response.json({ error: "Failed to fetch pages" }, { status: 500 });
+    return errorResponse(error);
   }
 }
 
 export async function POST(request: Request) {
-  const { title, content, summary } = await request.json();
-
-  if (!title || !content) {
-    return Response.json({ error: "Missing fields" }, { status: 400 });
-  }
-
-  if (typeof title !== "string" || typeof content !== "string") {
-    return Response.json({ error: "Invalid fields" }, { status: 400 });
-  }
-
-  if (title.split("/").some((p: string) => p.toLowerCase() === "_lounge")) {
-    return Response.json(
-      { error: 'Titles cannot contain "_lounge" segment' },
-      { status: 400 },
-    );
-  }
-
-  if (title.length > 255) {
-    return Response.json(
-      { error: "Title exceeds maximum length of 255 characters" },
-      { status: 400 },
-    );
-  }
-
-  const decodedToken = await getDecodedToken(request);
-
-  if (!decodedToken || !decodedToken.id) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (!decodedToken?.username) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (decodedToken.status > 0) {
-    return Response.json({ error: "Banned user" }, { status: 403 });
-  }
-
-  const denial = getPageEditDenial({
-    editor: decodedToken,
-    newTitle: title,
-    homepageLink: WIKI_HOMEPAGE_LINK,
-  });
-
-  if (denial) {
-    return Response.json({ error: denial.error }, { status: denial.status });
-  }
-
   try {
-    const targetSlugs = extractWikiLinkSlugs(content);
-    const redirection = checkRedirect(content, title);
-
-    const page = await prisma.$transaction(async (tx) => {
-      const newPage = await tx.page.create({
-        data: {
-          title,
-          content: "",
-          slug: slugify(title),
-          author: { connect: { id: decodedToken.id as string } },
-          revisions: {
-            create: {
-              content,
-              author: { connect: { id: decodedToken.id as string } },
-              summary,
-              isRedirect: redirection.isRedirect,
-              redirectTargetSlug: redirection.targetSlug,
-              title,
-            },
-          },
-          isRedirect: redirection.isRedirect,
-        },
-      });
-
-      if (targetSlugs.length > 0) {
-        await tx.wikiLink.createMany({
-          data: targetSlugs.map((targetSlug) => ({
-            sourceId: newPage.id,
-            targetSlug,
-          })),
-        });
-      }
-
-      return newPage;
-    });
-
+    const page = await createPage(
+      await getRequestUser(request),
+      await readJsonBody(request),
+    );
     return Response.json(page, { status: 201 });
   } catch (error) {
-    console.error(error);
-
-    if (hasErrorCode(error, "P2002")) {
-      return Response.json(
-        { error: "A page with this title already exists" },
-        { status: 409 },
-      );
-    }
-    return Response.json({ error: "Failed to create page" }, { status: 500 });
+    return errorResponse(error);
   }
 }

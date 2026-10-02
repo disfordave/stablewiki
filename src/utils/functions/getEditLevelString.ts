@@ -19,6 +19,7 @@
 */
 
 import { WIKI_HOMEPAGE_LINK } from "@/config";
+import { getEditLevelRequirement } from "./editLevels";
 
 export function getAccessEditLevelString(
   editLevel: number,
@@ -36,20 +37,18 @@ export function getAccessEditLevelString(
     }
   }
 
-  switch (editLevel) {
-    case 0:
-      return "Signed In Users";
-    case 1:
-      return "Signed In Users (reserved)";
-    case 2:
-      return "Signed In Users after 14 days";
-    case 7:
+  // Described from the same table the permission check uses
+  const { role, minAccountAgeDays } = getEditLevelRequirement(editLevel);
+  switch (role) {
+    case "USER":
+      return minAccountAgeDays > 0
+        ? `Signed In Users after ${minAccountAgeDays} days`
+        : "Signed In Users";
+    case "MODERATOR":
       return "Moderators and above";
-    case 8:
+    case "EDITOR":
       return "Editors and above";
-    case 9:
+    case "ADMIN":
       return "Admin Only";
-    default:
-      return "Unknown changes";
   }
 }

@@ -10,7 +10,7 @@ vi.mock("bcryptjs", () => ({
   default: { compare: vi.fn(async () => false), hash: vi.fn() },
 }));
 
-import { RATE_LIMITS, resetRateLimits } from "@/utils/api/rateLimit";
+import { RATE_LIMITS, resetRateLimits } from "@/server/rateLimit";
 import { POST as signIn } from "../auth/signin/route";
 import { POST as signUp } from "../auth/user/[[...slug]]/route";
 

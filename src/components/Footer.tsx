@@ -62,7 +62,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          StableWiki Engine v0.0.2
+          StableWiki Engine v0.1.0
         </Link>
       </p>
       <div className={`mt-2`}>

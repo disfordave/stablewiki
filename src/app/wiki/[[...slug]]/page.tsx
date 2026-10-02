@@ -38,21 +38,61 @@ import {
   StableEditor,
 } from "@/components/wiki";
 import { WIKI_HOMEPAGE_LINK, WIKI_NAME } from "@/config";
+import { getUser } from "@/lib";
+import { getThread } from "@/server/lounge";
+import { reportError } from "@/server/monitoring";
+import { getPage, getPageHistory, getPageVersion } from "@/server/pages";
 import { Page, PageRevisionData } from "@/types";
 import {
   handleHPage,
   slugify,
-  getPageData,
-  getLatestPageRevision,
   safeRedirect,
   getThemeColor,
-  fetchComments,
   getAccessEditLevelString,
   extractWikiCategorySlugs,
 } from "@/utils";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { Metadata } from "next";
 import Link from "next/link";
+
+// Route segments can arrive percent-encoded ("User%3Adave"); stored slugs aren't
+function toPageSlug(segments: string[]): string {
+  return segments
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        return segment;
+      }
+    })
+    .join("/");
+}
+
+// Result of the last action (?error= / ?success=), shown as plain text
+function ActionMessage({
+  error,
+  success,
+}: {
+  error: string | string[] | undefined;
+  success: string | string[] | undefined;
+}) {
+  const message = typeof error === "string" ? error : success;
+  if (typeof message !== "string" || message.length === 0) {
+    return null;
+  }
+  return (
+    <p
+      role={error ? "alert" : "status"}
+      className={`mb-4 rounded-xl p-4 text-sm font-medium ${
+        error
+          ? "bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100"
+          : "bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-100"
+      }`}
+    >
+      {message.slice(0, 300)}
+    </p>
+  );
+}
 
 function Chip({ text }: { text: string }) {
   return (
@@ -83,6 +123,8 @@ export default async function WikiPage({
     targetLoungeCommentId,
     sortBy,
     username,
+    error,
+    success,
   } = await searchParams;
   // Determine if viewing lounge
   const loungeIndex = baseSlug?.findIndex(
@@ -131,7 +173,12 @@ export default async function WikiPage({
 
   // Handle special System: pages
   if (slug[0].startsWith(encodeURIComponent("System:"))) {
-    return <SystemPages slug={slug} q={q} hPage={hPage} username={username} />;
+    return (
+      <>
+        <ActionMessage error={error} success={success} />
+        <SystemPages slug={slug} q={q} hPage={hPage} username={username} />
+      </>
+    );
   }
 
   const isUserPage =
@@ -142,27 +189,33 @@ export default async function WikiPage({
       ? decodeURIComponent(slug[0]).split(":")[1]
       : null;
 
-  // Fetch the page data from the API
+  const viewer = await getUser();
+  const pageSlug = toPageSlug(slug);
+
   let page: Page | null = null;
+  // For diffs: the version after the one shown (null when it's the latest)
+  let nextVersion: Page | null = null;
+  // For reverts: the current content being replaced
+  let latestPage: Page | null = null;
   const pageRevisions: PageRevisionData = { totalPages: 0, revisions: [] };
   try {
-    const queryParams =
-      showHistoryVersion || showRevert || showDiff
-        ? `?action=history&ver=${ver}`
-        : showHistoryList
-          ? `?action=history&hPage=${handledHPage}`
-          : "";
-
-    const data = await getPageData(joinedSlug, queryParams);
-
     if (showHistoryList) {
-      pageRevisions.revisions = data.page.revisions || [];
-      pageRevisions.totalPages = data.page.totalPages || 0;
+      const history = await getPageHistory(pageSlug, handledHPage, viewer);
+      pageRevisions.revisions = history?.revisions ?? [];
+      pageRevisions.totalPages = history?.totalPages ?? 0;
+    } else if (showHistoryVersion || showRevert || showDiff) {
+      page = await getPageVersion(pageSlug, Number(ver), viewer);
+      if (page && showDiff) {
+        nextVersion = await getPageVersion(pageSlug, Number(ver) + 1, viewer);
+      }
+      if (page && showRevert) {
+        latestPage = await getPage(pageSlug, viewer);
+      }
     } else {
-      page = data.page;
+      page = await getPage(pageSlug, viewer);
     }
   } catch (err) {
-    console.error(err);
+    reportError(err, { slug: pageSlug });
     return <p className="text-red-500">Failed to load page 😢</p>;
   }
 
@@ -189,6 +242,16 @@ export default async function WikiPage({
 
   return (
     <div>
+      <ActionMessage error={error} success={success} />
+      {page?.deletedAt && (
+        <p className="mb-4 rounded-xl bg-zinc-100 p-4 text-sm font-medium dark:bg-zinc-900">
+          This page is in the trash and only visible to editors.{" "}
+          <Link href="/wiki/System:Trash" className="underline">
+            Open the trash
+          </Link>{" "}
+          to restore it.
+        </p>
+      )}
       <div className="flex flex-wrap items-center justify-start">
         {isLoungeView && <Chip text="Lounge" />}
         {((page && isUserPagePostPage) ||
@@ -266,25 +329,9 @@ export default async function WikiPage({
           <PageDate page={page} isOld={true} />
           <DiffViewer
             oldContent={page.content}
-            newContent={
-              (
-                await getPageData(
-                  joinedSlug,
-                  `?action=history&ver=${Number(ver) + 1}`,
-                )
-              ).page.content || page.content
-            }
+            newContent={nextVersion ? nextVersion.content : page.content}
             oldVer={Number(ver)}
-            newVer={
-              (
-                await getPageData(
-                  joinedSlug,
-                  `?action=history&ver=${Number(ver) + 1}`,
-                )
-              ).page.content
-                ? Number(ver) + 1
-                : "latest"
-            }
+            newVer={nextVersion ? Number(ver) + 1 : "latest"}
           />
           <TransitionLinkButton
             href={`/wiki/${decodeURIComponent(joinedSlug)}?action=history`}
@@ -299,9 +346,7 @@ export default async function WikiPage({
         <div>
           <PageDate page={page} isOld={false} />
           <RevertPage
-            currentContent={
-              (await getLatestPageRevision(joinedSlug)).page.content
-            }
+            currentContent={latestPage?.content ?? ""}
             newTargetContent={page.content}
             slug={slug.join("/")}
             targetVersion={ver as string}
@@ -529,8 +574,6 @@ export async function generateMetadata({
       ? baseSlug?.slice(0, loungeIndex)
       : baseSlug;
 
-  const joinedSlug = slug ? slug.join("/") : "";
-
   if (!slug) {
     return {
       title: WIKI_NAME,
@@ -549,14 +592,11 @@ export async function generateMetadata({
       : null;
 
   try {
-    const queryParams = showHistoryVersion
-      ? `?action=history&ver=${ver}`
-      : showHistoryList
-        ? `?action=history`
-        : "";
-
-    const data = await getPageData(joinedSlug, queryParams);
-    const page = showHistoryList ? data.page : data.page;
+    const viewer = await getUser();
+    const pageSlug = toPageSlug(slug);
+    const page = showHistoryVersion
+      ? await getPageVersion(pageSlug, Number(ver), viewer)
+      : await getPage(pageSlug, viewer);
     const systemPage = slug[0].replace("System:", "");
     if (slug[0].startsWith("System:")) {
       switch (systemPage) {
@@ -601,6 +641,11 @@ export async function generateMetadata({
           return {
             title: `Comments System | ${WIKI_NAME}`,
             description: `View and manage comments on ${WIKI_NAME}.`,
+          };
+        case "Trash":
+          return {
+            title: `Trash | ${WIKI_NAME}`,
+            description: `Deleted pages on ${WIKI_NAME}.`,
           };
         default:
           return {
@@ -677,14 +722,11 @@ export async function generateMetadata({
       const commentId = loungeId;
 
       if (commentId) {
-        const comments = await fetchComments({
-          pageId: page.id,
-          commentId: commentId,
+        const thread = await getThread(page.id, commentId, {
           hPage: 1,
           sortBy: "createdAt",
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const comment = comments?.data.find((c: any) => c.id === commentId);
+        const comment = thread?.data.find((c) => c.id === commentId);
         return {
           title: `${comment ? comment.title : "Unknown"} on ${page.title} Lounge | ${WIKI_NAME}`,
           description: `Discussion lounge comment on the wiki page titled "${page.title}".`,
@@ -716,7 +758,7 @@ export async function generateMetadata({
       },
     };
   } catch (err) {
-    console.error(err);
+    reportError(err);
     return {
       title: `Error | ${WIKI_NAME}`,
       description: `Failed to load page.`,

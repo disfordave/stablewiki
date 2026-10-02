@@ -18,6 +18,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import "server-only";
 // Fixed-window counters kept in process memory. Fine for a single self-hosted
 // instance; deployments running several instances need a shared store.
 const buckets = new Map<string, { count: number; resetTime: number }>();

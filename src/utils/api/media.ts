@@ -63,11 +63,8 @@ const UNSAFE_SVG_PATTERNS = [
   /javascript:/i,
 ];
 
-export function getMediaDir(): string {
-  return path.join(process.cwd(), "public", "media");
-}
-
-// Titles become file names, so anything that could act as a path is refused
+// Titles become file names (and storage keys), so anything that could act
+// as a path is refused
 export function isSafeMediaTitle(title: string): boolean {
   const trimmed = title.trim();
   return (
@@ -76,13 +73,6 @@ export function isSafeMediaTitle(title: string): boolean {
     !trimmed.startsWith(".") &&
     !/[/\\\p{Cc}]/u.test(trimmed)
   );
-}
-
-// Returns null for anything that would resolve outside the media directory
-export function resolveMediaPath(fileName: string): string | null {
-  const mediaDir = getMediaDir();
-  const resolved = path.resolve(mediaDir, fileName);
-  return resolved.startsWith(mediaDir + path.sep) ? resolved : null;
 }
 
 // Identifies the file from its leading bytes; the client's MIME type is not trusted

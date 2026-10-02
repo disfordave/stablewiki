@@ -1,12 +1,9 @@
-import path from "path";
 import { describe, expect, it } from "vitest";
 import {
   getMediaContentType,
-  getMediaDir,
   getMediaExtension,
   isSafeMediaTitle,
   isUnsafeSvg,
-  resolveMediaPath,
   sniffMediaType,
 } from "@/utils/api/media";
 
@@ -35,31 +32,6 @@ describe("isSafeMediaTitle", () => {
     ];
     for (const title of titles) {
       expect([title, isSafeMediaTitle(title)]).toEqual([title, false]);
-    }
-  });
-});
-
-describe("resolveMediaPath", () => {
-  const mediaDir = getMediaDir();
-
-  it("keeps files inside the media directory", () => {
-    expect(resolveMediaPath("logo.png")).toBe(path.join(mediaDir, "logo.png"));
-    expect(resolveMediaPath("a/../logo.png")).toBe(
-      path.join(mediaDir, "logo.png"),
-    );
-  });
-
-  it("refuses anything that escapes it", () => {
-    const fileNames = [
-      "../package.json",
-      "../../.env",
-      "/etc/passwd",
-      "a/../../x",
-      "",
-      ".",
-    ];
-    for (const fileName of fileNames) {
-      expect([fileName, resolveMediaPath(fileName)]).toEqual([fileName, null]);
     }
   });
 });

@@ -1,4 +1,4 @@
-import { PublicUser } from "@/types";
+import { getPublicUser } from "@/server/users";
 import { TransitionLinkButton } from "../ui";
 import {
   DocumentTextIcon,
@@ -13,20 +13,7 @@ export default async function PublicUserInfo({
 }: {
   username: string;
 }) {
-  async function fetchUserData(username: string): Promise<PublicUser | null> {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user/${username}`,
-    );
-
-    if (!res.ok) {
-      return null;
-    }
-
-    const data = await res.json();
-    return data as PublicUser;
-  }
-
-  const user = await fetchUserData(username);
+  const user = await getPublicUser(username);
 
   if (!user) {
     return <p>Failed to load user information.</p>;

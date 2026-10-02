@@ -3,7 +3,7 @@ import {
   checkRateLimit,
   getClientIp,
   resetRateLimits,
-} from "@/utils/api/rateLimit";
+} from "@/server/rateLimit";
 
 const LIMIT = { limit: 3, windowMs: 60_000 };
 

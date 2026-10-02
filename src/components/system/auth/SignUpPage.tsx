@@ -20,16 +20,12 @@
 
 import { DisabledMessage, TransitionFormButton } from "@/components/ui";
 import { WIKI_DISABLE_SIGNUP } from "@/config";
-import { SignUpResult, registerUser } from "@/lib/auth/registration";
+import { SignUpResult, registerUser } from "@/server/auth/registration";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { getThemeColor, safeRedirect } from "@/utils";
-import {
-  RATE_LIMITS,
-  checkRateLimit,
-  getClientIp,
-} from "@/utils/api/rateLimit";
+import { RATE_LIMITS, checkRateLimit, getClientIp } from "@/server/rateLimit";
 
 export default async function SignupPage() {
   if (WIKI_DISABLE_SIGNUP) {

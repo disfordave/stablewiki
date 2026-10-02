@@ -18,36 +18,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { User } from "@/types";
+import { SESSION_COOKIE, getSessionUser } from "@/server/auth/session";
 import { safeRedirect } from "@/utils";
 import { cookies } from "next/headers";
 
-export async function getUser(): Promise<User | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwt")?.value;
-
-  if (!token) {
-    return null;
-  }
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    return null;
-  }
-
-  const user = await res.json();
-  return user as User;
-}
+// The signed-in visitor, or null
+export const getUser = getSessionUser;
 
 export async function signOutUser() {
   "use server";
   const cookieStore = await cookies();
-  cookieStore.delete("jwt");
+  cookieStore.delete(SESSION_COOKIE);
   safeRedirect(`/wiki/System:SignIn?success=${"Successfully signed out!"}`);
 }

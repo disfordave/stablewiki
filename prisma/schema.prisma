@@ -30,13 +30,14 @@ model User {
   negativeReactions NegativeReaction[]
   isHidden          Boolean            @default(false)
   systemLogs        SystemLog[]
+  deletedPages      Page[]             @relation("DeletedPages")
 }
 
 model Page {
   id              String     @id @default(cuid())
   title           String
   slug            String     @unique
-  content         String
+  content         String // Copy of the latest revision's content
   authorId        String?
   parentId        String?
   isPublished     Boolean    @default(false)
@@ -57,7 +58,9 @@ model Page {
   isHidden        Boolean    @default(false) // For hiding pages from search and listings
   isPrivate       Boolean    @default(false) // For private pages
   isPinned        Boolean    @default(false) // For pinning important pages
-  isSoftDeleted   Boolean    @default(false) // For soft deletion
+  deletedAt       DateTime? // Set while the page is in the trash
+  deletedById     String?
+  deletedBy       User?      @relation("DeletedPages", fields: [deletedById], references: [id], onDelete: SetNull)
   isTemplate      Boolean    @default(false)
   ageRating       Int        @default(0) // 0, 13, 18 
   outboundLinks   WikiLink[] @relation("PageOutboundLinks") // this page links to others
@@ -81,6 +84,7 @@ model Revision {
   page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   title              String   @default("")
 
+  @@unique([pageId, version])
   @@index([pageId])
 }
 

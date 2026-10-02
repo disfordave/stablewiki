@@ -21,11 +21,11 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { WIKI_DESCRIPTION, WIKI_NAME } from "@/config";
+import { WIKI_DESCRIPTION, WIKI_NAME, WIKI_THEME_COLOR } from "@/config";
 
 import { Header, Footer, Providers } from "@/components";
 import { AsideLounges, AsideRevisions, BackToTopButton } from "@/components/ui";
-import { getThemeColor } from "@/utils";
+import { getThemeColor, resolveThemeColor } from "@/utils";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +44,10 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
+
+// Every page reads the session and the database, so nothing is prerendered.
+// This also keeps `next build` from querying whatever database .env points at.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL,
@@ -66,7 +70,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      data-theme-color={resolveThemeColor(WIKI_THEME_COLOR)}
+      suppressHydrationWarning
+    >
       <head>
         <meta name="apple-mobile-web-app-title" content={WIKI_NAME} />
         <script defer dangerouslySetInnerHTML={{ __html: themeScript }} />
