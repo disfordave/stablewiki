@@ -5,14 +5,15 @@
 [![CI](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml/badge.svg)](https://github.com/disfordave/stablewiki/actions/workflows/ci.yml)
 ![Licence](https://img.shields.io/badge/Licence-AGPL--3.0--or--later-blue)
 
-🌐 **Live Demo:** [https://wiki.hsw.is](https://wiki.hsw.is)
+> [!NOTE]
+> **SidWiki is currently offline** (as of October 2026). There is no live demo at the moment; see [Installation](#installation) to run StableWiki locally.
 
 StableWiki Engine is an open-source wiki and knowledge platform built with **Next.js, TypeScript, and PostgreSQL**.
 
 It was originally created to replace the friction of maintaining a **Git-based Markdown blog**.
 Instead of writing posts locally and pushing commits, StableWiki allows pages to be created and edited directly on the web while preserving the structure and traceability of a wiki.
 
-The engine powers **[SidWiki](https://wiki.hsw.is)** — the ultimate knowledge base and blog platform that combines:
+The engine was built for **SidWiki** (currently offline) — the ultimate knowledge base and blog platform that combines:
 
 - wiki-style articles
 - personal blog pages through user subpages
@@ -307,9 +308,7 @@ touch the database in `.env`.
 
 # Roadmap
 
-Future plans and development notes are tracked in:
-
-[https://wiki.hsw.is/wiki/User:dave/[Wiki]\_The_Future_of_SidWiki_and_StableWiki_Engine](https://wiki.hsw.is/wiki/User:dave/[Wiki]_The_Future_of_SidWiki_and_StableWiki_Engine)
+Future plans and development notes were tracked on SidWiki in _The Future of SidWiki and StableWiki Engine_. That page is unavailable while SidWiki is offline.
 
 ---
 
@@ -370,15 +369,3 @@ In short:
 - If you deploy the project as a service, you must also share your modifications under the same license.
 
 See the [LICENSE](LICENSE) file for details.
-
----
-
-# StableWiki in Production
-
-StableWiki Engine currently powers:
-
-**SidWiki**
-
-[https://wiki.hsw.is](https://wiki.hsw.is)
-
-The ultimate knowledge base and blog platform built using the StableWiki engine created by the [same developer](https://wiki.hsw.is/wiki/User:disfordave).
