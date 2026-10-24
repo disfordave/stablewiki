@@ -31,7 +31,7 @@
     "bcryptjs": "^3.0.2",
     "diff": "^9.0.0",
     "jose": "^6.2.9",
-    "next": "^16.3.8",
+    "next": "^16.4.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-markdown": "^10.1.0",
@@ -43,7 +43,7 @@
     "server-only": "^0.0.1",
     "sharp": "^0.35.3",
     "themeflip": "^0.2.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
@@ -57,7 +57,7 @@
     "dotenv": "^17.4.2",
     "embedded-postgres": "^18.4.0-beta.17",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.3.8",
+    "eslint-config-next": "16.4.3",
     "eslint-config-prettier": "^10.1.8",
     "pg": "^8.23.1",
     "prettier": "3.9.6",
@@ -65,10 +65,11 @@
     "prisma": "^7.10.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   },
   "overrides": {
     "deepmerge-ts": "^8.0.1",
-    "mysql2": "^3.24.5"
+    "mysql2": "^3.24.5",
+    "postcss-selector-parser": "^7.1.6"
   }
 }
